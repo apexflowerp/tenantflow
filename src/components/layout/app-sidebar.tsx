@@ -17,6 +17,10 @@ import {
   LogOut,
   User,
   Cog,
+  FileBarChart,
+  Shield,
+  ShieldCheck,
+  ScrollText,
 } from 'lucide-react'
 
 import { useAppStore } from '@/stores'
@@ -64,6 +68,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+      { id: 'reports', label: 'Reports', icon: FileBarChart },
       { id: 'copilot', label: 'AI Copilot', icon: Sparkles },
     ],
   },
@@ -84,9 +89,17 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    label: 'PLATFORM',
+    items: [
+      { id: 'owner', label: 'Owner Mgmt', icon: Shield },
+    ],
+  },
+  {
     label: 'SYSTEM',
     items: [
+      { id: 'devices', label: 'Devices', icon: ShieldCheck },
       { id: 'documents', label: 'Documents', icon: FolderOpen },
+      { id: 'audit', label: 'Audit Trail', icon: ScrollText },
       { id: 'settings', label: 'Settings', icon: Settings },
     ],
   },

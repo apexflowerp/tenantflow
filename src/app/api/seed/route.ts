@@ -1,12 +1,63 @@
 import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Check if force reseed is requested
+    const forceReseed = new URL(request.url).searchParams.get('force') === 'true'
+    
     // Check if data already exists
     const existingWorkspace = await db.workspace.findFirst()
-    if (existingWorkspace) {
+    const existingUsers = await db.user.count()
+    const existingAuditLogs = await db.auditLog.count()
+    if (existingWorkspace && existingUsers > 0 && existingAuditLogs > 0 && !forceReseed) {
       return NextResponse.json({ message: 'Database already seeded. Skipping.', workspace: existingWorkspace.name })
+    }
+
+    // If force reseed, clear all data first
+    if (forceReseed && existingWorkspace) {
+      // Use raw SQL to delete all data in correct order (respecting FK constraints)
+      try {
+        await db.$executeRawUnsafe(`DELETE FROM AuditLog`)
+        await db.$executeRawUnsafe(`DELETE FROM LicenseKey`)
+        await db.$executeRawUnsafe(`DELETE FROM Invoice`)
+        await db.$executeRawUnsafe(`DELETE FROM Session`)
+        await db.$executeRawUnsafe(`DELETE FROM Device`)
+        await db.$executeRawUnsafe(`DELETE FROM Document`)
+        await db.$executeRawUnsafe(`DELETE FROM Message`)
+        await db.$executeRawUnsafe(`DELETE FROM Activity`)
+        await db.$executeRawUnsafe(`DELETE FROM MaintenanceTicket`)
+        await db.$executeRawUnsafe(`DELETE FROM Payment`)
+        await db.$executeRawUnsafe(`DELETE FROM Lease`)
+        await db.$executeRawUnsafe(`DELETE FROM Tenant`)
+        await db.$executeRawUnsafe(`DELETE FROM Unit`)
+        await db.$executeRawUnsafe(`DELETE FROM Property`)
+        await db.$executeRawUnsafe(`DELETE FROM Client`)
+        await db.$executeRawUnsafe(`DELETE FROM User`)
+        await db.$executeRawUnsafe(`DELETE FROM Workspace`)
+      } catch {
+        // If raw SQL fails, try Prisma methods
+        try {
+          await db.auditLog.deleteMany()
+          await db.invoice.deleteMany()
+          await db.session.deleteMany()
+          await db.device.deleteMany()
+          await db.document.deleteMany()
+          await db.message.deleteMany()
+          await db.activity.deleteMany()
+          await db.maintenanceTicket.deleteMany()
+          await db.payment.deleteMany()
+          await db.lease.deleteMany()
+          await db.tenant.deleteMany()
+          await db.unit.deleteMany()
+          await db.property.deleteMany()
+          await db.client.deleteMany()
+          await db.user.deleteMany()
+          await db.workspace.deleteMany()
+        } catch {
+          // Continue even if cleanup fails
+        }
+      }
     }
 
     const now = new Date()
@@ -24,6 +75,76 @@ export async function GET() {
       const d = new Date(now)
       d.setDate(d.getDate() + days)
       return d
+    }
+
+    // If workspace and users exist but audit logs don't, just add audit logs
+    if (existingWorkspace && existingUsers > 0 && existingAuditLogs === 0) {
+      const wsId = existingWorkspace.id
+      const users = await db.user.findMany({ where: { workspaceId: wsId } })
+      const admin = users.find(u => u.role === 'admin') || users[0]
+      const user3 = users.find(u => u.department === 'Maintenance') || users[2]
+      const properties = await db.property.findMany({ where: { workspaceId: wsId } })
+      const tenants = await db.tenant.findMany({ where: { workspaceId: wsId } })
+      const leases = await db.lease.findMany({ where: { workspaceId: wsId } })
+      const clients = await db.client.findMany()
+      const skyline = properties.find(p => p.name === 'Skyline Tower')
+      const greenfield = properties.find(p => p.name === 'Greenfield Gardens')
+      const metro = properties.find(p => p.name === 'Metro Commercial Hub')
+      const pacific = properties.find(p => p.name === 'Pacific Heights')
+      const t1 = tenants.find(t => t.name === 'James Mitchell')
+      const t13 = tenants.find(t => t.name === 'Ava Patel')
+      const l1 = leases.find(l => l.status === 'expired')
+      const l2 = leases.find(l => l.propertyId === skyline?.id && l.status === 'active')
+      const client1 = clients.find(c => c.companyName === 'Meridian Properties LLC')
+      const client3 = clients.find(c => c.companyName === 'Pacific Coast Management')
+      const client4 = clients.find(c => c.status === 'suspended')
+
+      const now = new Date()
+      const daysAgo = (days: number) => { const d = new Date(now); d.setDate(d.getDate() - days); return d }
+
+      const auditLogData = [
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Admin login from office network', severity: 'info', createdAt: daysAgo(0) },
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Admin login successful', severity: 'info', createdAt: daysAgo(0) },
+        { action: 'property.created', entity: 'property', entityId: skyline?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: JSON.stringify({ name: 'Skyline Tower', type: 'residential', units: 6 }), severity: 'info', createdAt: daysAgo(1) },
+        { action: 'tenant.updated', entity: 'tenant', entityId: t1?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Updated emergency contact information for James Mitchell', severity: 'info', createdAt: daysAgo(1) },
+        { action: 'payment.received', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ amount: 4500, tenant: 'Isabella Torres', method: 'bank_transfer' }), severity: 'info', createdAt: daysAgo(1) },
+        { action: 'ticket.created', entity: 'ticket', entityId: null, userId: user3?.id || null, workspaceId: wsId, ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', details: 'New maintenance ticket: Leaking kitchen faucet at Skyline Tower', severity: 'info', createdAt: daysAgo(2) },
+        { action: 'client.onboarded', entity: 'client', entityId: client1?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: JSON.stringify({ company: 'Meridian Properties LLC', plan: 'enterprise' }), severity: 'info', createdAt: daysAgo(2) },
+        { action: 'device.activated', entity: 'device', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.15', userAgent: 'TenantFlow-Desktop/2.1.0', details: 'Device activated with serial key TFOW-2024-XKCD-7A3B', severity: 'info', createdAt: daysAgo(2) },
+        { action: 'invoice.sent', entity: 'invoice', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ invoiceNumber: 'INV-2024-001', client: 'Skyline Real Estate Group', amount: 1047 }), severity: 'info', createdAt: daysAgo(3) },
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '203.0.113.42', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: 'Login from new IP address - flagged for review', severity: 'warning', createdAt: daysAgo(3) },
+        { action: 'lease.created', entity: 'lease', entityId: l2?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'James Mitchell', property: 'Skyline Tower', unit: '12A', rent: 3300 }), severity: 'info', createdAt: daysAgo(3) },
+        { action: 'payment.overdue', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Ethan Williams', amount: 2400, daysOverdue: 30 }), severity: 'warning', createdAt: daysAgo(3) },
+        { action: 'property.updated', entity: 'property', entityId: greenfield?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Updated property details for Greenfield Gardens - added pet policy', severity: 'info', createdAt: daysAgo(4) },
+        { action: 'ticket.resolved', entity: 'ticket', entityId: null, userId: user3?.id || null, workspaceId: wsId, ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', details: 'Smoke detector issue resolved at Pacific Heights', severity: 'info', createdAt: daysAgo(4) },
+        { action: 'user.failed_login', entity: 'user', entityId: null, userId: null, workspaceId: wsId, ipAddress: '45.33.32.156', userAgent: 'python-requests/2.28.0', details: 'Failed login attempt for admin@tenantflow.io - invalid password', severity: 'warning', createdAt: daysAgo(5) },
+        { action: 'payment.received', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ amount: 4200, tenant: 'TechVista Solutions', method: 'bank_transfer' }), severity: 'info', createdAt: daysAgo(5) },
+        { action: 'lease.renewed', entity: 'lease', entityId: l2?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'James Mitchell', newRent: 3300, renewedFor: 12 }), severity: 'info', createdAt: daysAgo(6) },
+        { action: 'client.suspended', entity: 'client', entityId: client4?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ company: 'Urban Living Solutions', reason: 'Payment default - 60 days overdue' }), severity: 'warning', createdAt: daysAgo(7) },
+        { action: 'ticket.escalated', entity: 'ticket', entityId: null, userId: user3?.id || null, workspaceId: wsId, ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', details: 'Roof leak at Metro Commercial Hub escalated to high priority', severity: 'warning', createdAt: daysAgo(7) },
+        { action: 'tenant.created', entity: 'tenant', entityId: t13?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ name: 'Ava Patel', property: 'Pacific Heights', unit: '2A' }), severity: 'info', createdAt: daysAgo(8) },
+        { action: 'device.blocked', entity: 'device', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Device blocked due to suspicious activity - TFOW-2024-YMDE-9C5D', severity: 'error', createdAt: daysAgo(9) },
+        { action: 'payment.late_fee', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Greenleaf Café', lateFee: 150, daysLate: 30 }), severity: 'warning', createdAt: daysAgo(9) },
+        { action: 'invoice.overdue', entity: 'invoice', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ client: 'Urban Living Solutions', invoiceNumber: 'INV-2024-005', amount: 49, daysOverdue: 45 }), severity: 'warning', createdAt: daysAgo(10) },
+        { action: 'property.inspection', entity: 'property', entityId: metro?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: 'Quarterly inspection completed for Metro Commercial Hub', severity: 'info', createdAt: daysAgo(10) },
+        { action: 'lease.created', entity: 'lease', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Innovate Partners', property: 'Metro Commercial Hub', type: 'commercial' }), severity: 'info', createdAt: daysAgo(12) },
+        { action: 'data.export', entity: 'workspace', entityId: wsId, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Full data export initiated by admin - 2.4MB CSV', severity: 'warning', createdAt: daysAgo(14) },
+        { action: 'user.permission_change', entity: 'user', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Changed role for Rachel Patel from member to manager', severity: 'info', createdAt: daysAgo(15) },
+        { action: 'system.error', entity: 'workspace', entityId: wsId, userId: null, workspaceId: wsId, ipAddress: null, userAgent: 'TenantFlow-Server/2.1.0', details: JSON.stringify({ error: 'Database connection timeout', duration: '45s', retries: 3 }), severity: 'error', createdAt: daysAgo(18) },
+        { action: 'client.onboarded', entity: 'client', entityId: client3?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ company: 'Pacific Coast Management', plan: 'professional', trial: true }), severity: 'info', createdAt: daysAgo(20) },
+        { action: 'security.breach_attempt', entity: 'user', entityId: null, userId: null, workspaceId: wsId, ipAddress: '185.220.101.34', userAgent: 'curl/7.68.0', details: JSON.stringify({ type: 'SQL injection attempt', endpoint: '/api/auth/login', blocked: true }), severity: 'critical', createdAt: daysAgo(22) },
+        { action: 'system.critical', entity: 'workspace', entityId: wsId, userId: null, workspaceId: wsId, ipAddress: null, userAgent: 'TenantFlow-Server/2.1.0', details: JSON.stringify({ error: 'Payment gateway integration failure', provider: 'Stripe', duration: '2h 15m', affectedPayments: 3 }), severity: 'critical', createdAt: daysAgo(25) },
+        { action: 'lease.terminated', entity: 'lease', entityId: l1?.id || null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Former tenant', property: 'Skyline Tower', unit: '8A', reason: 'Non-renewal' }), severity: 'info', createdAt: daysAgo(25) },
+        { action: 'backup.completed', entity: 'workspace', entityId: wsId, userId: null, workspaceId: wsId, ipAddress: null, userAgent: 'TenantFlow-Cron/1.0', details: 'Automated daily backup completed - 45.2MB', severity: 'info', createdAt: daysAgo(28) },
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '172.16.0.50', userAgent: 'Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X)', details: 'Admin login from mobile device', severity: 'info', createdAt: daysAgo(29) },
+        { action: 'license.generated', entity: 'device', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ key: 'TFOL-PRO-2024-AAAA', plan: 'professional', maxDevices: 10 }), severity: 'info', createdAt: daysAgo(30) },
+      ]
+      let auditLogCount = 0
+      for (const al of auditLogData) {
+        await db.auditLog.create({ data: al })
+        auditLogCount++
+      }
+      return NextResponse.json({ message: 'Audit logs seeded successfully', auditLogs: auditLogCount })
     }
 
     const result = await db.$transaction(async (tx) => {
@@ -277,6 +398,196 @@ export async function GET() {
         documentCount++
       }
 
+      // ── SaaS Clients (Owner Module) ──
+      const client1 = await tx.client.create({
+        data: {
+          companyName: 'Meridian Properties LLC', contactName: 'Robert Hayes', email: 'robert.hayes@meridianprops.com',
+          phone: '(305) 555-2001', address: '1200 Brickell Ave', city: 'Miami', state: 'FL', zipCode: '33131',
+          country: 'US', website: 'https://meridianprops.com', industry: 'property-management', companySize: '51-200',
+          taxId: 'EIN-84-2839102', status: 'active', plan: 'enterprise', billingCycle: 'annually',
+          monthlyFee: 799, setupFee: 2500, discountPercent: 15,
+          contractStart: monthsAgo(10), contractEnd: daysFromNow(245),
+          maxProperties: 50, maxUsers: 100, maxDevices: 25,
+          notes: 'Enterprise client, VIP support tier',
+          primaryColor: '#059669', customDomain: 'app.meridianprops.com',
+          features: JSON.stringify(['Analytics', 'API Access', 'Custom Branding', 'Priority Support', 'SSO']),
+        },
+      })
+      const client2 = await tx.client.create({
+        data: {
+          companyName: 'Skyline Real Estate Group', contactName: 'Amanda Foster', email: 'amanda.foster@skylinereg.com',
+          phone: '(415) 555-3002', address: '500 Market St', city: 'San Francisco', state: 'CA', zipCode: '94105',
+          country: 'US', website: 'https://skylinereg.com', industry: 'real-estate', companySize: '11-50',
+          taxId: 'EIN-92-1847293', status: 'active', plan: 'business', billingCycle: 'quarterly',
+          monthlyFee: 349, setupFee: 1000, discountPercent: 10,
+          contractStart: monthsAgo(6), contractEnd: daysFromNow(180),
+          maxProperties: 25, maxUsers: 50, maxDevices: 10,
+          notes: 'Expanding to 3 new markets in Q3',
+          primaryColor: '#d97706',
+          features: JSON.stringify(['Analytics', 'Custom Branding', 'Multi-location']),
+        },
+      })
+      const client3 = await tx.client.create({
+        data: {
+          companyName: 'Pacific Coast Management', contactName: 'David Nakamura', email: 'david.n@pacificcoastmgmt.com',
+          phone: '(206) 555-4003', address: '800 Pike St', city: 'Seattle', state: 'WA', zipCode: '98101',
+          country: 'US', website: 'https://pacificcoastmgmt.com', industry: 'property-management', companySize: '11-50',
+          status: 'trial', plan: 'professional', billingCycle: 'monthly',
+          monthlyFee: 149, setupFee: 0, discountPercent: 0,
+          trialStart: daysAgo(14), trialEnd: daysFromNow(16),
+          maxProperties: 15, maxUsers: 25, maxDevices: 5,
+          notes: 'Evaluating platform for full migration from AppFolio',
+          features: JSON.stringify(['Analytics', 'Import Tool']),
+        },
+      })
+      const client4 = await tx.client.create({
+        data: {
+          companyName: 'Urban Living Solutions', contactName: 'Jennifer Park', email: 'jpark@urbanlivingsol.com',
+          phone: '(512) 555-5004', address: '200 Congress Ave', city: 'Austin', state: 'TX', zipCode: '78701',
+          country: 'US', website: 'https://urbanlivingsol.com', industry: 'residential', companySize: '1-10',
+          status: 'suspended', plan: 'starter', billingCycle: 'monthly',
+          monthlyFee: 49, setupFee: 0, discountPercent: 0,
+          contractStart: monthsAgo(4), contractEnd: monthsAgo(1),
+          maxProperties: 5, maxUsers: 10, maxDevices: 3,
+          notes: 'Payment failed 3 times, suspended until billing resolved',
+          features: JSON.stringify(['Basic Analytics']),
+        },
+      })
+      const client5 = await tx.client.create({
+        data: {
+          companyName: 'Greenfield Holdings', contactName: 'Marcus Green', email: 'mgreen@greenfieldholdings.com',
+          phone: '(303) 555-6005', address: '1400 Larimer St', city: 'Denver', state: 'CO', zipCode: '80202',
+          country: 'US', website: 'https://greenfieldholdings.com', industry: 'commercial', companySize: '51-200',
+          status: 'churned', plan: 'business', billingCycle: 'annually',
+          monthlyFee: 349, setupFee: 1000, discountPercent: 5,
+          contractStart: monthsAgo(14), contractEnd: monthsAgo(2),
+          maxProperties: 30, maxUsers: 60, maxDevices: 15,
+          notes: 'Churned - moved to Buildium. Possible win-back opportunity in Q4.',
+          features: JSON.stringify(['Analytics', 'Custom Branding', 'API Access']),
+        },
+      })
+
+      // ── Devices ──
+      const d1 = await tx.device.create({
+        data: { serialKey: 'TF-MBP2024-A3KF92', deviceName: "Jordan's MacBook Pro", deviceType: 'laptop', os: 'macOS Sonoma 14.3', browser: 'Chrome 121', ipAddress: '192.168.1.101', macAddress: 'A4:83:E7:2F:6B:01', status: 'active', activatedAt: daysAgo(45), lastSeenAt: daysAgo(0), userId: admin.id, workspaceId: wsId },
+      })
+      const d2 = await tx.device.create({
+        data: { serialKey: 'TF-PC2024-B7GH34', deviceName: 'Office Desktop PC', deviceType: 'desktop', os: 'Windows 11 Pro', browser: 'Firefox 122', ipAddress: '192.168.1.102', macAddress: 'B8:27:EB:3C:9D:44', status: 'active', activatedAt: daysAgo(90), lastSeenAt: daysAgo(1), userId: user3.id, workspaceId: wsId },
+      })
+      const d3 = await tx.device.create({
+        data: { serialKey: 'TF-TP2024-C5MN78', deviceName: "Sarah's ThinkPad", deviceType: 'laptop', os: 'Ubuntu 22.04 LTS', browser: 'Chrome 121', ipAddress: '192.168.1.103', macAddress: 'C0:3F:D5:7A:E2:88', status: 'active', activatedAt: daysAgo(30), lastSeenAt: daysAgo(2), workspaceId: wsId },
+      })
+      const d4 = await tx.device.create({
+        data: { serialKey: 'TF-IPAD2024-D2PQ56', deviceName: 'Reception iPad', deviceType: 'tablet', os: 'iPadOS 17.3', browser: 'Safari 17', ipAddress: '192.168.1.104', macAddress: 'D4:61:9E:1B:F5:CC', status: 'blocked', activatedAt: daysAgo(60), lastSeenAt: daysAgo(14), workspaceId: wsId },
+      })
+      const d5 = await tx.device.create({
+        data: { serialKey: 'TF-LT2024-E8RS90', deviceName: 'Field Laptop', deviceType: 'laptop', os: 'Windows 11 Pro', browser: 'Edge 121', ipAddress: '10.0.0.55', macAddress: 'E6:B4:C8:5D:3A:FF', status: 'pending', workspaceId: wsId },
+      })
+
+      // ── Demo activation devices (for login flow) ──
+      await tx.device.create({
+        data: { serialKey: 'TFOW-2024-XKCD-7A3B', deviceName: 'Demo Desktop Alpha', deviceType: 'desktop', os: 'Windows 11', browser: 'Chrome', status: 'active', activatedAt: daysAgo(10), lastSeenAt: daysAgo(0), workspaceId: wsId },
+      })
+      await tx.device.create({
+        data: { serialKey: 'TFOW-2024-YMDE-9C5D', deviceName: 'Demo Laptop Beta', deviceType: 'laptop', os: 'macOS Ventura', browser: 'Safari', status: 'active', activatedAt: daysAgo(5), lastSeenAt: daysAgo(0), workspaceId: wsId },
+      })
+      await tx.device.create({
+        data: { serialKey: 'TFOW-2024-ZNRF-2E8F', deviceName: 'Demo Tablet Gamma', deviceType: 'tablet', os: 'iPadOS 17', browser: 'Safari', status: 'active', activatedAt: daysAgo(2), lastSeenAt: daysAgo(0), workspaceId: wsId },
+      })
+
+      // ── Sessions ──
+      await tx.session.create({ data: { userId: admin.id, deviceId: d1.id, token: 'ses_active_001', ipAddress: '192.168.1.101', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', isActive: true, expiresAt: daysFromNow(1), createdAt: daysAgo(0) } })
+      await tx.session.create({ data: { userId: admin.id, deviceId: d1.id, token: 'ses_active_002', ipAddress: '192.168.1.101', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15', isActive: true, expiresAt: daysFromNow(2), createdAt: daysAgo(1) } })
+      await tx.session.create({ data: { userId: user3.id, deviceId: d2.id, token: 'ses_active_003', ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Firefox/122.0', isActive: true, expiresAt: daysFromNow(1), createdAt: daysAgo(0) } })
+      await tx.session.create({ data: { userId: admin.id, deviceId: d3.id, token: 'ses_active_004', ipAddress: '192.168.1.103', userAgent: 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64) Chrome/121.0', isActive: true, expiresAt: daysFromNow(3), createdAt: daysAgo(2) } })
+      await tx.session.create({ data: { userId: admin.id, deviceId: d4.id, token: 'ses_active_005', ipAddress: '192.168.1.104', userAgent: 'Mozilla/5.0 (iPad; CPU OS 17_3) Safari/604.1', isActive: true, expiresAt: daysFromNow(1), createdAt: daysAgo(1) } })
+      await tx.session.create({ data: { userId: admin.id, deviceId: d1.id, token: 'ses_expired_001', ipAddress: '192.168.1.101', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', isActive: false, expiresAt: daysAgo(5), createdAt: daysAgo(7) } })
+      await tx.session.create({ data: { userId: user3.id, deviceId: d2.id, token: 'ses_expired_002', ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', isActive: false, expiresAt: daysAgo(3), createdAt: daysAgo(10) } })
+      await tx.session.create({ data: { userId: admin.id, deviceId: d3.id, token: 'ses_expired_003', ipAddress: '192.168.1.103', userAgent: 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64)', isActive: false, expiresAt: daysAgo(1), createdAt: daysAgo(8) } })
+
+      // ── License Keys ──
+      // Client 1 - Meridian Properties (enterprise)
+      await tx.licenseKey.create({ data: { key: 'TF-ENT1-A3KF-B7GH-C5MN', type: 'enterprise', plan: 'enterprise', maxDevices: 25, maxUsers: 100, status: 'activated', activatedAt: daysAgo(45), expiresAt: daysFromNow(320), clientId: client1.id, deviceId: d1.id } })
+      await tx.licenseKey.create({ data: { key: 'TF-ENT1-D2PQ-E8RS-F1TU', type: 'enterprise', plan: 'enterprise', maxDevices: 25, maxUsers: 100, status: 'activated', activatedAt: daysAgo(90), expiresAt: daysFromNow(275), clientId: client1.id, deviceId: d2.id } })
+      // Client 2 - Skyline Real Estate (business)
+      await tx.licenseKey.create({ data: { key: 'TF-BIZ2-G4VW-H6XY-J8ZA', type: 'professional', plan: 'business', maxDevices: 10, maxUsers: 50, status: 'activated', activatedAt: daysAgo(60), expiresAt: daysFromNow(305), clientId: client2.id } })
+      await tx.licenseKey.create({ data: { key: 'TF-BIZ2-K2BC-L4DE-M6FG', type: 'professional', plan: 'business', maxDevices: 10, maxUsers: 50, status: 'available', expiresAt: daysFromNow(365), clientId: client2.id } })
+      // Client 3 - Pacific Coast (trial)
+      await tx.licenseKey.create({ data: { key: 'TF-TRL3-N8HI-P0JK-Q2LM', type: 'trial', plan: 'professional', maxDevices: 5, maxUsers: 25, status: 'activated', activatedAt: daysAgo(14), expiresAt: daysFromNow(16), clientId: client3.id } })
+      // Client 4 - Urban Living (suspended - expired key)
+      await tx.licenseKey.create({ data: { key: 'TF-STD4-R4ST-T6UV-V8WX', type: 'standard', plan: 'starter', maxDevices: 3, maxUsers: 10, status: 'expired', activatedAt: daysAgo(120), expiresAt: daysAgo(30), clientId: client4.id } })
+      // Client 5 - Greenfield (churned - revoked key)
+      await tx.licenseKey.create({ data: { key: 'TF-BIZ5-X0YZ-Z2AB-C4CD', type: 'professional', plan: 'business', maxDevices: 15, maxUsers: 60, status: 'revoked', activatedAt: daysAgo(200), expiresAt: daysAgo(60), clientId: client5.id } })
+      await tx.licenseKey.create({ data: { key: 'TF-BIZ5-E6FG-H8IJ-K0LM', type: 'professional', plan: 'business', maxDevices: 15, maxUsers: 60, status: 'revoked', activatedAt: daysAgo(150), expiresAt: daysAgo(45), clientId: client5.id } })
+
+      // ── Demo activation license keys (for login flow) ──
+      await tx.licenseKey.create({ data: { key: 'TFOL-PRO-2024-AAAA', type: 'professional', plan: 'professional', maxDevices: 10, maxUsers: 25, status: 'available', expiresAt: daysFromNow(365), clientId: client1.id } })
+      await tx.licenseKey.create({ data: { key: 'TFOL-ENT-2024-BBBB', type: 'enterprise', plan: 'enterprise', maxDevices: 50, maxUsers: 100, status: 'available', expiresAt: daysFromNow(365), clientId: client1.id } })
+
+      // ── SaaS Client Invoices (Owner Module) ──
+      // Client 1 - Meridian Properties (active, enterprise)
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-001', clientId: client1.id, type: 'subscription', status: 'paid', issueDate: monthsAgo(10), dueDate: monthsAgo(9), paidDate: monthsAgo(9), subtotal: 9588, taxRate: 0, taxAmount: 0, discount: 1438, total: 8150, paidAmount: 8150, currency: 'USD', notes: 'Annual subscription - Enterprise plan', terms: 'Net 30', items: JSON.stringify([{ description: 'Enterprise Plan - Annual', quantity: 1, unitPrice: 9588, amount: 9588 }]), workspaceId: wsId } })
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-002', clientId: client1.id, type: 'addon', status: 'paid', issueDate: monthsAgo(3), dueDate: monthsAgo(2), paidDate: monthsAgo(2), subtotal: 500, taxRate: 0, taxAmount: 0, discount: 0, total: 500, paidAmount: 500, currency: 'USD', notes: 'Additional device license pack', terms: 'Net 30', items: JSON.stringify([{ description: 'Device License Pack (5)', quantity: 1, unitPrice: 500, amount: 500 }]), workspaceId: wsId } })
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-003', clientId: client1.id, type: 'subscription', status: 'sent', issueDate: daysAgo(5), dueDate: daysFromNow(25), subtotal: 9588, taxRate: 0, taxAmount: 0, discount: 1438, total: 8150, paidAmount: 0, currency: 'USD', notes: 'Annual renewal - Enterprise plan', terms: 'Net 30', items: JSON.stringify([{ description: 'Enterprise Plan - Annual Renewal', quantity: 1, unitPrice: 9588, amount: 9588 }]), workspaceId: wsId } })
+      // Client 2 - Skyline Real Estate (active, business)
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-004', clientId: client2.id, type: 'subscription', status: 'paid', issueDate: monthsAgo(6), dueDate: monthsAgo(5), paidDate: monthsAgo(5), subtotal: 1047, taxRate: 8.5, taxAmount: 89, discount: 105, total: 1031, paidAmount: 1031, currency: 'USD', notes: 'Q1 Business Plan', terms: 'Net 30', items: JSON.stringify([{ description: 'Business Plan - Quarterly', quantity: 1, unitPrice: 1047, amount: 1047 }]), workspaceId: wsId } })
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-005', clientId: client2.id, type: 'subscription', status: 'paid', issueDate: monthsAgo(3), dueDate: monthsAgo(2), paidDate: monthsAgo(2), subtotal: 1047, taxRate: 8.5, taxAmount: 89, discount: 105, total: 1031, paidAmount: 1031, currency: 'USD', notes: 'Q2 Business Plan', terms: 'Net 30', items: JSON.stringify([{ description: 'Business Plan - Quarterly', quantity: 1, unitPrice: 1047, amount: 1047 }]), workspaceId: wsId } })
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-006', clientId: client2.id, type: 'upgrade', status: 'draft', issueDate: daysAgo(1), dueDate: daysFromNow(29), subtotal: 200, taxRate: 8.5, taxAmount: 17, discount: 0, total: 217, paidAmount: 0, currency: 'USD', notes: 'Upgrade from Business to Enterprise', terms: 'Net 30', items: JSON.stringify([{ description: 'Plan Upgrade Fee', quantity: 1, unitPrice: 200, amount: 200 }]), workspaceId: wsId } })
+      // Client 3 - Pacific Coast (trial)
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-007', clientId: client3.id, type: 'subscription', status: 'draft', issueDate: daysAgo(1), dueDate: daysFromNow(29), subtotal: 149, taxRate: 10, taxAmount: 15, discount: 0, total: 164, paidAmount: 0, currency: 'USD', notes: 'First month after trial ends', terms: 'Net 15', items: JSON.stringify([{ description: 'Professional Plan - Monthly', quantity: 1, unitPrice: 149, amount: 149 }]), workspaceId: wsId } })
+      // Client 4 - Urban Living (suspended)
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-008', clientId: client4.id, type: 'subscription', status: 'overdue', issueDate: monthsAgo(2), dueDate: monthsAgo(1), subtotal: 49, taxRate: 0, taxAmount: 0, discount: 0, total: 49, paidAmount: 0, currency: 'USD', notes: 'Overdue - 30+ days', terms: 'Net 15', items: JSON.stringify([{ description: 'Starter Plan - Monthly', quantity: 1, unitPrice: 49, amount: 49 }]), workspaceId: wsId } })
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-009', clientId: client4.id, type: 'subscription', status: 'overdue', issueDate: monthsAgo(1), dueDate: daysAgo(15), subtotal: 49, taxRate: 0, taxAmount: 0, discount: 0, total: 49, paidAmount: 0, currency: 'USD', notes: 'Overdue - 15+ days', terms: 'Net 15', items: JSON.stringify([{ description: 'Starter Plan - Monthly', quantity: 1, unitPrice: 49, amount: 49 }]), workspaceId: wsId } })
+      // Client 5 - Greenfield (churned)
+      await tx.invoice.create({ data: { invoiceNumber: 'INV-2024-010', clientId: client5.id, type: 'subscription', status: 'paid', issueDate: monthsAgo(12), dueDate: monthsAgo(11), paidDate: monthsAgo(11), subtotal: 4188, taxRate: 0, taxAmount: 0, discount: 209, total: 3979, paidAmount: 3979, currency: 'USD', notes: 'Annual Business Plan (final)', terms: 'Net 30', items: JSON.stringify([{ description: 'Business Plan - Annual', quantity: 1, unitPrice: 4188, amount: 4188 }]), workspaceId: wsId } })
+
+      // ── Link workspace to client ──
+      await tx.workspace.update({ where: { id: wsId }, data: { clientId: client1.id } })
+
+      // ── Audit Logs ──
+      const auditLogData = [
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Admin login from office network', severity: 'info', createdAt: daysAgo(0) },
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Admin login successful', severity: 'info', createdAt: daysAgo(0) },
+        { action: 'property.created', entity: 'property', entityId: skyline.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: JSON.stringify({ name: 'Skyline Tower', type: 'residential', units: 6 }), severity: 'info', createdAt: daysAgo(1) },
+        { action: 'tenant.updated', entity: 'tenant', entityId: t1.id, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Updated emergency contact information for James Mitchell', severity: 'info', createdAt: daysAgo(1) },
+        { action: 'payment.received', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ amount: 4500, tenant: 'Isabella Torres', method: 'bank_transfer' }), severity: 'info', createdAt: daysAgo(1) },
+        { action: 'ticket.created', entity: 'ticket', entityId: null, userId: user3.id, workspaceId: wsId, ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', details: 'New maintenance ticket: Leaking kitchen faucet at Skyline Tower', severity: 'info', createdAt: daysAgo(2) },
+        { action: 'client.onboarded', entity: 'client', entityId: client1.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: JSON.stringify({ company: 'Meridian Properties LLC', plan: 'enterprise' }), severity: 'info', createdAt: daysAgo(2) },
+        { action: 'device.activated', entity: 'device', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.15', userAgent: 'TenantFlow-Desktop/2.1.0', details: 'Device activated with serial key TFOW-2024-XKCD-7A3B', severity: 'info', createdAt: daysAgo(2) },
+        { action: 'invoice.sent', entity: 'invoice', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ invoiceNumber: 'INV-2024-001', client: 'Skyline Real Estate Group', amount: 1047 }), severity: 'info', createdAt: daysAgo(3) },
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '203.0.113.42', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: 'Login from new IP address - flagged for review', severity: 'warning', createdAt: daysAgo(3) },
+        { action: 'lease.created', entity: 'lease', entityId: l2.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'James Mitchell', property: 'Skyline Tower', unit: '12A', rent: 3300 }), severity: 'info', createdAt: daysAgo(3) },
+        { action: 'payment.overdue', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Ethan Williams', amount: 2400, daysOverdue: 30 }), severity: 'warning', createdAt: daysAgo(3) },
+        { action: 'property.updated', entity: 'property', entityId: greenfield.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Updated property details for Greenfield Gardens - added pet policy', severity: 'info', createdAt: daysAgo(4) },
+        { action: 'ticket.resolved', entity: 'ticket', entityId: null, userId: user3.id, workspaceId: wsId, ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', details: 'Smoke detector issue resolved at Pacific Heights', severity: 'info', createdAt: daysAgo(4) },
+        { action: 'user.failed_login', entity: 'user', entityId: null, userId: null, workspaceId: wsId, ipAddress: '45.33.32.156', userAgent: 'python-requests/2.28.0', details: 'Failed login attempt for admin@tenantflow.io - invalid password', severity: 'warning', createdAt: daysAgo(5) },
+        { action: 'payment.received', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ amount: 4200, tenant: 'TechVista Solutions', method: 'bank_transfer' }), severity: 'info', createdAt: daysAgo(5) },
+        { action: 'lease.renewed', entity: 'lease', entityId: l2.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'James Mitchell', newRent: 3300, renewedFor: 12 }), severity: 'info', createdAt: daysAgo(6) },
+        { action: 'client.suspended', entity: 'client', entityId: client4.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ company: 'Urban Living Solutions', reason: 'Payment default - 60 days overdue' }), severity: 'warning', createdAt: daysAgo(7) },
+        { action: 'ticket.escalated', entity: 'ticket', entityId: null, userId: user3.id, workspaceId: wsId, ipAddress: '192.168.1.102', userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)', details: 'Roof leak at Metro Commercial Hub escalated to high priority', severity: 'warning', createdAt: daysAgo(7) },
+        { action: 'tenant.created', entity: 'tenant', entityId: t13.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ name: 'Ava Patel', property: 'Pacific Heights', unit: '2A' }), severity: 'info', createdAt: daysAgo(8) },
+        { action: 'device.blocked', entity: 'device', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Device blocked due to suspicious activity - TFOW-2024-YMDE-9C5D', severity: 'error', createdAt: daysAgo(9) },
+        { action: 'payment.late_fee', entity: 'payment', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Greenleaf Café', lateFee: 150, daysLate: 30 }), severity: 'warning', createdAt: daysAgo(9) },
+        { action: 'invoice.overdue', entity: 'invoice', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '10.0.0.45', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ client: 'Urban Living Solutions', invoiceNumber: 'INV-2024-005', amount: 49, daysOverdue: 45 }), severity: 'warning', createdAt: daysAgo(10) },
+        { action: 'property.inspection', entity: 'property', entityId: metro.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', details: 'Quarterly inspection completed for Metro Commercial Hub', severity: 'info', createdAt: daysAgo(10) },
+        { action: 'lease.created', entity: 'lease', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Innovate Partners', property: 'Metro Commercial Hub', type: 'commercial' }), severity: 'info', createdAt: daysAgo(12) },
+        { action: 'data.export', entity: 'workspace', entityId: wsId, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Full data export initiated by admin - 2.4MB CSV', severity: 'warning', createdAt: daysAgo(14) },
+        { action: 'user.permission_change', entity: 'user', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: 'Changed role for Rachel Patel from member to manager', severity: 'info', createdAt: daysAgo(15) },
+        { action: 'system.error', entity: 'workspace', entityId: wsId, userId: null, workspaceId: wsId, ipAddress: null, userAgent: 'TenantFlow-Server/2.1.0', details: JSON.stringify({ error: 'Database connection timeout', duration: '45s', retries: 3 }), severity: 'error', createdAt: daysAgo(18) },
+        { action: 'client.onboarded', entity: 'client', entityId: client3.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ company: 'Pacific Coast Management', plan: 'professional', trial: true }), severity: 'info', createdAt: daysAgo(20) },
+        { action: 'security.breach_attempt', entity: 'user', entityId: null, userId: null, workspaceId: wsId, ipAddress: '185.220.101.34', userAgent: 'curl/7.68.0', details: JSON.stringify({ type: 'SQL injection attempt', endpoint: '/api/auth/login', blocked: true }), severity: 'critical', createdAt: daysAgo(22) },
+        { action: 'system.critical', entity: 'workspace', entityId: wsId, userId: null, workspaceId: wsId, ipAddress: null, userAgent: 'TenantFlow-Server/2.1.0', details: JSON.stringify({ error: 'Payment gateway integration failure', provider: 'Stripe', duration: '2h 15m', affectedPayments: 3 }), severity: 'critical', createdAt: daysAgo(25) },
+        { action: 'lease.terminated', entity: 'lease', entityId: l1.id, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ tenant: 'Former tenant', property: 'Skyline Tower', unit: '8A', reason: 'Non-renewal' }), severity: 'info', createdAt: daysAgo(25) },
+        { action: 'backup.completed', entity: 'workspace', entityId: wsId, userId: null, workspaceId: wsId, ipAddress: null, userAgent: 'TenantFlow-Cron/1.0', details: 'Automated daily backup completed - 45.2MB', severity: 'info', createdAt: daysAgo(28) },
+        { action: 'user.login', entity: 'user', entityId: admin.id, userId: admin.id, workspaceId: wsId, ipAddress: '172.16.0.50', userAgent: 'Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X)', details: 'Admin login from mobile device', severity: 'info', createdAt: daysAgo(29) },
+        { action: 'license.generated', entity: 'device', entityId: null, userId: admin.id, workspaceId: wsId, ipAddress: '192.168.1.100', userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', details: JSON.stringify({ key: 'TFOL-PRO-2024-AAAA', plan: 'professional', maxDevices: 10 }), severity: 'info', createdAt: daysAgo(30) },
+      ]
+      let auditLogCount = 0
+      for (const al of auditLogData) {
+        await tx.auditLog.create({ data: al })
+        auditLogCount++
+      }
+
       return {
         workspace: workspace.name,
         users: 5,
@@ -289,6 +600,12 @@ export async function GET() {
         activities: activityCount,
         messages: messageCount,
         documents: documentCount,
+        auditLogs: auditLogCount,
+        devices: 5,
+        sessions: 8,
+        clients: 5,
+        licenseKeys: 9,
+        invoices: 10,
       }
     })
 

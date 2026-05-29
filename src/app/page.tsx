@@ -11,6 +11,11 @@ import { SettingsPage } from '@/components/settings'
 import { AnalyticsPage } from '@/components/analytics'
 import { AiCopilotPage } from '@/components/ai-copilot'
 import { DocumentsPage } from '@/components/documents'
+import { ReportsPage } from '@/components/reports'
+import { LoginPage } from '@/components/auth/login-page'
+import { OwnerPage } from '@/components/owner'
+import { DevicesPage } from '@/components/devices'
+import { AuditPage } from '@/components/audit'
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -30,9 +35,15 @@ import {
   TrendingUp,
   HomeIcon,
   Activity,
+  LogOut,
+  FileBarChart,
+  Shield,
+  ShieldCheck,
+  ScrollText,
 } from 'lucide-react'
 
 import { useAppStore } from '@/stores'
+import { useAuthStore } from '@/stores/auth-store'
 
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/layout/app-sidebar'
@@ -85,6 +96,19 @@ const MODULES: Record<string, ModuleConfig> = {
       { label: 'Revenue YTD', value: '$512,400', trend: '+18%' },
       { label: 'Collection Rate', value: '94.2%', trend: '+3%' },
       { label: 'Avg. Lease Value', value: '$2,850', trend: '+8%' },
+    ],
+  },
+  reports: {
+    id: 'reports',
+    label: 'Reports',
+    description: 'Professional invoices, reports, and document generation',
+    icon: FileBarChart,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/10',
+    stats: [
+      { label: 'Reports Generated', value: '24' },
+      { label: 'Invoices Sent', value: '18' },
+      { label: 'Total Revenue', value: '$269.8K' },
     ],
   },
   copilot: {
@@ -187,6 +211,47 @@ const MODULES: Record<string, ModuleConfig> = {
     stats: [
       { label: 'Total Documents', value: '24' },
       { label: 'Recent Uploads', value: '3' },
+    ],
+  },
+  owner: {
+    id: 'owner',
+    label: 'Owner Management',
+    description: 'Manage SaaS clients, licenses, and billing',
+    icon: Shield,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/10',
+    stats: [
+      { label: 'Active Clients', value: '3' },
+      { label: 'MRR', value: '$1,197' },
+      { label: 'Trial Clients', value: '1' },
+    ],
+  },
+  devices: {
+    id: 'devices',
+    label: 'Device Management',
+    description: 'Track devices, manage serial keys, and control sessions',
+    icon: ShieldCheck,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/10',
+    stats: [
+      { label: 'Total Devices', value: '5' },
+      { label: 'Active', value: '3' },
+      { label: 'Blocked', value: '1' },
+      { label: 'Active Sessions', value: '5' },
+    ],
+  },
+  audit: {
+    id: 'audit',
+    label: 'Audit Trail',
+    description: 'Track all system activities and security events',
+    icon: ScrollText,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/10',
+    stats: [
+      { label: 'Total Events', value: '35' },
+      { label: 'Warnings', value: '6' },
+      { label: 'Errors', value: '2' },
+      { label: 'Critical', value: '2' },
     ],
   },
   settings: {
@@ -473,6 +538,66 @@ function ModuleContent({ moduleId }: { moduleId: string }) {
     )
   }
 
+  // Use ReportsPage for the reports module
+  if (moduleId === 'reports') {
+    return (
+      <motion.div
+        key="reports"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+      >
+        <ReportsPage />
+      </motion.div>
+    )
+  }
+
+  // Use OwnerPage for the owner module
+  if (moduleId === 'owner') {
+    return (
+      <motion.div
+        key="owner"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+      >
+        <OwnerPage />
+      </motion.div>
+    )
+  }
+
+  // Use DevicesPage for the devices module
+  if (moduleId === 'devices') {
+    return (
+      <motion.div
+        key="devices"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+      >
+        <DevicesPage />
+      </motion.div>
+    )
+  }
+
+  // Use AuditPage for the audit module
+  if (moduleId === 'audit') {
+    return (
+      <motion.div
+        key="audit"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+      >
+        <AuditPage />
+      </motion.div>
+    )
+  }
+
   return <ModulePlaceholder moduleId={moduleId} />
 }
 
@@ -525,28 +650,104 @@ function AppInitializer() {
   return null
 }
 
+// ── Auth Gate Component ──────────────────────────────────────────────────────
+
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, _hydrate } = useAuthStore()
+  const [hydrated, setHydrated] = React.useState(false)
+
+  React.useEffect(() => {
+    _hydrate()
+    setHydrated(true)
+  }, [_hydrate])
+
+  // Show nothing while hydrating to prevent flash
+  if (!hydrated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Building2 className="size-5 animate-pulse" />
+          <span className="text-sm">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage />
+  }
+
+  return <>{children}</>
+}
+
+// ── Logout Handler ────────────────────────────────────────────────────────────
+
+function LogoutHandler() {
+  const { logout } = useAuthStore()
+
+  React.useEffect(() => {
+    // Listen for logout events from the sidebar/user menu
+    const handleLogout = () => {
+      logout()
+    }
+    window.addEventListener('tenantflow:logout', handleLogout)
+    return () => window.removeEventListener('tenantflow:logout', handleLogout)
+  }, [logout])
+
+  return null
+}
+
+// ── Main Page ───────────────────────────────────────────────────────────────
+
 export default function Home() {
   const { activeModule } = useAppStore()
+  const { isAuthenticated, currentUser, logout } = useAuthStore()
 
   return (
-    <SidebarProvider>
-      <AppInitializer />
-      <AppSidebar />
+    <AuthGate>
+      <SidebarProvider>
+        <AppInitializer />
+        <LogoutHandler />
+        <AppSidebar />
 
-      <SidebarInset>
-        <AppHeader />
+        <SidebarInset>
+          <AppHeader />
 
-        {/* Main content area */}
-        <div className="flex-1 overflow-auto">
-          <div className="p-4 md:p-6">
-            <AnimatePresence mode="wait">
-              <ModuleContent key={activeModule} moduleId={activeModule} />
-            </AnimatePresence>
+          {/* User info + logout in header area */}
+          {isAuthenticated && currentUser && (
+            <div className="flex items-center justify-between border-b border-border/50 px-4 py-2 md:px-6">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex size-7 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
+                  <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+                    {currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </span>
+                </div>
+                <span>{currentUser.name}</span>
+                <span className="text-xs text-muted-foreground/50">·</span>
+                <span className="text-xs text-muted-foreground/70">{currentUser.email}</span>
+              </div>
+              <button
+                onClick={() => logout()}
+                className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              >
+                <LogOut className="size-3.5" />
+                Sign Out
+              </button>
+            </div>
+          )}
+
+          {/* Main content area */}
+          <div className="flex-1 overflow-auto">
+            <div className="p-4 md:p-6">
+              <AnimatePresence mode="wait">
+                <ModuleContent key={activeModule} moduleId={activeModule} />
+              </AnimatePresence>
+            </div>
           </div>
-        </div>
-      </SidebarInset>
+        </SidebarInset>
 
-      <CommandPalette />
-    </SidebarProvider>
+        <CommandPalette />
+      </SidebarProvider>
+    </AuthGate>
   )
 }

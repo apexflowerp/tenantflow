@@ -51,3 +51,10 @@ export type {
 // AI Chat
 export { useChatStore } from './chat-store'
 export type { ChatMessage } from './chat-store'
+
+// Owner Management
+export { useOwnerStore } from './owner-store'
+export type { ClientData, LicenseKeyData, InvoiceData, DashboardStats as OwnerDashboardStats } from './owner-store'
+
+// Authentication
+export { useAuthStore } from './auth-store'

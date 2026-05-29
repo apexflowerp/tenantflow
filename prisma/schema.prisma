@@ -16,6 +16,7 @@ model Workspace {
   currency    String   @default("USD")
   timezone    String   @default("UTC")
   plan        String   @default("starter")
+  clientId    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -28,24 +29,180 @@ model Workspace {
   activities  Activity[]
   messages    Message[]
   documents   Document[]
+  invoices    Invoice[]
+  auditLogs   AuditLog[]
+  devices     Device[]
+  client      Client?  @relation(fields: [clientId], references: [id])
 }
 
 model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  avatar        String?
+  role          String   @default("member")
+  phone         String?
+  department    String?
+  isActive      Boolean  @default(true)
+  lastLogin     DateTime?
+  mfaEnabled    Boolean  @default(false)
+  mfaSecret     String?
+  passwordHash  String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  activities    Activity[]
+  sessions      Session[]
+  auditLogs     AuditLog[]
+  devices       Device[]
+}
+
+model Session {
   id          String   @id @default(cuid())
-  email       String   @unique
-  name        String
-  avatar      String?
-  role        String   @default("member")
-  phone       String?
-  department  String?
+  userId      String
+  deviceId    String?
+  token       String
+  ipAddress   String?
+  userAgent   String?
   isActive    Boolean  @default(true)
-  lastLogin   DateTime?
-  workspaceId String
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  device      Device?  @relation(fields: [deviceId], references: [id])
+}
+
+model Device {
+  id            String   @id @default(cuid())
+  serialKey     String   @unique
+  deviceName    String?
+  deviceType    String   @default("desktop")
+  os            String?
+  browser       String?
+  ipAddress     String?
+  macAddress    String?
+  status        String   @default("pending")
+  activatedAt   DateTime?
+  lastSeenAt    DateTime?
+  workspaceId   String
+  userId        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  user          User?     @relation(fields: [userId], references: [id])
+  sessions      Session[]
+  licenseKeys   LicenseKey[]
+}
+
+model Client {
+  id              String   @id @default(cuid())
+  companyName     String
+  contactName     String
+  email           String   @unique
+  phone           String?
+  address         String?
+  city            String?
+  state           String?
+  zipCode         String?
+  country         String   @default("US")
+  website         String?
+  industry        String?
+  companySize     String?
+  taxId           String?
+  status          String   @default("active")
+  plan            String   @default("starter")
+  billingCycle    String   @default("monthly")
+  monthlyFee      Float    @default(0)
+  setupFee        Float    @default(0)
+  currency        String   @default("USD")
+  discountPercent Float    @default(0)
+  trialStart      DateTime?
+  trialEnd        DateTime?
+  contractStart   DateTime?
+  contractEnd     DateTime?
+  notes           String?
+  logo            String?
+  primaryColor    String?
+  customDomain    String?
+  maxProperties   Int      @default(10)
+  maxUsers        Int      @default(5)
+  maxDevices      Int      @default(3)
+  features        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspaces      Workspace[]
+  invoices        Invoice[]
+  licenseKeys     LicenseKey[]
+  auditLogs       AuditLog[]
+}
+
+model LicenseKey {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  type        String   @default("standard")
+  plan        String   @default("starter")
+  maxDevices  Int      @default(1)
+  maxUsers    Int      @default(5)
+  status      String   @default("available")
+  activatedAt DateTime?
+  expiresAt   DateTime?
+  clientId    String
+  deviceId    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  client      Client   @relation(fields: [clientId], references: [id])
+  device      Device?  @relation(fields: [deviceId], references: [id])
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  clientId      String
+  workspaceId   String?
+  type          String   @default("subscription")
+  status        String   @default("draft")
+  issueDate     DateTime
+  dueDate       DateTime
+  paidDate      DateTime?
+  subtotal      Float    @default(0)
+  taxRate       Float    @default(0)
+  taxAmount     Float    @default(0)
+  discount      Float    @default(0)
+  total         Float    @default(0)
+  paidAmount    Float    @default(0)
+  currency      String   @default("USD")
+  notes         String?
+  terms         String?
+  items         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  client        Client    @relation(fields: [clientId], references: [id])
+  workspace     Workspace? @relation(fields: [workspaceId], references: [id])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String
+  entity      String
+  entityId    String?
+  userId      String?
+  workspaceId String
+  clientId    String?
+  ipAddress   String?
+  userAgent   String?
+  details     String?
+  severity    String   @default("info")
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id])
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  activities  Activity[]
+  client      Client?  @relation(fields: [clientId], references: [id])
 }
 
 model Property {
