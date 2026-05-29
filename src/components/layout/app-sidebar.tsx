@@ -16,11 +16,17 @@ import {
   ChevronsUpDown,
   LogOut,
   User,
-  Cog,
+  Settings2,
   FileBarChart,
   Shield,
   ShieldCheck,
   ScrollText,
+  Truck,
+  ClipboardCheck,
+  Store,
+  ShieldAlert,
+  CalendarDays,
+  BookOpen,
 } from 'lucide-react'
 
 import { useAppStore } from '@/stores'
@@ -84,7 +90,13 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'OPERATIONS',
     items: [
       { id: 'billing', label: 'Billing', icon: CreditCard },
+      { id: 'marketplace', label: 'Marketplace', icon: Store },
+      { id: 'accounting', label: 'Accounting', icon: BookOpen },
       { id: 'maintenance', label: 'Maintenance', icon: Wrench },
+      { id: 'inspections', label: 'Inspections', icon: ClipboardCheck },
+      { id: 'vendors', label: 'Vendors', icon: Truck },
+      { id: 'insurance', label: 'Insurance', icon: ShieldAlert },
+      { id: 'calendar', label: 'Calendar', icon: CalendarDays },
       { id: 'communications', label: 'Communications', icon: MessageSquare },
     ],
   },
@@ -245,7 +257,7 @@ export function AppSidebar() {
                   className="cursor-pointer rounded-lg"
                   onClick={() => setActiveModule('settings')}
                 >
-                  <Cog className="size-4" />
+                  <Settings2 className="size-4" />
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

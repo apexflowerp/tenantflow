@@ -403,3 +403,134 @@ Stage Summary:
 - Filter bar with search, entity type, severity, date range, and user filters
 - All 15 modules wired in sidebar and ModuleContent (dashboard, analytics, reports, copilot, properties, tenants, leases, billing, maintenance, communications, owner, devices, documents, audit, settings)
 - Full integration verified: sidebar, page router, stores, seed data
+
+---
+Task ID: 4
+Agent: Subagent (full-stack-developer)
+Task: Build Vendors & Contractors Module for TenantFlow OS
+
+Work Log:
+- Created vendor-card.tsx — Card component with vendor info (name, company), star rating display (1-5 stars with half-fill), category badge (8 categories with unique colors), specialty, email/phone contact, total jobs count, payment terms badge, status badge (active/inactive), dropdown action menu (View/Edit/Delete)
+- Created add-vendor-dialog.tsx — Full-featured dialog form with 4 sections:
+  - Company Information: Contact Name, Company, Email, Phone
+  - Service Details: Category dropdown (plumbing/electrical/hvac/cleaning/landscaping/general/roofing/painting), Specialty, License Number, Insurance Expiry (date picker), Payment Terms (Net 15/30/60)
+  - Address: Street Address, City, State, Zip Code
+  - Additional Notes: Textarea
+  - Form validation (name, email, company, category, payment terms required)
+  - Loading state with spinner on submit
+- Created vendors-page.tsx — Main page component with:
+  - Header with Truck icon, title, description, and Add Vendor button
+  - Stats row: Total Vendors, Active (with percentage), Top Rated (4.5+ star filter), Total Spent (estimated)
+  - Search bar with search icon for name/company/email/specialty
+  - Category filter dropdown (all + 8 categories)
+  - Responsive grid of vendor cards (1/2/3 columns)
+  - Click-to-detail view with animated transition
+  - VendorDetail component: Back button, 4 quick stat cards (Rating, Total Jobs, Payment Terms, Category), Contact Information card, Professional Details card, Notes section, action buttons (View Work History, Contact)
+  - Empty state with clear filters or add vendor CTA
+  - 6 mock vendors: Mike Johnson (Plumbing), Sarah Chen (Electrical), Tony Rivera (HVAC), CleanPro Services (Cleaning), Green Thumb Landscaping (Landscaping), TopRoof Solutions (Roofing/inactive)
+- Created index.ts — Barrel export for VendorsPage, VendorCard, Vendor type, AddVendorDialog
+- Added 'Vendors' to OPERATIONS group in app-sidebar.tsx with Truck icon
+- Added VendorsPage to ModuleContent in page.tsx with vendors module config (Total Vendors: 6, Active: 5, Top Rated: 4, Total Spent: $85.5k)
+- Added Truck import to page.tsx
+- Lint: 0 new errors (8 pre-existing errors from accounting/insurance modules, 2 pre-existing warnings from TanStack Table)
+- Dev server compiling successfully
+
+Stage Summary:
+- 4 component files in /src/components/vendors/ (vendors-page, vendor-card, add-vendor-dialog, index)
+- Professional card-based vendor management UI with search, category filter, and stats
+- Star rating display with half-fill support
+- 8 category types with unique color-coded badges
+- Vendor detail view with comprehensive information layout
+- Add Vendor dialog with 4-section form and validation
+- Vendors module accessible from sidebar OPERATIONS group
+- 6 mock vendors covering 6 different categories
+- 16 modules now wired in sidebar and ModuleContent
+
+---
+Task ID: 5
+Agent: Subagent (full-stack-developer)
+Task: Build Inspections Module for TenantFlow OS
+
+Work Log:
+- Created index.ts — Barrel export for InspectionsPage, InspectionCard, ScheduleInspectionDialog
+- Created inspection-card.tsx — Card/row component with:
+  - Inspection interface type (move_in, move_out, annual, seasonal, emergency, compliance)
+  - TYPE_CONFIG map with labels, icons, and colors per type
+  - STATUS_CONFIG map with labels, colors, dots, and backgrounds per status (scheduled, in_progress, completed)
+  - RatingDisplay sub-component: 5-star display with half-fill support, color-coded by rating (green ≥4, orange ≥3, red <3)
+  - Full card layout: type icon, title, type+status badges, meta row (property/unit, date, inspector, completion date), rating + findings footer
+  - Compact variant for smaller list items
+- Created schedule-inspection-dialog.tsx — Dialog form with:
+  - Title input (required)
+  - Type dropdown: 6 inspection types (Move-In, Move-Out, Annual Safety Check, Seasonal Review, Emergency, Compliance)
+  - Property dropdown: 5 mock properties (Skyline Tower, Harbor View Residences, Metro Commercial Hub, Greenfield Gardens, Riverside Apartments)
+  - Unit input (optional)
+  - Inspector Name input (required)
+  - Scheduled Date picker with calendar icon (required)
+  - Scheduled Time picker
+  - Checklist Items textarea with placeholder showing per-line format
+  - Notes textarea
+  - Form validation, loading state, submit handler
+- Created inspections-page.tsx — Full page component with:
+  - Mock data: 6 inspections (i1-i6) covering all types and statuses with realistic data
+  - Stats row: Total Inspections, Scheduled, Completed, Avg Rating (computed dynamically)
+  - Filter tabs: All, Scheduled, In Progress, Completed (via Tabs component)
+  - Search bar + Type filter dropdown (7 options)
+  - InspectionCard list with staggered Framer Motion animation
+  - Click-to-detail view with InspectionDetail component
+  - Empty state with contextual messaging
+  - Schedule Inspection dialog trigger button
+- Created InspectionDetail sub-component (within inspections-page.tsx):
+  - Back button with arrow
+  - Title + type badge + status badge header
+  - Info grid cards: Property (with unit), Scheduled Date, Inspector, Completed Date, Rating (with star display), Emergency Priority
+  - Findings section with FileText icon
+  - Timeline section with Activity icon showing scheduled → in progress → completed states
+  - Action buttons: Start/Complete Inspection, Generate Report, View Property
+- Added 'Inspections' to OPERATIONS group in app-sidebar.tsx with ClipboardCheck icon
+- Added InspectionsPage to ModuleContent in page.tsx with inspections module config
+- Added ClipboardCheck import to page.tsx and app-sidebar.tsx
+- Lint: 0 new errors (8 pre-existing errors from accounting/insurance modules, 2 pre-existing warnings from TanStack Table)
+- Dev server compiling successfully
+
+Stage Summary:
+- 4 component files in /src/components/inspections/ (inspections-page, inspection-card, schedule-inspection-dialog, index)
+- Professional inspection management UI with stats, filter tabs, search, type filter
+- 6 inspection types with unique icons and color-coded badges
+- 3 statuses with dot indicators (scheduled=amber, in_progress=teal, completed=primary)
+- Star rating display with half-fill support and color thresholds
+- Schedule Inspection dialog with full form and validation
+- Inspection detail view with info grid, findings, timeline, and action buttons
+- 6 mock inspections covering all types and statuses
+- Inspections module accessible from sidebar OPERATIONS group
+- 17 modules now wired in sidebar and ModuleContent
+
+---
+Task ID: 6
+Agent: Subagent (full-stack-developer)
+Task: Build Accounting Module for TenantFlow OS
+
+Work Log:
+- Created chart-of-accounts.tsx with accounts grouped by type, sortable table, type summary cards, color-coded badges
+- Created transaction-list.tsx with search, type/status filters, sort functionality, quick stats cards
+- Created add-account-dialog.tsx with code, name, type, category, description, parent account, opening balance fields
+- Created record-transaction-dialog.tsx with date, description, account, type (debit/credit), amount, category, reference, notes fields
+- Created accounting-page.tsx with 4 stats cards (Total Revenue, Total Expenses, Net Income, Accounts Count), 3-tab layout (Chart of Accounts, General Ledger, Transactions)
+- Created index.ts barrel export
+- Added 17 mock accounts across 5 types (4 assets, 3 liabilities, 2 equity, 3 revenue, 5 expenses)
+- Added 8 mock transactions with debit/credit types and posted/pending statuses
+- General Ledger tab: summary cards by account type, accounting equation visualization, income statement with progress bars, balance check
+- Added Accounting to sidebar OPERATIONS group (BookOpen icon)
+- Added AccountingPage to ModuleContent in page.tsx with accounting module config
+- Added BookOpen import to page.tsx and app-sidebar.tsx
+- Fixed React Compiler lint errors (SortButton components created during render → inlined as Button elements)
+- Lint: 0 errors, 2 pre-existing warnings (TanStack Table)
+
+Stage Summary:
+- 6 component files in /src/components/accounting/ (accounting-page, chart-of-accounts, transaction-list, add-account-dialog, record-transaction-dialog, index)
+- Chart of Accounts: sortable table grouped by type with summary cards, type badges, balance display
+- General Ledger: 5 type summary cards, accounting equation visualization (Assets = Liabilities + Equity), income statement with progress bars
+- Transactions: searchable/filterable table with debit/credit indicators, status badges, account name resolution
+- Add Account dialog: full form with type→category cascading, parent account selection, opening balance
+- Record Transaction dialog: auto-suggest debit/credit based on account type, live preview, category selection
+- Accounting module accessible from sidebar OPERATIONS group

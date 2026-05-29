@@ -16,6 +16,12 @@ import { LoginPage } from '@/components/auth/login-page'
 import { OwnerPage } from '@/components/owner'
 import { DevicesPage } from '@/components/devices'
 import { AuditPage } from '@/components/audit'
+import { AccountingPage } from '@/components/accounting'
+import { InsurancePage } from '@/components/insurance'
+import { CalendarPage } from '@/components/calendar'
+import { InspectionsPage } from '@/components/inspections'
+import { VendorsPage } from '@/components/vendors'
+import { MarketplacePage } from '@/components/marketplace'
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -40,6 +46,12 @@ import {
   Shield,
   ShieldCheck,
   ScrollText,
+  Truck,
+  ClipboardCheck,
+  ShieldAlert,
+  CalendarDays,
+  Store,
+  BookOpen,
 } from 'lucide-react'
 
 import { useAppStore } from '@/stores'
@@ -176,6 +188,34 @@ const MODULES: Record<string, ModuleConfig> = {
       { label: 'Overdue', value: '$2,100' },
     ],
   },
+  marketplace: {
+    id: 'marketplace',
+    label: 'Marketplace',
+    description: 'Listings, applications, and tenant placement',
+    icon: Store,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Active Listings', value: '4' },
+      { label: 'Total Applications', value: '6' },
+      { label: 'Approval Rate', value: '33%' },
+      { label: 'Avg. Days to Fill', value: '18' },
+    ],
+  },
+  accounting: {
+    id: 'accounting',
+    label: 'Accounting',
+    description: 'Chart of accounts, general ledger, and financial reporting',
+    icon: BookOpen,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Total Revenue', value: '$524,400' },
+      { label: 'Net Income', value: '$358,600' },
+      { label: 'Accounts', value: '17' },
+      { label: 'Transactions', value: '8' },
+    ],
+  },
   maintenance: {
     id: 'maintenance',
     label: 'Maintenance',
@@ -187,6 +227,20 @@ const MODULES: Record<string, ModuleConfig> = {
       { label: 'Open Tickets', value: '8' },
       { label: 'In Progress', value: '4' },
       { label: 'Resolved', value: '3' },
+    ],
+  },
+  vendors: {
+    id: 'vendors',
+    label: 'Vendors & Contractors',
+    description: 'Manage service providers, contractors, and vendor relationships',
+    icon: Truck,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Total Vendors', value: '6' },
+      { label: 'Active', value: '5' },
+      { label: 'Top Rated', value: '4' },
+      { label: 'Total Spent', value: '$85.5k' },
     ],
   },
   communications: {
@@ -238,6 +292,50 @@ const MODULES: Record<string, ModuleConfig> = {
       { label: 'Active', value: '3' },
       { label: 'Blocked', value: '1' },
       { label: 'Active Sessions', value: '5' },
+    ],
+  },
+  insurance: {
+    id: 'insurance',
+    label: 'Insurance',
+    description: 'Manage policies, coverage, and compliance',
+    icon: ShieldAlert,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Active Policies', value: '5' },
+      { label: 'Total Coverage', value: '$9.5M' },
+      { label: 'Annual Premium', value: '$40.3K' },
+      { label: 'Expiring Soon', value: '0' },
+    ],
+  },
+  calendar: {
+    id: 'calendar',
+    label: 'Calendar',
+    description: 'Schedule showings, inspections, and events',
+    icon: CalendarDays,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Upcoming Events', value: '8' },
+      { label: 'This Week', value: '3' },
+      { label: 'Showings', value: '2' },
+    ],
+  },
+  inspections: {
+    id: 'inspections',
+    label: 'Inspections',
+    description: 'Property inspections, checklists, and condition reports',
+    icon: ClipboardCheck,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Total Inspections', value: '6' },
+      { label: 'Scheduled', value: '2' },
+      { label: 'Completed', value: '3' },
+      { label: 'Avg Rating', value: '4.2' },
+    ],
+    quickActions: [
+      { label: 'Schedule Inspection', icon: ClipboardCheck },
     ],
   },
   audit: {
@@ -379,7 +477,10 @@ function ModuleContent({ moduleId }: { moduleId: string }) {
     tenants: TenantsPage,
     leases: LeasesPage,
     maintenance: MaintenancePage,
+    vendors: VendorsPage,
     billing: BillingPage,
+    marketplace: MarketplacePage,
+    accounting: AccountingPage,
     analytics: AnalyticsPage,
     copilot: AiCopilotPage,
     communications: CommunicationsPage,
@@ -388,6 +489,9 @@ function ModuleContent({ moduleId }: { moduleId: string }) {
     reports: ReportsPage,
     owner: OwnerPage,
     devices: DevicesPage,
+    inspections: InspectionsPage,
+    insurance: InsurancePage,
+    calendar: CalendarPage,
     audit: AuditPage,
   }
 

@@ -32,6 +32,14 @@ model Workspace {
   invoices    Invoice[]
   auditLogs   AuditLog[]
   devices     Device[]
+  vendors     Vendor[]
+  inspections Inspection[]
+  accounts    Account[]
+  transactions Transaction[]
+  insurancePolicies InsurancePolicy[]
+  calendarEvents CalendarEvent[]
+  listings    Listing[]
+  applications Application[]
   client      Client?  @relation(fields: [clientId], references: [id])
 }
 
@@ -234,6 +242,7 @@ model Property {
   leases        Lease[]
   tickets       MaintenanceTicket[]
   documents     Document[]
+  inspections   Inspection[]
 }
 
 model Unit {
@@ -397,4 +406,175 @@ model Document {
   property    Property? @relation(fields: [propertyId], references: [id])
   tenant      Tenant?   @relation(fields: [tenantId], references: [id])
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+// ── New World-Class Models ────────────────────────────────────────────────────
+
+model Vendor {
+  id            String   @id @default(cuid())
+  name          String
+  email         String?
+  phone         String?
+  company       String?
+  category      String   @default("general")
+  specialty     String?
+  licenseNumber String?
+  insuranceExp  DateTime?
+  rating        Float    @default(0)
+  totalJobs     Int      @default(0)
+  address       String?
+  city          String?
+  state         String?
+  zipCode       String?
+  taxId         String?
+  paymentTerms  String   @default("net30")
+  status        String   @default("active")
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Inspection {
+  id            String   @id @default(cuid())
+  title         String
+  type          String   @default("move_in")
+  status        String   @default("scheduled")
+  scheduledDate DateTime
+  completedDate DateTime?
+  propertyId    String
+  unitId        String?
+  inspectorName String?
+  checklist     String?
+  findings      String?
+  rating        Float?
+  photos        String?
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  property      Property  @relation(fields: [propertyId], references: [id])
+}
+
+model Account {
+  id          String   @id @default(cuid())
+  code        String
+  name        String
+  type        String   @default("asset")
+  category    String?
+  description String?
+  parentCode  String?
+  isActive    Boolean  @default(true)
+  balance     Float    @default(0)
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  date        DateTime
+  description String
+  amount      Float
+  type        String   @default("debit")
+  category    String?
+  accountCode String
+  reference   String?
+  status      String   @default("posted")
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model InsurancePolicy {
+  id            String   @id @default(cuid())
+  policyNumber  String
+  provider      String
+  type          String   @default("property")
+  premium       Float    @default(0)
+  deductible    Float    @default(0)
+  coverage      Float    @default(0)
+  startDate     DateTime
+  endDate       DateTime
+  status        String   @default("active")
+  propertyId    String?
+  claims        String?
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String   @default("event")
+  startDate   DateTime
+  endDate     DateTime?
+  allDay      Boolean  @default(false)
+  location    String?
+  propertyId  String?
+  tenantId    String?
+  status      String   @default("confirmed")
+  color       String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Listing {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  propertyId    String
+  unitId        String?
+  type          String   @default("rental")
+  price         Float
+  deposit       Float?
+  status        String   @default("active")
+  featured      Boolean  @default(false)
+  amenities     String?
+  photos        String?
+  views         Int      @default(0)
+  applications  Int      @default(0)
+  listedDate    DateTime @default(now())
+  availableFrom DateTime?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Application {
+  id            String   @id @default(cuid())
+  listingId     String
+  applicantName String
+  email         String
+  phone         String?
+  income        Float?
+  employment    String?
+  moveInDate    DateTime?
+  status        String   @default("submitted")
+  score         Float?
+  documents     String?
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
 }
