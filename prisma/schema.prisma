@@ -1,0 +1,243 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  logo        String?
+  industry    String?
+  currency    String   @default("USD")
+  timezone    String   @default("UTC")
+  plan        String   @default("starter")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  properties  Property[]
+  tenants     Tenant[]
+  leases      Lease[]
+  payments    Payment[]
+  tickets     MaintenanceTicket[]
+  activities  Activity[]
+  messages    Message[]
+  documents   Document[]
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  avatar      String?
+  role        String   @default("member")
+  phone       String?
+  department  String?
+  isActive    Boolean  @default(true)
+  lastLogin   DateTime?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  activities  Activity[]
+}
+
+model Property {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  type          String   @default("residential")
+  address       String
+  city          String
+  state         String?
+  zipCode       String?
+  country       String   @default("US")
+  lat           Float?
+  lng           Float?
+  description   String?
+  totalUnits    Int      @default(0)
+  occupiedUnits Int      @default(0)
+  floors        Int?
+  yearBuilt     Int?
+  totalArea     Float?
+  image         String?
+  status        String   @default("active")
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  units         Unit[]
+  leases        Lease[]
+  tickets       MaintenanceTicket[]
+  documents     Document[]
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  unitNumber  String
+  propertyId  String
+  floor       Int?
+  type        String   @default("apartment")
+  bedrooms    Int      @default(1)
+  bathrooms   Int      @default(1)
+  area        Float?
+  rent        Float
+  deposit     Float?
+  status      String   @default("vacant")
+  amenities   String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  leases      Lease[]
+}
+
+model Tenant {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  phone         String?
+  avatar        String?
+  type          String   @default("individual")
+  company       String?
+  idNumber      String?
+  emergencyName String?
+  emergencyPhone String?
+  moveInDate    DateTime?
+  moveOutDate   DateTime?
+  status        String   @default("active")
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  leases        Lease[]
+  payments      Payment[]
+  tickets       MaintenanceTicket[]
+  messages      Message[]
+  documents     Document[]
+}
+
+model Lease {
+  id            String   @id @default(cuid())
+  propertyId    String
+  unitId        String
+  tenantId      String
+  startDate     DateTime
+  endDate       DateTime
+  monthlyRent   Float
+  deposit       Float
+  status        String   @default("active")
+  type          String   @default("residential")
+  terms         String?
+  renewalDate   DateTime?
+  rentEscalation Float?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  property      Property @relation(fields: [propertyId], references: [id])
+  unit          Unit     @relation(fields: [unitId], references: [id])
+  tenant        Tenant   @relation(fields: [tenantId], references: [id])
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  payments      Payment[]
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  leaseId     String
+  tenantId    String
+  amount      Float
+  type        String   @default("rent")
+  status      String   @default("pending")
+  dueDate     DateTime
+  paidDate    DateTime?
+  method      String?
+  reference   String?
+  notes       String?
+  lateFee     Float?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lease       Lease    @relation(fields: [leaseId], references: [id])
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model MaintenanceTicket {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String   @default("general")
+  priority    String   @default("medium")
+  status      String   @default("open")
+  propertyId  String
+  tenantId    String?
+  assignedTo  String?
+  dueDate     DateTime?
+  completedAt DateTime?
+  image       String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  property    Property @relation(fields: [propertyId], references: [id])
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  type        String
+  title       String
+  description String?
+  userId      String?
+  workspaceId String
+  metadata    String?
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  subject     String?
+  content     String
+  type        String   @default("email")
+  direction   String   @default("outbound")
+  status      String   @default("sent")
+  tenantId    String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   @default("general")
+  category    String?
+  fileUrl     String?
+  size        Int?
+  propertyId  String?
+  tenantId    String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+
+  property    Property? @relation(fields: [propertyId], references: [id])
+  tenant      Tenant?   @relation(fields: [tenantId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
