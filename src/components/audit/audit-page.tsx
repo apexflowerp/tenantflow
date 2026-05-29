@@ -150,8 +150,8 @@ function SeverityBadge({ severity }: { severity: string }) {
 function UserAvatar({ name }: { name: string }) {
   const initials = getInitials(name)
   return (
-    <div className="flex size-7 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-      <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
+    <div className="flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
+      <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400">
         {initials}
       </span>
     </div>
@@ -166,8 +166,8 @@ function StatsCards({ stats }: { stats: AuditStats }) {
       label: 'Total Events',
       value: stats.totalLogs,
       icon: Activity,
-      color: 'text-emerald-600 dark:text-emerald-400',
-      bgColor: 'bg-emerald-500/10',
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
     },
     {
       label: 'Warnings',
@@ -195,7 +195,7 @@ function StatsCards({ stats }: { stats: AuditStats }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
-        <Card key={card.label} className="border-border/50 shadow-sm">
+        <Card key={card.label} className="mojave-card border-border/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className={`flex size-10 items-center justify-center rounded-xl ${card.bgColor}`}>
@@ -217,7 +217,7 @@ function StatsCards({ stats }: { stats: AuditStats }) {
 
 function AuditRow({ log, isExpanded, onToggle }: { log: AuditLogEntry; isExpanded: boolean; onToggle: () => void }) {
   return (
-    <motion.div layout className="border-b border-border/50 last:border-b-0">
+    <motion.div layout className="border-b border-border/30 last:border-b-0">
       <div
         className="grid grid-cols-[1fr_1.2fr_0.8fr_0.6fr_1fr_0.8fr_0.7fr_40px] items-center gap-2 px-4 py-3 cursor-pointer hover:bg-muted/30 transition-colors"
         onClick={onToggle}
@@ -299,7 +299,7 @@ function AuditRow({ log, isExpanded, onToggle }: { log: AuditLogEntry; isExpande
             className="overflow-hidden"
           >
             <div className="px-4 pb-4 pl-14">
-              <div className="rounded-lg border border-border/50 bg-muted/30 p-4 space-y-3">
+              <div className="rounded-lg border border-border/30 bg-muted/30 p-4 space-y-3">
                 {/* Details row */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   {log.details && (
@@ -364,7 +364,7 @@ function AuditRow({ log, isExpanded, onToggle }: { log: AuditLogEntry; isExpande
                 {log.details && (
                   <div>
                     <p className="text-xs font-medium text-muted-foreground mb-1">Raw Details</p>
-                    <pre className="text-xs font-mono bg-background p-3 rounded-lg overflow-x-auto max-h-48 overflow-y-auto border border-border/50">
+                    <pre className="text-xs font-mono bg-background p-3 rounded-lg overflow-x-auto max-h-48 overflow-y-auto border border-border/30">
                       {(() => {
                         try {
                           return JSON.stringify(JSON.parse(log.details), null, 2)
@@ -493,8 +493,8 @@ export function AuditPage() {
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10">
-            <ShieldCheck className="size-5 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <ShieldCheck className="size-5 text-primary" />
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Audit Trail</h1>
@@ -513,7 +513,7 @@ export function AuditPage() {
       {stats && <StatsCards stats={stats} />}
 
       {/* ── Filter Bar ── */}
-      <Card className="border-border/50 shadow-sm">
+      <Card className="mojave-card border-border/30">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 mb-3">
             <Filter className="size-4 text-muted-foreground" />
@@ -590,9 +590,9 @@ export function AuditPage() {
       </Card>
 
       {/* ── Audit Table ── */}
-      <Card className="border-border/50 shadow-sm overflow-hidden">
+      <Card className="mojave-card border-border/30 overflow-hidden">
         {/* Table Header */}
-        <div className="grid grid-cols-[1fr_1.2fr_0.8fr_0.6fr_1fr_0.8fr_0.7fr_40px] items-center gap-2 px-4 py-2.5 bg-muted/50 border-b border-border/50 text-xs font-medium text-muted-foreground">
+        <div className="grid grid-cols-[1fr_1.2fr_0.8fr_0.6fr_1fr_0.8fr_0.7fr_40px] items-center gap-2 px-4 py-2.5 bg-muted/50 border-b border-border/30 text-xs font-medium text-muted-foreground">
           <span>Timestamp</span>
           <span>Action</span>
           <span>Entity</span>
@@ -636,7 +636,7 @@ export function AuditPage() {
 
         {/* Pagination */}
         {!loading && total > 0 && (
-          <div className="flex items-center justify-between border-t border-border/50 px-4 py-3">
+          <div className="flex items-center justify-between border-t border-border/30 px-4 py-3">
             <p className="text-sm text-muted-foreground">
               Showing {page * limit + 1}–{Math.min((page + 1) * limit, total)} of{' '}
               {total.toLocaleString()} events

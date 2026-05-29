@@ -71,7 +71,7 @@ function getLeaseStatusBadge(lease: LeaseRow) {
     )
   }
   return (
-    <Badge variant="outline" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800">
+    <Badge variant="outline" className="bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary border-primary/20 dark:border-primary/20">
       Active
     </Badge>
   )
@@ -87,7 +87,7 @@ function CircularProgress({ value, size = 80, strokeWidth = 6 }: { value: number
   const color =
     value >= 90 ? 'stroke-red-500' :
     value >= 70 ? 'stroke-amber-500' :
-    'stroke-emerald-500'
+    'stroke-primary'
 
   return (
     <svg width={size} height={size} className="-rotate-90">
@@ -218,7 +218,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               {/* Key Dates & Circular Progress */}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Days Remaining with Circular Progress */}
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5 flex items-center gap-4">
                     <div className="relative flex items-center justify-center">
                       <CircularProgress value={progressPercent} size={72} strokeWidth={5} />
@@ -235,10 +235,10 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                 </Card>
 
                 {/* Start Date */}
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <Calendar className="size-4 text-emerald-600 dark:text-emerald-400" />
+                      <Calendar className="size-4 text-primary" />
                       <p className="text-xs font-medium text-muted-foreground">Start Date</p>
                     </div>
                     <p className="text-lg font-bold">{format(new Date(lease.startDate), 'MMM d, yyyy')}</p>
@@ -251,7 +251,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                 </Card>
 
                 {/* End Date */}
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-2">
                       <Calendar className="size-4 text-amber-600 dark:text-amber-400" />
@@ -265,7 +265,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                 </Card>
 
                 {/* Renewal Date */}
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="size-4 text-violet-600 dark:text-violet-400" />
@@ -285,10 +285,10 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
 
               {/* Financial Summary */}
               <div className="grid gap-4 sm:grid-cols-3">
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <DollarSign className="size-4 text-emerald-600 dark:text-emerald-400" />
+                      <DollarSign className="size-4 text-primary" />
                       <p className="text-xs font-medium text-muted-foreground">Monthly Rent</p>
                     </div>
                     <p className="text-2xl font-bold">{formatCurrency(lease.monthlyRent)}</p>
@@ -298,7 +298,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                   </CardContent>
                 </Card>
 
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-2">
                       <Shield className="size-4 text-amber-600 dark:text-amber-400" />
@@ -311,7 +311,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                   </CardContent>
                 </Card>
 
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-2">
                       <Hash className="size-4 text-teal-600 dark:text-teal-400" />
@@ -326,7 +326,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               </div>
 
               {/* Lease Progress */}
-              <Card className="border-border/50 shadow-sm">
+              <Card className="border-border/30 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-medium">Lease Timeline</CardTitle>
                 </CardHeader>
@@ -346,7 +346,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                     <Progress value={progressPercent} className="h-2" />
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
-                        <CheckCircle2 className="size-3 text-emerald-500" />
+                        <CheckCircle2 className="size-3 text-primary" />
                         {elapsedDays} days elapsed
                       </span>
                       <span className="flex items-center gap-1">
@@ -392,22 +392,22 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                     </div>
                   )}
                   {lease.rentEscalation && lease.rentEscalation > 0 && (
-                    <div className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-                      <TrendingUp className="size-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/20">
+                      <TrendingUp className="size-4 text-primary mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">Rent Escalation Active</p>
-                        <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5">
+                        <p className="text-sm font-medium text-primary dark:text-primary">Rent Escalation Active</p>
+                        <p className="text-xs text-primary dark:text-primary mt-0.5">
                           Annual rent escalation of {lease.rentEscalation}% is applied. Next adjustment should be tracked for timely billing updates.
                         </p>
                       </div>
                     </div>
                   )}
                   {daysRemaining > 90 && (
-                    <div className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-                      <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/20">
+                      <CheckCircle2 className="size-4 text-primary mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">Lease Healthy</p>
-                        <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5">
+                        <p className="text-sm font-medium text-primary dark:text-primary">Lease Healthy</p>
+                        <p className="text-xs text-primary dark:text-primary mt-0.5">
                           This lease is in good standing with {daysRemaining} days remaining. AI recommends scheduling a mid-term check-in with the tenant.
                         </p>
                       </div>
@@ -429,29 +429,29 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               className="mt-6 space-y-6"
             >
               {/* Lease Terms */}
-              <Card className="border-border/50 shadow-sm">
+              <Card className="border-border/30 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base font-medium">
-                    <FileText className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <FileText className="size-4 text-primary" />
                     Lease Agreement Terms
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">Lease Type</span>
                         <Badge variant="secondary" className="capitalize">{lease.type}</Badge>
                       </div>
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">Start Date</span>
                         <span className="text-sm font-medium">{format(new Date(lease.startDate), 'MMM d, yyyy')}</span>
                       </div>
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">End Date</span>
                         <span className="text-sm font-medium">{format(new Date(lease.endDate), 'MMM d, yyyy')}</span>
                       </div>
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">Duration</span>
                         <span className="text-sm font-medium">{totalDays} days ({Math.ceil(totalDays / 30)} months)</span>
                       </div>
@@ -464,19 +464,19 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                     </div>
 
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">Monthly Rent</span>
-                        <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(lease.monthlyRent)}</span>
+                        <span className="text-sm font-bold text-primary">{formatCurrency(lease.monthlyRent)}</span>
                       </div>
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">Security Deposit</span>
                         <span className="text-sm font-medium">{formatCurrency(lease.deposit)}</span>
                       </div>
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">Total Lease Value</span>
                         <span className="text-sm font-bold">{formatCurrency(totalLeaseValue)}</span>
                       </div>
-                      <div className="flex items-center justify-between py-2 border-b border-border/50">
+                      <div className="flex items-center justify-between py-2 border-b border-border/30">
                         <span className="text-sm text-muted-foreground">Rent Escalation</span>
                         <span className="text-sm font-medium">
                           {lease.rentEscalation ? `${lease.rentEscalation}% annually` : 'None'}
@@ -492,7 +492,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               </Card>
 
               {/* Rent Escalation Rules */}
-              <Card className="border-border/50 shadow-sm">
+              <Card className="border-border/30 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base font-medium">
                     <Percent className="size-4 text-amber-600 dark:text-amber-400" />
@@ -510,7 +510,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                         {[0, 1, 2].map((year) => {
                           const projectedRent = lease.monthlyRent * Math.pow(1 + lease.rentEscalation! / 100, year)
                           return (
-                            <div key={year} className="rounded-lg border border-border/50 p-3 text-center">
+                            <div key={year} className="rounded-lg border border-border/30 p-3 text-center">
                               <p className="text-xs text-muted-foreground">
                                 Year {year + 1}
                               </p>
@@ -533,7 +533,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               </Card>
 
               {/* Custom Terms */}
-              <Card className="border-border/50 shadow-sm">
+              <Card className="border-border/30 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base font-medium">
                     <FileText className="size-4 text-muted-foreground" />
@@ -542,7 +542,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                 </CardHeader>
                 <CardContent>
                   {lease.terms ? (
-                    <div className="rounded-lg border border-border/50 p-4 bg-muted/30">
+                    <div className="rounded-lg border border-border/30 p-4 bg-muted/30">
                       <p className="text-sm whitespace-pre-wrap leading-relaxed">{lease.terms}</p>
                     </div>
                   ) : (
@@ -568,16 +568,16 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
             >
               {/* Payment Summary */}
               <div className="grid gap-4 sm:grid-cols-3">
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-1">
-                      <CreditCard className="size-4 text-emerald-600 dark:text-emerald-400" />
+                      <CreditCard className="size-4 text-primary" />
                       <p className="text-xs font-medium text-muted-foreground">Monthly Rent</p>
                     </div>
                     <p className="text-2xl font-bold">{formatCurrency(lease.monthlyRent)}</p>
                   </CardContent>
                 </Card>
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-1">
                       <Hash className="size-4 text-amber-600 dark:text-amber-400" />
@@ -586,7 +586,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                     <p className="text-2xl font-bold">{lease.paymentCount ?? 0}</p>
                   </CardContent>
                 </Card>
-                <Card className="border-border/50 shadow-sm">
+                <Card className="border-border/30 shadow-sm">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-2 mb-1">
                       <DollarSign className="size-4 text-teal-600 dark:text-teal-400" />
@@ -600,17 +600,17 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               </div>
 
               {/* Payment History */}
-              <Card className="border-border/50 shadow-sm">
+              <Card className="border-border/30 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base font-medium">
-                    <CreditCard className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <CreditCard className="size-4 text-primary" />
                     Payment History
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {(lease.paymentCount ?? 0) > 0 ? (
                     <div className="flex flex-col items-center py-8 text-center">
-                      <CreditCard className="size-10 text-emerald-500/30 mb-3" />
+                      <CreditCard className="size-10 text-primary/30 mb-3" />
                       <p className="text-sm font-medium text-foreground">
                         {lease.paymentCount} payments linked to this lease
                       </p>
@@ -639,10 +639,10 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               transition={{ duration: 0.2 }}
               className="mt-6 space-y-6"
             >
-              <Card className="border-border/50 shadow-sm">
+              <Card className="border-border/30 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base font-medium">
-                    <FolderOpen className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <FolderOpen className="size-4 text-primary" />
                     Lease Documents
                   </CardTitle>
                 </CardHeader>
@@ -660,7 +660,7 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
               </Card>
 
               {/* Contract Summary */}
-              <Card className="border-border/50 shadow-sm">
+              <Card className="border-border/30 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base font-medium">
                     <FileText className="size-4 text-amber-600 dark:text-amber-400" />
@@ -669,19 +669,19 @@ export function LeaseDetail({ lease, onBack }: LeaseDetailProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                    <div className="flex items-center justify-between py-2 border-b border-border/30">
                       <span className="text-sm text-muted-foreground">Contract Type</span>
                       <Badge variant="secondary" className="capitalize">{lease.type} Lease</Badge>
                     </div>
-                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                    <div className="flex items-center justify-between py-2 border-b border-border/30">
                       <span className="text-sm text-muted-foreground">Property</span>
                       <span className="text-sm font-medium">{lease.property?.name ?? '—'}</span>
                     </div>
-                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                    <div className="flex items-center justify-between py-2 border-b border-border/30">
                       <span className="text-sm text-muted-foreground">Unit</span>
                       <span className="text-sm font-medium">Unit {lease.unit?.unitNumber ?? '—'}</span>
                     </div>
-                    <div className="flex items-center justify-between py-2 border-b border-border/50">
+                    <div className="flex items-center justify-between py-2 border-b border-border/30">
                       <span className="text-sm text-muted-foreground">Tenant</span>
                       <span className="text-sm font-medium">{lease.tenant?.name ?? '—'}</span>
                     </div>

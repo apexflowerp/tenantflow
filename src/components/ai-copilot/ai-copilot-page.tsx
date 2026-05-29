@@ -29,11 +29,11 @@ import { ChatInput } from './chat-input'
 
 const SUGGESTED_ACTIONS = [
   { label: 'Review lease renewals', icon: FileText, color: 'text-amber-600 dark:text-amber-400' },
-  { label: 'Analyze rent collection', icon: BarChart3, color: 'text-emerald-600 dark:text-emerald-400' },
+  { label: 'Analyze rent collection', icon: BarChart3, color: 'text-primary' },
   { label: 'Check property occupancy', icon: Building2, color: 'text-teal-600 dark:text-teal-400' },
   { label: 'Review maintenance queue', icon: Wrench, color: 'text-orange-600 dark:text-orange-400' },
   { label: 'Tenant satisfaction report', icon: Users, color: 'text-violet-600 dark:text-violet-400' },
-  { label: 'Revenue forecast', icon: TrendingUp, color: 'text-emerald-600 dark:text-emerald-400' },
+  { label: 'Revenue forecast', icon: TrendingUp, color: 'text-primary' },
 ]
 
 const RECENT_INSIGHTS = [
@@ -60,7 +60,7 @@ function WelcomeScreen({ onSend }: { onSend: (msg: string) => void }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="mb-6 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/20"
+        className="mb-6 flex size-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-600/20"
       >
         <Sparkles className="size-8 text-white" />
       </motion.div>
@@ -79,7 +79,7 @@ function WelcomeScreen({ onSend }: { onSend: (msg: string) => void }) {
           <button
             key={prompt}
             onClick={() => onSend(prompt)}
-            className="rounded-xl border border-border/60 bg-background px-4 py-3 text-left text-xs font-medium text-muted-foreground shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-300"
+            className="rounded-xl border border-border/60 bg-background px-4 py-3 text-left text-xs font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary dark:hover:border-primary/30 dark:hover:bg-primary/10"
           >
             {prompt}
           </button>
@@ -114,11 +114,11 @@ export function AiCopilotPage() {
         {/* Chat Header */}
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-md shadow-emerald-500/15">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-md shadow-amber-600/20">
               <Sparkles className="size-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              <h1 className="text-xl font-semibold tracking-tight text-foreground">
                 AI Copilot
               </h1>
               <p className="text-xs text-muted-foreground">
@@ -142,7 +142,7 @@ export function AiCopilotPage() {
         </div>
 
         {/* Chat Messages */}
-        <Card className="flex-1 border-border/50 shadow-sm overflow-hidden">
+        <Card className="flex-1 border-border/30 overflow-hidden">
           <CardContent className="flex h-full flex-col p-0">
             <ScrollArea className="flex-1 p-4" ref={scrollRef}>
               {messages.length === 0 ? (
@@ -160,7 +160,7 @@ export function AiCopilotPage() {
             </ScrollArea>
 
             {/* Input bar */}
-            <div className="border-t border-border/50 bg-background p-4">
+            <div className="border-t border-border/30 bg-background p-4">
               <ChatInput onSend={sendMessage} isLoading={isLoading} />
             </div>
           </CardContent>
@@ -170,7 +170,7 @@ export function AiCopilotPage() {
       {/* ── Suggestions Panel (1/3) ──────────────────────────────────────── */}
       <div className="hidden w-[320px] shrink-0 space-y-4 lg:block">
         {/* Suggested Actions */}
-        <Card className="border-border/50 shadow-sm">
+        <Card className="border-border/30">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm font-semibold">
               <Lightbulb className="size-4 text-amber-500" />
@@ -195,7 +195,7 @@ export function AiCopilotPage() {
         </Card>
 
         {/* Recent Insights */}
-        <Card className="border-border/50 shadow-sm">
+        <Card className="border-border/30">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm font-semibold">
               <MessageSquare className="size-4 text-teal-500" />
@@ -206,7 +206,7 @@ export function AiCopilotPage() {
             <ul className="space-y-2.5">
               {RECENT_INSIGHTS.map((insight, i) => (
                 <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                  <span className="mt-1 size-1.5 shrink-0 rounded-full bg-emerald-500" />
+                  <span className="mt-1 size-1.5 shrink-0 rounded-full bg-primary" />
                   {insight}
                 </li>
               ))}
@@ -215,10 +215,10 @@ export function AiCopilotPage() {
         </Card>
 
         {/* Quick Reports */}
-        <Card className="border-border/50 shadow-sm">
+        <Card className="border-border/30">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm font-semibold">
-              <FileText className="size-4 text-emerald-500" />
+              <FileText className="size-4 text-primary" />
               Quick Reports
             </CardTitle>
           </CardHeader>

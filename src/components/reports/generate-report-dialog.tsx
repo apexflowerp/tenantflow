@@ -130,7 +130,7 @@ export function GenerateReportDialog({
       <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileBarChart className="size-5 text-emerald-600 dark:text-emerald-400" />
+            <FileBarChart className="size-5 text-primary" />
             Generate Report
           </DialogTitle>
           <DialogDescription>
@@ -212,8 +212,8 @@ export function GenerateReportDialog({
                 onClick={() => setFormat('view')}
                 className={`flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${
                   format === 'view'
-                    ? 'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'border-border text-muted-foreground hover:border-emerald-200 hover:bg-emerald-50/50 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/30'
+                    ? 'border-primary/20 bg-primary/5 text-primary dark:border-primary/20 dark:bg-primary/10 dark:text-primary'
+                    : 'border-border text-muted-foreground hover:border-primary/20 hover:bg-primary/5 dark:hover:border-primary/20 dark:hover:bg-primary/10'
                 }`}
               >
                 <Eye className="size-3.5" />
@@ -224,8 +224,8 @@ export function GenerateReportDialog({
                 onClick={() => setFormat('print')}
                 className={`flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${
                   format === 'print'
-                    ? 'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'border-border text-muted-foreground hover:border-emerald-200 hover:bg-emerald-50/50 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/30'
+                    ? 'border-primary/20 bg-primary/5 text-primary dark:border-primary/20 dark:bg-primary/10 dark:text-primary'
+                    : 'border-border text-muted-foreground hover:border-primary/20 hover:bg-primary/5 dark:hover:border-primary/20 dark:hover:bg-primary/10'
                 }`}
               >
                 <Printer className="size-3.5" />
@@ -236,8 +236,8 @@ export function GenerateReportDialog({
                 onClick={() => setFormat('pdf')}
                 className={`flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-medium transition-colors ${
                   format === 'pdf'
-                    ? 'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                    : 'border-border text-muted-foreground hover:border-emerald-200 hover:bg-emerald-50/50 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/30'
+                    ? 'border-primary/20 bg-primary/5 text-primary dark:border-primary/20 dark:bg-primary/10 dark:text-primary'
+                    : 'border-border text-muted-foreground hover:border-primary/20 hover:bg-primary/5 dark:hover:border-primary/20 dark:hover:bg-primary/10'
                 }`}
               >
                 <Download className="size-3.5" />
@@ -254,7 +254,7 @@ export function GenerateReportDialog({
           <Button
             onClick={handleGenerate}
             disabled={!reportType}
-            className="bg-emerald-600 hover:bg-emerald-700"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <FileBarChart className="mr-1.5 size-4" />
             Generate Report

@@ -54,7 +54,7 @@ function CustomTooltip({ active, payload, label }: {
 export function RevenueChart({ data, loading }: RevenueChartProps) {
   if (loading) {
     return (
-      <Card className="border-border/50 shadow-sm">
+      <Card className="border-border/30 shadow-sm">
         <CardHeader className="pb-2">
           <Skeleton className="h-5 w-40" />
         </CardHeader>
@@ -66,7 +66,7 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
   }
 
   return (
-    <Card className="border-border/50 shadow-sm">
+    <Card className="border-border/30 shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Revenue vs Expenses</CardTitle>
       </CardHeader>
@@ -76,8 +76,8 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
             <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0.02} />
+                  <stop offset="5%" stopColor="#c2703a" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#c2703a" stopOpacity={0.02} />
                 </linearGradient>
                 <linearGradient id="expensesGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} />
@@ -112,11 +112,11 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
               <Area
                 type="monotone"
                 dataKey="revenue"
-                stroke="#10b981"
+                stroke="#c2703a"
                 strokeWidth={2.5}
                 fill="url(#revenueGradient)"
                 dot={false}
-                activeDot={{ r: 5, stroke: '#10b981', strokeWidth: 2, fill: '#fff' }}
+                activeDot={{ r: 5, stroke: '#c2703a', strokeWidth: 2, fill: '#fff' }}
               />
               <Area
                 type="monotone"

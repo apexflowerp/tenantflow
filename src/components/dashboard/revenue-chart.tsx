@@ -48,15 +48,15 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   if (!active || !payload || !payload.length) return null
 
   return (
-    <div className="rounded-lg border border-border bg-card px-4 py-3 shadow-xl">
-      <p className="text-xs font-medium text-muted-foreground mb-2">{label}</p>
+    <div className="rounded-xl border border-border/40 bg-card/95 backdrop-blur-xl px-4 py-3 shadow-xl">
+      <p className="text-[11px] font-medium text-muted-foreground mb-2">{label}</p>
       {payload.map((entry, index) => (
         <div key={index} className="flex items-center gap-2">
           <div
-            className="size-2.5 rounded-full"
+            className="size-2 rounded-full"
             style={{ backgroundColor: entry.color }}
           />
-          <span className="text-xs text-muted-foreground capitalize">
+          <span className="text-[11px] text-muted-foreground capitalize">
             {entry.dataKey}:
           </span>
           <span className="text-sm font-semibold text-foreground">
@@ -97,36 +97,40 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
 
   if (isLoading) {
     return (
-      <Card className="border-border/50">
+      <Card className="border-border/30 bg-card/80">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <Skeleton className="h-6 w-40" />
-            <Skeleton className="h-8 w-40" />
+            <Skeleton className="h-5 w-36 rounded-md" />
+            <Skeleton className="h-7 w-36 rounded-lg" />
           </div>
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-[300px] w-full" />
+          <Skeleton className="h-[280px] w-full rounded-lg" />
         </CardContent>
       </Card>
     )
   }
 
+  // Warm Mojave colors for charts
+  const revenueColor = '#c2703a' // warm terracotta/amber
+  const expenseColor = '#d4956a' // warm sand
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
+      transition={{ duration: 0.45, delay: 0.4 }}
     >
-      <Card className="border-border/50">
+      <Card className="mojave-card border-border/30 bg-card/80">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold">Revenue Overview</CardTitle>
-            <div className="flex items-center gap-1 rounded-lg border border-border p-0.5">
+            <CardTitle className="text-base font-semibold">Revenue Overview</CardTitle>
+            <div className="flex items-center gap-0.5 rounded-lg border border-border/40 bg-muted/30 p-0.5">
               <Button
                 variant={period === 'monthly' ? 'secondary' : 'ghost'}
                 size="sm"
                 onClick={() => setPeriod('monthly')}
-                className="h-7 px-3 text-xs"
+                className="h-6 px-2.5 text-[11px] rounded-md"
               >
                 Monthly
               </Button>
@@ -134,7 +138,7 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
                 variant={period === 'quarterly' ? 'secondary' : 'ghost'}
                 size="sm"
                 onClick={() => setPeriod('quarterly')}
-                className="h-7 px-3 text-xs"
+                className="h-6 px-2.5 text-[11px] rounded-md"
               >
                 Quarterly
               </Button>
@@ -142,7 +146,7 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] w-full">
+          <div className="h-[280px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={chartData}
@@ -150,31 +154,31 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
               >
                 <defs>
                   <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.0} />
+                    <stop offset="0%" stopColor={revenueColor} stopOpacity={0.25} />
+                    <stop offset="100%" stopColor={revenueColor} stopOpacity={0.0} />
                   </linearGradient>
                   <linearGradient id="expensesGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.2} />
-                    <stop offset="100%" stopColor="#f59e0b" stopOpacity={0.0} />
+                    <stop offset="0%" stopColor={expenseColor} stopOpacity={0.15} />
+                    <stop offset="100%" stopColor={expenseColor} stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="hsl(var(--border))"
-                  opacity={0.5}
+                  opacity={0.3}
                   vertical={false}
                 />
                 <XAxis
                   dataKey="month"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                   dy={10}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                   tickFormatter={formatCurrencyShort}
                   dx={-10}
                 />
@@ -182,28 +186,28 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#10b981"
-                  strokeWidth={2.5}
+                  stroke={revenueColor}
+                  strokeWidth={2}
                   fill="url(#revenueGradient)"
                   dot={false}
                   activeDot={{
-                    r: 5,
-                    fill: '#10b981',
-                    stroke: '#fff',
+                    r: 4,
+                    fill: revenueColor,
+                    stroke: 'hsl(var(--card))',
                     strokeWidth: 2,
                   }}
                 />
                 <Area
                   type="monotone"
                   dataKey="expenses"
-                  stroke="#f59e0b"
-                  strokeWidth={2}
+                  stroke={expenseColor}
+                  strokeWidth={1.5}
                   fill="url(#expensesGradient)"
                   dot={false}
                   activeDot={{
-                    r: 4,
-                    fill: '#f59e0b',
-                    stroke: '#fff',
+                    r: 3,
+                    fill: expenseColor,
+                    stroke: 'hsl(var(--card))',
                     strokeWidth: 2,
                   }}
                 />
@@ -211,14 +215,14 @@ export function RevenueChart({ data, isLoading }: RevenueChartProps) {
             </ResponsiveContainer>
           </div>
           {/* Legend */}
-          <div className="flex items-center justify-center gap-6 pt-4">
+          <div className="flex items-center justify-center gap-6 pt-3">
             <div className="flex items-center gap-2">
-              <div className="size-3 rounded-full bg-emerald-500" />
-              <span className="text-xs text-muted-foreground">Revenue</span>
+              <div className="size-2.5 rounded-full" style={{ backgroundColor: revenueColor }} />
+              <span className="text-[11px] text-muted-foreground">Revenue</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="size-3 rounded-full bg-amber-500" />
-              <span className="text-xs text-muted-foreground">Expenses</span>
+              <div className="size-2.5 rounded-full" style={{ backgroundColor: expenseColor }} />
+              <span className="text-[11px] text-muted-foreground">Expenses</span>
             </div>
           </div>
         </CardContent>

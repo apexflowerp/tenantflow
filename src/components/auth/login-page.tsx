@@ -23,62 +23,62 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
 
-// ── Animated background ──────────────────────────────────────────────────────
+// ── macOS Mojave Desert Background ────────────────────────────────────────────
 
-function AnimatedBackground() {
+function MojaveBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-900" />
+      {/* Base gradient — warm Mojave desert tones */}
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-900 via-orange-800 to-rose-900" />
 
-      {/* Grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
-        }}
-      />
+      {/* Sand dune layer */}
+      <div className="absolute inset-0 bg-gradient-to-t from-amber-950/60 via-transparent to-orange-900/30" />
 
-      {/* Floating orbs */}
+      {/* Sun glow */}
+      <div className="absolute top-[15%] left-1/2 -translate-x-1/2">
+        <div className="h-64 w-64 rounded-full bg-amber-400/20 blur-3xl animate-mojave-breathe" />
+        <div className="absolute inset-0 h-48 w-48 m-auto rounded-full bg-yellow-300/15 blur-2xl" />
+      </div>
+
+      {/* Warm atmospheric orbs */}
       <motion.div
-        className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl"
+        className="absolute -top-20 right-[10%] h-72 w-72 rounded-full bg-rose-500/10 blur-3xl"
         animate={{
-          x: [0, 30, 0],
-          y: [0, -20, 0],
+          x: [0, 25, 0],
+          y: [0, -15, 0],
+          scale: [1, 1.08, 1],
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute bottom-[10%] left-[5%] h-80 w-80 rounded-full bg-amber-500/8 blur-3xl"
+        animate={{
+          x: [0, -15, 0],
+          y: [0, 25, 0],
           scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute top-[40%] right-[20%] h-48 w-48 rounded-full bg-orange-400/8 blur-3xl"
+        animate={{
+          scale: [1, 1.15, 1],
+          opacity: [0.3, 0.5, 0.3],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <motion.div
-        className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl"
-        animate={{
-          x: [0, -20, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.15, 1],
+
+      {/* Subtle noise texture */}
+      <div
+        className="absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)`,
+          backgroundSize: '24px 24px',
         }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/5 blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* Dot pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)',
-          backgroundSize: '30px 30px',
-        }}
-      />
+      {/* Warm vignette */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-amber-950/40" />
     </div>
   )
 }
@@ -156,17 +156,17 @@ function DeviceActivationStep({
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-emerald-500/20 ring-1 ring-emerald-500/30"
+          className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-amber-500/15 ring-1 ring-amber-400/20"
         >
-          <KeyRound className="size-8 text-emerald-400" />
+          <KeyRound className="size-8 text-amber-400" />
         </motion.div>
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <h2 className="text-2xl font-bold text-white">Activate Your Device</h2>
-          <p className="mt-1.5 text-sm text-emerald-200/70">
+          <h2 className="text-2xl font-bold text-white tracking-tight">Activate Your Device</h2>
+          <p className="mt-1.5 text-sm text-amber-200/60">
             Enter your serial key to activate TenantFlow OS on this device
           </p>
         </motion.div>
@@ -179,11 +179,11 @@ function DeviceActivationStep({
         transition={{ delay: 0.3, duration: 0.4 }}
         className="space-y-3"
       >
-        <Label htmlFor="serial-key" className="text-sm font-medium text-emerald-100/90">
+        <Label htmlFor="serial-key" className="text-sm font-medium text-amber-100/80">
           Serial Key
         </Label>
         <div className="relative">
-          <MonitorSmartphone className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-emerald-400/50" />
+          <MonitorSmartphone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-amber-400/40" />
           <Input
             id="serial-key"
             type="text"
@@ -191,7 +191,7 @@ function DeviceActivationStep({
             onChange={handleSerialKeyChange}
             onKeyDown={handleKeyDown}
             placeholder="XXXX-XXXX-XXXX-XXXX"
-            className="h-12 bg-white/5 border-white/10 pl-10 pr-4 text-center font-mono text-lg tracking-widest text-white placeholder:text-white/20 focus:border-emerald-500/50 focus:ring-emerald-500/20"
+            className="h-12 bg-white/[0.06] border-white/[0.08] pl-11 pr-4 text-center font-mono text-lg tracking-widest text-white placeholder:text-white/15 focus:border-amber-500/40 focus:ring-amber-500/15 rounded-xl"
             maxLength={19}
             autoComplete="off"
           />
@@ -201,7 +201,7 @@ function DeviceActivationStep({
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300 ring-1 ring-red-500/20"
+            className="flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-2.5 text-sm text-red-300 ring-1 ring-red-500/15"
           >
             <AlertCircle className="size-4 shrink-0" />
             {error}
@@ -218,7 +218,7 @@ function DeviceActivationStep({
         <Button
           onClick={handleActivate}
           disabled={isLoading || serialKey.length < 19}
-          className="h-12 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-lg shadow-emerald-600/25 transition-all duration-200 disabled:opacity-50"
+          className="h-12 w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold shadow-lg shadow-amber-900/30 transition-all duration-200 disabled:opacity-50 rounded-xl"
           size="lg"
         >
           {isLoading ? (
@@ -242,8 +242,8 @@ function DeviceActivationStep({
         transition={{ delay: 0.5, duration: 0.4 }}
       >
         <div className="relative">
-          <Separator className="bg-white/10" />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs text-white/40">
+          <Separator className="bg-white/[0.06]" />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs text-white/25">
             or
           </span>
         </div>
@@ -258,7 +258,7 @@ function DeviceActivationStep({
       >
         <button
           onClick={onDemoMode}
-          className="group inline-flex items-center gap-2 text-sm text-emerald-300/70 hover:text-emerald-300 transition-colors duration-200"
+          className="group inline-flex items-center gap-2 text-sm text-amber-300/50 hover:text-amber-300/80 transition-colors duration-200"
         >
           <Zap className="size-4" />
           Try Demo Mode — No activation required
@@ -332,17 +332,17 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-emerald-500/20 ring-1 ring-emerald-500/30"
+          className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-amber-500/15 ring-1 ring-amber-400/20"
         >
-          <Shield className="size-8 text-emerald-400" />
+          <Shield className="size-8 text-amber-400" />
         </motion.div>
         <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <h2 className="text-2xl font-bold text-white">Welcome Back</h2>
-          <p className="mt-1.5 text-sm text-emerald-200/70">
+          <h2 className="text-2xl font-bold text-white tracking-tight">Welcome Back</h2>
+          <p className="mt-1.5 text-sm text-amber-200/60">
             Sign in to your TenantFlow OS account
           </p>
         </motion.div>
@@ -358,11 +358,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
       >
         {/* Email */}
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium text-emerald-100/90">
+          <Label htmlFor="email" className="text-sm font-medium text-amber-100/80">
             Email Address
           </Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-emerald-400/50" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-amber-400/40" />
             <Input
               id="email"
               type="email"
@@ -372,7 +372,7 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
                 if (error) setError('')
               }}
               placeholder="you@company.com"
-              className="h-11 bg-white/5 border-white/10 pl-10 text-white placeholder:text-white/25 focus:border-emerald-500/50 focus:ring-emerald-500/20"
+              className="h-11 bg-white/[0.06] border-white/[0.08] pl-11 text-white placeholder:text-white/20 focus:border-amber-500/40 focus:ring-amber-500/15 rounded-xl"
               autoComplete="email"
             />
           </div>
@@ -381,18 +381,18 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
         {/* Password */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password" className="text-sm font-medium text-emerald-100/90">
+            <Label htmlFor="password" className="text-sm font-medium text-amber-100/80">
               Password
             </Label>
             <button
               type="button"
-              className="text-xs text-emerald-300/60 hover:text-emerald-300/80 transition-colors"
+              className="text-xs text-amber-300/40 hover:text-amber-300/60 transition-colors"
             >
               Forgot Password?
             </button>
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-emerald-400/50" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-amber-400/40" />
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
@@ -402,13 +402,13 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
                 if (error) setError('')
               }}
               placeholder="Enter your password"
-              className="h-11 bg-white/5 border-white/10 pl-10 pr-10 text-white placeholder:text-white/25 focus:border-emerald-500/50 focus:ring-emerald-500/20"
+              className="h-11 bg-white/[0.06] border-white/[0.08] pl-11 pr-11 text-white placeholder:text-white/20 focus:border-amber-500/40 focus:ring-amber-500/15 rounded-xl"
               autoComplete="current-password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-400/50 hover:text-emerald-400/80 transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-amber-400/40 hover:text-amber-400/70 transition-colors"
             >
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
@@ -421,11 +421,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
             id="remember"
             checked={rememberMe}
             onCheckedChange={(checked) => setRememberMe(checked === true)}
-            className="border-white/20 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+            className="border-white/15 data-[state=checked]:bg-amber-600 data-[state=checked]:border-amber-600"
           />
           <Label
             htmlFor="remember"
-            className="text-sm text-emerald-100/70 cursor-pointer"
+            className="text-sm text-amber-100/50 cursor-pointer"
           >
             Remember me for 30 days
           </Label>
@@ -436,7 +436,7 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-300 ring-1 ring-red-500/20"
+            className="flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-2.5 text-sm text-red-300 ring-1 ring-red-500/15"
           >
             <AlertCircle className="size-4 shrink-0" />
             {error}
@@ -447,7 +447,7 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
         <Button
           type="submit"
           disabled={isLoading}
-          className="h-11 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-lg shadow-emerald-600/25 transition-all duration-200 disabled:opacity-50"
+          className="h-11 w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold shadow-lg shadow-amber-900/30 transition-all duration-200 disabled:opacity-50 rounded-xl"
         >
           {isLoading ? (
             <>
@@ -465,8 +465,8 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
 
       {/* Divider */}
       <div className="relative">
-        <Separator className="bg-white/10" />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs text-white/40">
+        <Separator className="bg-white/[0.06]" />
+        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs text-white/20">
           or continue with
         </span>
       </div>
@@ -481,12 +481,12 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
           onClick={handleDemoLogin}
           disabled={isLoading}
           variant="outline"
-          className="h-11 w-full border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-emerald-300 transition-all duration-200"
+          className="h-11 w-full border-white/[0.08] bg-white/[0.04] text-white/80 hover:bg-white/[0.08] hover:text-amber-200 transition-all duration-200 rounded-xl"
         >
           {isLoading ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
-            <Zap className="mr-2 size-4 text-emerald-400" />
+            <Zap className="mr-2 size-4 text-amber-400" />
           )}
           Demo Login
         </Button>
@@ -501,9 +501,9 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
       >
         <button
           onClick={onBack}
-          className="text-xs text-emerald-300/50 hover:text-emerald-300/70 transition-colors"
+          className="text-xs text-amber-300/30 hover:text-amber-300/50 transition-colors"
         >
-          ← Back to device activation
+          Back to device activation
         </button>
       </motion.div>
     </motion.div>
@@ -537,7 +537,7 @@ export function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4">
-      <AnimatedBackground />
+      <MojaveBackground />
 
       {/* Main card */}
       <motion.div
@@ -546,8 +546,8 @@ export function LoginPage() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className="relative z-10 w-full max-w-md"
       >
-        {/* Glass card */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl">
+        {/* macOS-style frosted glass card */}
+        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-8 shadow-2xl shadow-black/25 backdrop-blur-2xl backdrop-saturate-150">
           {/* Logo */}
           <motion.div
             initial={{ y: -10, opacity: 0 }}
@@ -556,17 +556,17 @@ export function LoginPage() {
             className="mb-8 flex flex-col items-center gap-3"
           >
             <div className="flex items-center gap-2.5">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500 shadow-lg shadow-emerald-500/30">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-600/30">
                 <Building2 className="size-5 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold tracking-tight text-white">
                   TenantFlow
-                  <span className="ml-1 text-emerald-400">OS</span>
+                  <span className="ml-1 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">OS</span>
                 </h1>
               </div>
             </div>
-            <p className="text-xs text-emerald-200/50 tracking-wider uppercase">
+            <p className="text-[10px] text-amber-200/30 tracking-[0.2em] uppercase">
               AI-Powered Property Management
             </p>
           </motion.div>
@@ -595,10 +595,10 @@ export function LoginPage() {
           transition={{ delay: 0.8, duration: 0.5 }}
           className="mt-6 text-center"
         >
-          <p className="text-xs text-white/30">
+          <p className="text-xs text-white/20">
             © {new Date().getFullYear()} TenantFlow OS · Enterprise Property Intelligence
           </p>
-          <div className="mt-2 flex items-center justify-center gap-3 text-xs text-white/20">
+          <div className="mt-2 flex items-center justify-center gap-3 text-xs text-white/12">
             <span>Privacy Policy</span>
             <span>·</span>
             <span>Terms of Service</span>

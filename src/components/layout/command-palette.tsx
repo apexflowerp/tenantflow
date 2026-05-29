@@ -140,7 +140,7 @@ export function CommandPalette() {
               onSelect={() => handleSelect(action.id)}
               className="cursor-pointer"
             >
-              <Plus className="size-4 text-emerald-600 dark:text-emerald-400" />
+              <Plus className="size-4 text-primary" />
               <span>{action.label}</span>
             </CommandItem>
           ))}

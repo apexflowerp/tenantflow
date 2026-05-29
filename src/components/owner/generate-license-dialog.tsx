@@ -79,9 +79,9 @@ export function GenerateLicenseDialog({ open, onOpenChange }: GenerateLicenseDia
 
         {generatedKey ? (
           <div className="space-y-4">
-            <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/20 p-4">
-              <p className="text-sm text-emerald-700 dark:text-emerald-400 font-medium mb-2">License Key Generated</p>
-              <code className="block text-lg font-mono font-bold text-emerald-800 dark:text-emerald-300">
+            <div className="rounded-lg border border-primary/20 dark:border-primary/20 bg-primary/5 dark:bg-primary/10 p-4">
+              <p className="text-sm text-primary dark:text-primary font-medium mb-2">License Key Generated</p>
+              <code className="block text-lg font-mono font-bold text-primary dark:text-primary">
                 {generatedKey}
               </code>
             </div>
@@ -89,7 +89,7 @@ export function GenerateLicenseDialog({ open, onOpenChange }: GenerateLicenseDia
               <Button onClick={copyKey} variant="outline" className="flex-1 gap-2">
                 Copy Key
               </Button>
-              <Button onClick={handleClose} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button onClick={handleClose} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
                 Done
               </Button>
             </div>
@@ -143,7 +143,7 @@ export function GenerateLicenseDialog({ open, onOpenChange }: GenerateLicenseDia
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
-              <Button type="submit" disabled={isSubmitting || !form.clientId} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+              <Button type="submit" disabled={isSubmitting || !form.clientId} className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
                 {isSubmitting ? (
                   <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (

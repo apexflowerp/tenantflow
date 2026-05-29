@@ -43,76 +43,128 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Light Mode
+   Warm, sandy undertones with soft shadows and translucent layers.
+   Inspired by: Finder, System Preferences, Notification Center.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  /* Emerald-600 as primary */
-  --primary: oklch(0.596 0.145 162.48);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.97 0.005 162);
-  --secondary-foreground: oklch(0.25 0.02 162);
-  --muted: oklch(0.965 0.003 162);
-  --muted-foreground: oklch(0.52 0.02 162);
-  --accent: oklch(0.95 0.025 162);
-  --accent-foreground: oklch(0.25 0.04 162);
+
+  /* Base: warm paper-like whites (not cool blue-white) */
+  --background: oklch(0.975 0.002 75);
+  --foreground: oklch(0.18 0.01 60);
+
+  /* Cards: slightly elevated warm white */
+  --card: oklch(0.995 0.001 75);
+  --card-foreground: oklch(0.18 0.01 60);
+
+  /* Popover */
+  --popover: oklch(0.995 0.001 75);
+  --popover-foreground: oklch(0.18 0.01 60);
+
+  /* Primary: Mojave sunset accent — warm coral/terracotta */
+  --primary: oklch(0.62 0.15 25);
+  --primary-foreground: oklch(0.99 0.002 75);
+
+  /* Secondary */
+  --secondary: oklch(0.94 0.008 75);
+  --secondary-foreground: oklch(0.25 0.01 60);
+
+  /* Muted */
+  --muted: oklch(0.94 0.006 75);
+  --muted-foreground: oklch(0.50 0.012 60);
+
+  /* Accent */
+  --accent: oklch(0.92 0.015 75);
+  --accent-foreground: oklch(0.22 0.015 60);
+
+  /* Destructive */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.005 162);
-  --input: oklch(0.92 0.005 162);
-  --ring: oklch(0.596 0.145 162.48);
-  --chart-1: oklch(0.696 0.17 162.48);
-  --chart-2: oklch(0.596 0.145 162.48);
-  --chart-3: oklch(0.496 0.12 162.48);
-  --chart-4: oklch(0.796 0.1 162.48);
-  --chart-5: oklch(0.896 0.06 162.48);
-  /* Sidebar: slightly warmer, slightly off-white */
-  --sidebar: oklch(0.98 0.005 162);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.596 0.145 162.48);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.95 0.025 162);
-  --sidebar-accent-foreground: oklch(0.25 0.04 162);
-  --sidebar-border: oklch(0.92 0.008 162);
-  --sidebar-ring: oklch(0.596 0.145 162.48);
+
+  /* Borders: warm subtle */
+  --border: oklch(0.91 0.006 75);
+  --input: oklch(0.91 0.006 75);
+  --ring: oklch(0.62 0.15 25);
+
+  /* Chart colors — warm Mojave palette */
+  --chart-1: oklch(0.62 0.15 25);
+  --chart-2: oklch(0.65 0.13 45);
+  --chart-3: oklch(0.58 0.12 150);
+  --chart-4: oklch(0.70 0.10 290);
+  --chart-5: oklch(0.55 0.10 200);
+
+  /* Sidebar: frosted glass with warm tint (like Finder sidebar) */
+  --sidebar: oklch(0.96 0.005 75 / 85%);
+  --sidebar-foreground: oklch(0.22 0.01 60);
+  --sidebar-primary: oklch(0.62 0.15 25);
+  --sidebar-primary-foreground: oklch(0.99 0.002 75);
+  --sidebar-accent: oklch(0.90 0.015 75);
+  --sidebar-accent-foreground: oklch(0.22 0.015 60);
+  --sidebar-border: oklch(0.90 0.006 75);
+  --sidebar-ring: oklch(0.62 0.15 25);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Dark Mode
+   Deep warm darks with subtle vibrancy. Inspired by Mojave Dark desktop,
+   with warm charcoal tones and blue-tinted depth.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 .dark {
-  --background: oklch(0.13 0.005 162);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.18 0.008 162);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.18 0.008 162);
-  --popover-foreground: oklch(0.985 0 0);
-  /* Emerald-400 as primary in dark */
-  --primary: oklch(0.696 0.17 162.48);
-  --primary-foreground: oklch(0.13 0.005 162);
-  --secondary: oklch(0.22 0.02 162);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.22 0.015 162);
-  --muted-foreground: oklch(0.65 0.02 162);
-  --accent: oklch(0.22 0.03 162);
-  --accent-foreground: oklch(0.95 0.02 162);
+  /* Base: warm deep charcoal (not pure black, slight warm tint) */
+  --background: oklch(0.17 0.008 55);
+  --foreground: oklch(0.95 0.005 75);
+
+  /* Cards: slightly lighter warm dark with subtle vibrancy */
+  --card: oklch(0.21 0.01 55);
+  --card-foreground: oklch(0.95 0.005 75);
+
+  /* Popover */
+  --popover: oklch(0.22 0.01 55);
+  --popover-foreground: oklch(0.95 0.005 75);
+
+  /* Primary: warm golden sunset accent */
+  --primary: oklch(0.72 0.14 55);
+  --primary-foreground: oklch(0.15 0.01 55);
+
+  /* Secondary */
+  --secondary: oklch(0.25 0.012 55);
+  --secondary-foreground: oklch(0.95 0.005 75);
+
+  /* Muted */
+  --muted: oklch(0.25 0.01 55);
+  --muted-foreground: oklch(0.62 0.012 55);
+
+  /* Accent */
+  --accent: oklch(0.27 0.015 55);
+  --accent-foreground: oklch(0.92 0.01 75);
+
+  /* Destructive */
   --destructive: oklch(0.704 0.191 22.216);
+
+  /* Borders: subtle warm lines */
   --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.696 0.17 162.48);
-  --chart-1: oklch(0.696 0.17 162.48);
-  --chart-2: oklch(0.596 0.145 162.48);
-  --chart-3: oklch(0.496 0.12 162.48);
-  --chart-4: oklch(0.796 0.1 162.48);
-  --chart-5: oklch(0.896 0.06 162.48);
-  --sidebar: oklch(0.155 0.008 162);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.696 0.17 162.48);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.22 0.03 162);
-  --sidebar-accent-foreground: oklch(0.95 0.02 162);
+  --ring: oklch(0.72 0.14 55);
+
+  /* Chart colors — warm Mojave dark palette */
+  --chart-1: oklch(0.72 0.14 55);
+  --chart-2: oklch(0.68 0.12 35);
+  --chart-3: oklch(0.65 0.11 150);
+  --chart-4: oklch(0.70 0.10 290);
+  --chart-5: oklch(0.60 0.08 200);
+
+  /* Sidebar: deep frosted glass with warm tint */
+  --sidebar: oklch(0.19 0.01 55 / 90%);
+  --sidebar-foreground: oklch(0.93 0.005 75);
+  --sidebar-primary: oklch(0.72 0.14 55);
+  --sidebar-primary-foreground: oklch(0.15 0.01 55);
+  --sidebar-accent: oklch(0.26 0.015 55);
+  --sidebar-accent-foreground: oklch(0.92 0.01 75);
   --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.696 0.17 162.48);
+  --sidebar-ring: oklch(0.72 0.14 55);
 }
 
 @layer base {
@@ -122,4 +174,163 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Custom Scrollbar
+   Thin, rounded, translucent — just like macOS native.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.5 0 0 / 20%);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.5 0 0 / 35%);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(0.7 0 0 / 18%);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.7 0 0 / 30%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Frosted Glass Utilities
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.glass-mojave {
+  background: oklch(0.97 0.005 75 / 72%);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+.dark .glass-mojave {
+  background: oklch(0.20 0.008 55 / 72%);
+}
+
+.glass-sidebar {
+  background: oklch(0.96 0.005 75 / 82%);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+}
+
+.dark .glass-sidebar {
+  background: oklch(0.18 0.01 55 / 85%);
+}
+
+.glass-toolbar {
+  background: oklch(0.97 0.005 75 / 80%);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+.dark .glass-toolbar {
+  background: oklch(0.19 0.008 55 / 80%);
+}
+
+.glass-card {
+  background: oklch(0.99 0.002 75 / 65%);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+.dark .glass-card {
+  background: oklch(0.22 0.008 55 / 55%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Card Enhancements
+   Soft layered shadows like macOS windows.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.mojave-card {
+  border-radius: 0.75rem;
+  box-shadow:
+    0 0 0 0.5px oklch(0 0 0 / 6%),
+    0 1px 3px oklch(0 0 0 / 4%),
+    0 4px 12px oklch(0 0 0 / 3%);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.mojave-card:hover {
+  box-shadow:
+    0 0 0 0.5px oklch(0 0 0 / 8%),
+    0 2px 6px oklch(0 0 0 / 6%),
+    0 8px 24px oklch(0 0 0 / 5%);
+}
+
+.dark .mojave-card {
+  box-shadow:
+    0 0 0 0.5px oklch(1 0 0 / 6%),
+    0 1px 3px oklch(0 0 0 / 20%),
+    0 4px 12px oklch(0 0 0 / 15%);
+}
+
+.dark .mojave-card:hover {
+  box-shadow:
+    0 0 0 0.5px oklch(1 0 0 / 10%),
+    0 2px 6px oklch(0 0 0 / 25%),
+    0 8px 24px oklch(0 0 0 / 20%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Selection Highlight
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: oklch(0.72 0.14 55 / 30%);
+  color: inherit;
+}
+
+.dark ::selection {
+  background: oklch(0.72 0.14 55 / 25%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Focus Ring
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+:focus-visible {
+  outline: 2px solid oklch(0.72 0.14 55 / 50%);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.dark :focus-visible {
+  outline: 2px solid oklch(0.72 0.14 55 / 40%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Mojave Retina — Animations
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@keyframes mojave-breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes mojave-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-mojave-breathe {
+  animation: mojave-breathe 6s ease-in-out infinite;
+}
+
+.animate-mojave-float {
+  animation: mojave-float 4s ease-in-out infinite;
 }

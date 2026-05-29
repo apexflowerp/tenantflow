@@ -105,7 +105,7 @@ function getFileIcon(type: string) {
 function getFileColor(type: string) {
   switch (type) {
     case 'contract':
-      return 'text-emerald-600 bg-emerald-500/10'
+      return 'text-primary bg-primary/10'
     case 'application':
       return 'text-sky-600 bg-sky-500/10'
     case 'template':
@@ -161,7 +161,7 @@ export function DocumentsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+          <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <FolderOpen className="size-6 text-slate-600" />
             Documents
           </h1>
@@ -170,7 +170,7 @@ export function DocumentsPage() {
           </p>
         </div>
         <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
-          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
             <Upload className="size-4" />
             Upload Document
           </Button>
@@ -182,7 +182,7 @@ export function DocumentsPage() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 transition-colors hover:border-emerald-500/50 hover:bg-emerald-500/5 cursor-pointer">
+              <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 transition-colors hover:border-primary/50 hover:bg-primary/5 cursor-pointer">
                 <Upload className="size-8 text-muted-foreground mb-2" />
                 <p className="text-sm font-medium">Drop files here or click to browse</p>
                 <p className="text-xs text-muted-foreground mt-1">Max file size: 25MB</p>
@@ -192,7 +192,7 @@ export function DocumentsPage() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setUploadOpen(false)}>Cancel</Button>
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => setUploadOpen(false)}>Upload</Button>
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setUploadOpen(false)}>Upload</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -200,11 +200,11 @@ export function DocumentsPage() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-border/50 shadow-sm">
+        <Card className="mojave-card border-border/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-emerald-500/10">
-                <FileText className="size-4 text-emerald-600" />
+              <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
+                <FileText className="size-4 text-primary" />
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground">Total Documents</p>
@@ -213,7 +213,7 @@ export function DocumentsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border/50 shadow-sm">
+        <Card className="mojave-card border-border/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex size-9 items-center justify-center rounded-lg bg-sky-500/10">
@@ -226,7 +226,7 @@ export function DocumentsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border/50 shadow-sm">
+        <Card className="mojave-card border-border/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex size-9 items-center justify-center rounded-lg bg-amber-500/10">
@@ -239,7 +239,7 @@ export function DocumentsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border/50 shadow-sm">
+        <Card className="mojave-card border-border/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex size-9 items-center justify-center rounded-lg bg-teal-500/10">
@@ -272,7 +272,7 @@ export function DocumentsPage() {
               variant={selectedCategory === cat ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedCategory(cat)}
-              className={selectedCategory === cat ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : ''}
+              className={selectedCategory === cat ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}
             >
               {cat}
             </Button>
@@ -297,7 +297,7 @@ export function DocumentsPage() {
       </div>
 
       {/* Document List */}
-      <Card className="border-border/50 shadow-sm">
+      <Card className="mojave-card border-border/30">
         <CardContent className="p-0">
           <ScrollArea className="max-h-[600px]">
             <div className="divide-y divide-border/50">

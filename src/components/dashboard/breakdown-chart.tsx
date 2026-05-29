@@ -16,25 +16,25 @@ interface BreakdownChartProps {
   isLoading?: boolean
 }
 
-// ── Color Palettes ───────────────────────────────────────────────────────────
+// ── Color Palettes — Warm Mojave tones ───────────────────────────────────────
 
 const paymentColors = {
-  paid: '#10b981',     // emerald-500
-  pending: '#f59e0b',  // amber-500
-  overdue: '#ef4444',  // red-500
+  paid: '#c2703a',     // warm terracotta
+  pending: '#d4956a',  // warm sand
+  overdue: '#dc4a3a',  // warm red
 }
 
 const ticketColors = {
-  open: '#f59e0b',       // amber-500
-  in_progress: '#14b8a6', // teal-500
-  scheduled: '#8b5cf6',   // violet-500
-  resolved: '#10b981',    // emerald-500
+  open: '#d4956a',       // warm sand
+  in_progress: '#6ba3b5', // muted teal
+  scheduled: '#8b6ba5',   // muted violet
+  resolved: '#c2703a',    // warm terracotta
 }
 
 const leaseColors = {
-  active: '#10b981',    // emerald-500
-  expiring: '#f59e0b',  // amber-500
-  expired: '#ef4444',   // red-500
+  active: '#c2703a',    // warm terracotta
+  expiring: '#d4956a',  // warm sand
+  expired: '#dc4a3a',   // warm red
 }
 
 // ── Custom Tooltip ───────────────────────────────────────────────────────────
@@ -48,13 +48,13 @@ function BreakdownTooltip({ active, payload }: CustomTooltipProps) {
   if (!active || !payload || !payload.length) return null
 
   return (
-    <div className="rounded-lg border border-border bg-card px-3 py-2 shadow-xl">
+    <div className="rounded-xl border border-border/40 bg-card/95 backdrop-blur-xl px-3 py-2 shadow-xl">
       <div className="flex items-center gap-2">
         <div
-          className="size-2.5 rounded-full"
+          className="size-2 rounded-full"
           style={{ backgroundColor: payload[0].payload.fill }}
         />
-        <span className="text-xs text-muted-foreground capitalize">
+        <span className="text-[11px] text-muted-foreground capitalize">
           {payload[0].name.replace('_', ' ')}:
         </span>
         <span className="text-sm font-semibold text-foreground">
@@ -84,7 +84,7 @@ const renderCustomLabel = ({
   outerRadius,
   percent,
 }: LabelProps) => {
-  if (percent < 0.05) return null // Don't show label for tiny slices
+  if (percent < 0.05) return null
 
   const RADIAN = Math.PI / 180
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5
@@ -98,7 +98,7 @@ const renderCustomLabel = ({
       fill="white"
       textAnchor="middle"
       dominantBaseline="central"
-      className="text-xs font-bold"
+      className="text-[10px] font-bold"
     >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
@@ -114,7 +114,6 @@ export function BreakdownChart({
   leaseBreakdown,
   isLoading,
 }: BreakdownChartProps) {
-  // Transform data based on type
   let chartData: Array<{ name: string; value: number; fill: string }> = []
   let title = ''
   let total = 0
@@ -151,12 +150,12 @@ export function BreakdownChart({
 
   if (isLoading) {
     return (
-      <Card className="border-border/50">
+      <Card className="border-border/30 bg-card/80">
         <CardHeader className="pb-2">
-          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-4 w-28 rounded-md" />
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-[180px] w-full" />
+          <Skeleton className="h-[160px] w-full rounded-lg" />
         </CardContent>
       </Card>
     )
@@ -164,27 +163,27 @@ export function BreakdownChart({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.6 }}
+      transition={{ duration: 0.45, delay: 0.6 }}
     >
-      <Card className="border-border/50">
+      <Card className="mojave-card border-border/30 bg-card/80">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-semibold">{title}</CardTitle>
-            <span className="text-xs text-muted-foreground">{total} total</span>
+            <CardTitle className="text-[13px] font-semibold">{title}</CardTitle>
+            <span className="text-[11px] text-muted-foreground">{total} total</span>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[180px] w-full">
+          <div className="h-[160px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={50}
-                  outerRadius={75}
+                  innerRadius={45}
+                  outerRadius={68}
                   paddingAngle={3}
                   dataKey="value"
                   labelLine={false}
@@ -200,17 +199,17 @@ export function BreakdownChart({
             </ResponsiveContainer>
           </div>
           {/* Legend */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
             {chartData.map((item) => (
               <div key={item.name} className="flex items-center gap-1.5">
                 <div
-                  className="size-2.5 rounded-full"
+                  className="size-2 rounded-full"
                   style={{ backgroundColor: item.fill }}
                 />
-                <span className="text-xs text-muted-foreground capitalize">
+                <span className="text-[11px] text-muted-foreground capitalize">
                   {item.name.replace('_', ' ')}
                 </span>
-                <span className="text-xs font-medium text-foreground">
+                <span className="text-[11px] font-medium text-foreground">
                   {item.value}
                 </span>
               </div>

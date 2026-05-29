@@ -47,20 +47,20 @@ import {
 
 const PLAN_COLORS: Record<string, string> = {
   starter: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  professional: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  professional: 'bg-primary/10 text-primary dark:bg-primary/20',
   business: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
   enterprise: 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-400',
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  active: 'bg-primary/10 text-primary dark:bg-primary/20',
   trial: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
   suspended: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
   churned: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
 }
 
 const LICENSE_STATUS_COLORS: Record<string, string> = {
-  available: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  available: 'bg-primary/10 text-primary dark:bg-primary/20',
   activated: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400',
   expired: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
   revoked: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
@@ -69,12 +69,12 @@ const LICENSE_STATUS_COLORS: Record<string, string> = {
 const INVOICE_STATUS_COLORS: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
   sent: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400',
-  paid: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  paid: 'bg-primary/10 text-primary dark:bg-primary/20',
   overdue: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
   cancelled: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
 }
 
-const CHART_COLORS = ['#10b981', '#f59e0b', '#8b5cf6', '#6b7280', '#06b6d4', '#ec4899']
+const CHART_COLORS = ['#c2703a', '#f59e0b', '#8b5cf6', '#6b7280', '#06b6d4', '#ec4899']
 
 function formatCurrency(amount: number, currency = 'USD') {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount)
@@ -107,21 +107,21 @@ function DashboardTab() {
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i} className="border-border/50"><CardContent className="p-6"><Skeleton className="h-20 w-full" /></CardContent></Card>
+            <Card key={i} className="border-border/30"><CardContent className="p-6"><Skeleton className="h-20 w-full" /></CardContent></Card>
           ))}
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
-          <Card className="lg:col-span-2 border-border/50"><CardContent className="p-6"><Skeleton className="h-64 w-full" /></CardContent></Card>
-          <Card className="border-border/50"><CardContent className="p-6"><Skeleton className="h-64 w-full" /></CardContent></Card>
+          <Card className="lg:col-span-2 border-border/30"><CardContent className="p-6"><Skeleton className="h-64 w-full" /></CardContent></Card>
+          <Card className="border-border/30"><CardContent className="p-6"><Skeleton className="h-64 w-full" /></CardContent></Card>
         </div>
       </div>
     )
   }
 
   const kpis = [
-    { label: 'Total Clients', value: stats.totalClients, icon: Users, color: 'text-emerald-600 dark:text-emerald-400', bgColor: 'bg-emerald-500/10', trend: '+12%' },
+    { label: 'Total Clients', value: stats.totalClients, icon: Users, color: 'text-primary', bgColor: 'bg-primary/10', trend: '+12%' },
     { label: 'Active Clients', value: stats.activeClients, icon: CheckCircle2, color: 'text-green-600 dark:text-green-400', bgColor: 'bg-green-500/10', trend: '+8%' },
-    { label: 'MRR', value: formatCurrency(stats.mrr), icon: DollarSign, color: 'text-emerald-600 dark:text-emerald-400', bgColor: 'bg-emerald-500/10', trend: '+15%' },
+    { label: 'MRR', value: formatCurrency(stats.mrr), icon: DollarSign, color: 'text-primary', bgColor: 'bg-primary/10', trend: '+15%' },
     { label: 'Trial Clients', value: stats.trialClients, icon: Clock, color: 'text-amber-600 dark:text-amber-400', bgColor: 'bg-amber-500/10', trend: '+3' },
   ]
 
@@ -136,7 +136,7 @@ function DashboardTab() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
           >
-            <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow">
+            <Card className="mojave-card border-border/30 hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -147,7 +147,7 @@ function DashboardTab() {
                     <kpi.icon className={`size-5 ${kpi.color}`} />
                   </div>
                 </div>
-                <div className="mt-3 flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                <div className="mt-3 flex items-center gap-1 text-xs font-medium text-primary">
                   <TrendingUp className="size-3" />
                   {kpi.trend} from last month
                 </div>
@@ -166,7 +166,7 @@ function DashboardTab() {
           transition={{ delay: 0.2 }}
           className="lg:col-span-2"
         >
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold">Monthly Recurring Revenue</CardTitle>
               <CardDescription>Revenue trend over the last 12 months</CardDescription>
@@ -177,8 +177,8 @@ function DashboardTab() {
                   <AreaChart data={stats.clientGrowth}>
                     <defs>
                       <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
-                        <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                        <stop offset="0%" stopColor="#c2703a" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#c2703a" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-border/50" />
@@ -196,7 +196,7 @@ function DashboardTab() {
                     <Area
                       type="monotone"
                       dataKey="revenue"
-                      stroke="#10b981"
+                      stroke="#c2703a"
                       strokeWidth={2}
                       fill="url(#revenueGrad)"
                     />
@@ -213,7 +213,7 @@ function DashboardTab() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-border/50 shadow-sm h-full">
+          <Card className="mojave-card border-border/30 h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold">Client Distribution</CardTitle>
               <CardDescription>By subscription plan</CardDescription>
@@ -271,7 +271,7 @@ function DashboardTab() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Recent Clients</CardTitle>
             </CardHeader>
@@ -281,7 +281,7 @@ function DashboardTab() {
               ) : (
                 stats.recentClients.map((client) => (
                   <div key={client.id} className="flex items-center gap-3 rounded-lg p-2 -mx-1 hover:bg-accent/50 transition-colors">
-                    <div className="flex size-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+                    <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary text-sm font-bold">
                       {client.companyName.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -304,7 +304,7 @@ function DashboardTab() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
         >
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Upcoming Renewals</CardTitle>
               <CardDescription>Next 90 days</CardDescription>
@@ -352,7 +352,7 @@ function DashboardTab() {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">License Keys</CardTitle>
             </CardHeader>
@@ -363,7 +363,7 @@ function DashboardTab() {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Available</span>
-                <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 text-[10px]">
+                <Badge variant="secondary" className="bg-primary/10 text-primary dark:bg-primary/20 text-[10px]">
                   {stats.licenseStats.available}
                 </Badge>
               </div>
@@ -453,7 +453,7 @@ function ClientsTab() {
               <SelectItem value="enterprise">Enterprise</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={() => setShowAddDialog(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+          <Button onClick={() => setShowAddDialog(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
             <Plus className="size-4" />
             <span className="hidden sm:inline">Add Client</span>
           </Button>
@@ -462,7 +462,7 @@ function ClientsTab() {
 
       {/* Client Grid */}
       {filtered.length === 0 ? (
-        <Card className="border-border/50">
+        <Card className="border-border/30">
           <CardContent className="py-12 text-center">
             <Users className="mx-auto size-12 text-muted-foreground/30" />
             <h3 className="mt-4 text-lg font-semibold">No clients found</h3>
@@ -553,14 +553,14 @@ function LicensesTab() {
             </SelectContent>
           </Select>
         </div>
-        <Button onClick={() => setShowGenDialog(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+        <Button onClick={() => setShowGenDialog(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
           <Key className="size-4" />
           Generate Key
         </Button>
       </div>
 
       {/* Table */}
-      <Card className="border-border/50 shadow-sm overflow-hidden">
+      <Card className="mojave-card border-border/30 overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -598,7 +598,7 @@ function LicensesTab() {
                                 className="p-1 rounded hover:bg-accent transition-colors"
                               >
                                 {copiedKey === lk.key ? (
-                                  <CheckCircle2 className="size-3.5 text-emerald-500" />
+                                  <CheckCircle2 className="size-3.5 text-primary" />
                                 ) : (
                                   <Copy className="size-3.5 text-muted-foreground" />
                                 )}
@@ -697,14 +697,14 @@ function InvoicesTab() {
             </SelectContent>
           </Select>
         </div>
-        <Button onClick={() => setShowCreateDialog(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+        <Button onClick={() => setShowCreateDialog(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
           <FileText className="size-4" />
           Create Invoice
         </Button>
       </div>
 
       {/* Invoice Table */}
-      <Card className="border-border/50 shadow-sm overflow-hidden">
+      <Card className="mojave-card border-border/30 overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -767,11 +767,11 @@ export function OwnerPage() {
         animate={{ opacity: 1, y: 0 }}
         className="flex items-start gap-4"
       >
-        <div className="flex size-12 items-center justify-center rounded-xl bg-emerald-500/10">
-          <Shield className="size-6 text-emerald-600 dark:text-emerald-400" />
+        <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+          <Shield className="size-6 text-primary" />
         </div>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold tracking-tight">Owner Management</h1>
+          <h1 className="text-xl font-semibold">Owner Management</h1>
           <p className="mt-1 text-sm text-muted-foreground">Manage SaaS clients, licenses, and billing</p>
         </div>
       </motion.div>

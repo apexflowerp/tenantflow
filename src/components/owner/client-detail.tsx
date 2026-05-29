@@ -21,20 +21,20 @@ import {
 
 const PLAN_COLORS: Record<string, string> = {
   starter: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  professional: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  professional: 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary',
   business: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
   enterprise: 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-400',
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  active: 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary',
   trial: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
   suspended: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
   churned: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
 }
 
 const LICENSE_STATUS_COLORS: Record<string, string> = {
-  available: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  available: 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary',
   activated: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400',
   expired: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
   revoked: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
@@ -43,7 +43,7 @@ const LICENSE_STATUS_COLORS: Record<string, string> = {
 const INVOICE_STATUS_COLORS: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
   sent: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400',
-  paid: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  paid: 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary',
   overdue: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
   cancelled: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
 }
@@ -130,7 +130,7 @@ export function ClientDetail() {
 
   // Activity timeline from audit logs (simulated)
   const activityItems = [
-    { id: 1, action: 'Client created', date: client.createdAt, icon: Building2, color: 'text-emerald-500' },
+    { id: 1, action: 'Client created', date: client.createdAt, icon: Building2, color: 'text-primary' },
     { id: 2, action: 'Plan upgraded to ' + client.plan, date: client.updatedAt, icon: ArrowLeft, color: 'text-violet-500' },
     { id: 3, action: 'License key activated', date: client.updatedAt, icon: Key, color: 'text-sky-500' },
   ]
@@ -150,7 +150,7 @@ export function ClientDetail() {
 
       {/* Client Header */}
       <div className="flex flex-col sm:flex-row items-start gap-4">
-        <div className="flex size-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-xl font-bold shadow-md">
+        <div className="flex size-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xl font-bold shadow-md">
           {client.logo ? (
             <img src={client.logo} alt={client.companyName} className="size-16 rounded-xl object-cover" />
           ) : (
@@ -177,25 +177,25 @@ export function ClientDetail() {
 
       {/* Quick Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-border/50 shadow-sm">
+        <Card className="border-border/30 shadow-sm">
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Monthly Fee</p>
             <p className="mt-1 text-xl font-bold">{formatCurrency(client.monthlyFee)}</p>
           </CardContent>
         </Card>
-        <Card className="border-border/50 shadow-sm">
+        <Card className="border-border/30 shadow-sm">
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Properties</p>
             <p className="mt-1 text-xl font-bold">{usageData.properties.used}<span className="text-sm font-normal text-muted-foreground">/{usageData.properties.max}</span></p>
           </CardContent>
         </Card>
-        <Card className="border-border/50 shadow-sm">
+        <Card className="border-border/30 shadow-sm">
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Users</p>
             <p className="mt-1 text-xl font-bold">{usageData.users.used}<span className="text-sm font-normal text-muted-foreground">/{usageData.users.max}</span></p>
           </CardContent>
         </Card>
-        <Card className="border-border/50 shadow-sm">
+        <Card className="border-border/30 shadow-sm">
           <CardContent className="p-4">
             <p className="text-xs text-muted-foreground">Devices</p>
             <p className="mt-1 text-xl font-bold">{usageData.devices.used}<span className="text-sm font-normal text-muted-foreground">/{usageData.devices.max}</span></p>
@@ -218,10 +218,10 @@ export function ClientDetail() {
         <TabsContent value="overview" className="mt-6">
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Company Info */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="border-border/30 shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <Building2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  <Building2 className="size-4 text-primary" />
                   Company Information
                 </CardTitle>
               </CardHeader>
@@ -237,10 +237,10 @@ export function ClientDetail() {
             </Card>
 
             {/* Contact Info */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="border-border/30 shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <Mail className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  <Mail className="size-4 text-primary" />
                   Contact Information
                 </CardTitle>
               </CardHeader>
@@ -252,15 +252,15 @@ export function ClientDetail() {
             </Card>
 
             {/* Usage Metrics */}
-            <Card className="border-border/50 shadow-sm lg:col-span-2">
+            <Card className="border-border/30 shadow-sm lg:col-span-2">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <Activity className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  <Activity className="size-4 text-primary" />
                   Usage Metrics
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <UsageMetric label="Properties" used={usageData.properties.used} max={usageData.properties.max} icon={HomeIcon} color="text-emerald-500" />
+                <UsageMetric label="Properties" used={usageData.properties.used} max={usageData.properties.max} icon={HomeIcon} color="text-primary" />
                 <UsageMetric label="Users" used={usageData.users.used} max={usageData.users.max} icon={Users} color="text-sky-500" />
                 <UsageMetric label="Devices" used={usageData.devices.used} max={usageData.devices.max} icon={Monitor} color="text-violet-500" />
               </CardContent>
@@ -272,13 +272,13 @@ export function ClientDetail() {
         <TabsContent value="subscription" className="mt-6">
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Current Plan */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="border-border/30 shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold">Current Plan</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-sm font-bold">
+                  <div className="flex size-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white text-sm font-bold">
                     {client.plan.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -299,7 +299,7 @@ export function ClientDetail() {
             </Card>
 
             {/* Contract & Billing */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="border-border/30 shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold">Contract & Billing</CardTitle>
               </CardHeader>
@@ -324,7 +324,7 @@ export function ClientDetail() {
             </Card>
 
             {/* Plan Options */}
-            <Card className="border-border/50 shadow-sm lg:col-span-2">
+            <Card className="border-border/30 shadow-sm lg:col-span-2">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold">Plan Options</CardTitle>
                 <CardDescription>Available plans for this client</CardDescription>
@@ -339,15 +339,15 @@ export function ClientDetail() {
                         key={plan}
                         className={`rounded-lg border p-4 text-center transition-colors ${
                           isCurrent
-                            ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20'
-                            : 'border-border/60 hover:border-emerald-300'
+                            ? 'border-primary/20 bg-primary/5 dark:bg-primary/10'
+                            : 'border-border/60 hover:border-primary/20'
                         }`}
                       >
                         <p className="text-sm font-semibold capitalize">{plan}</p>
                         <p className="mt-1 text-xl font-bold">{formatCurrency(prices[plan])}</p>
                         <p className="text-xs text-muted-foreground">/month</p>
                         {isCurrent && (
-                          <Badge className="mt-2 bg-emerald-600 text-white text-[10px]">Current Plan</Badge>
+                          <Badge className="mt-2 bg-primary text-primary-foreground text-[10px]">Current Plan</Badge>
                         )}
                       </div>
                     )
@@ -360,7 +360,7 @@ export function ClientDetail() {
 
         {/* ── Invoices Tab ── */}
         <TabsContent value="invoices" className="mt-6">
-          <Card className="border-border/50 shadow-sm overflow-hidden">
+          <Card className="border-border/30 shadow-sm overflow-hidden">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Invoice History</CardTitle>
             </CardHeader>
@@ -409,7 +409,7 @@ export function ClientDetail() {
 
         {/* ── License Keys Tab ── */}
         <TabsContent value="licenses" className="mt-6">
-          <Card className="border-border/50 shadow-sm overflow-hidden">
+          <Card className="border-border/30 shadow-sm overflow-hidden">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">License Keys</CardTitle>
             </CardHeader>
@@ -439,7 +439,7 @@ export function ClientDetail() {
                             <code className="text-xs font-mono bg-muted px-2 py-1 rounded">{maskKey(lk.key)}</code>
                             <button onClick={() => copyKey(lk.key)} className="p-1 rounded hover:bg-accent transition-colors">
                               {copiedKey === lk.key ? (
-                                <CheckCircle2 className="size-3.5 text-emerald-500" />
+                                <CheckCircle2 className="size-3.5 text-primary" />
                               ) : (
                                 <Copy className="size-3.5 text-muted-foreground" />
                               )}
@@ -465,7 +465,7 @@ export function ClientDetail() {
 
         {/* ── Activity Tab ── */}
         <TabsContent value="activity" className="mt-6">
-          <Card className="border-border/50 shadow-sm">
+          <Card className="border-border/30 shadow-sm">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Activity Timeline</CardTitle>
             </CardHeader>
@@ -499,7 +499,7 @@ export function ClientDetail() {
         <TabsContent value="settings" className="mt-6">
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Customization */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="border-border/30 shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold">Customization</CardTitle>
               </CardHeader>
@@ -516,7 +516,7 @@ export function ClientDetail() {
             </Card>
 
             {/* Features & Notes */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="border-border/30 shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold">Features & Notes</CardTitle>
               </CardHeader>

@@ -33,12 +33,12 @@ interface MessageStats {
 
 function CommunicationsSkeleton() {
   return (
-    <div className="flex h-[calc(100vh-10rem)] gap-0 rounded-xl border border-border/50 bg-card overflow-hidden">
-      <div className="w-full md:w-[380px] lg:w-[420px] border-r border-border/50">
-        <div className="p-3 border-b border-border/50">
+    <div className="flex h-[calc(100vh-10rem)] gap-0 rounded-xl border border-border/30 bg-card overflow-hidden">
+      <div className="w-full md:w-[380px] lg:w-[420px] border-r border-border/30">
+        <div className="p-3 border-b border-border/30">
           <Skeleton className="h-9 w-full" />
         </div>
-        <div className="flex border-b border-border/50">
+        <div className="flex border-b border-border/30">
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="flex-1 h-9 m-1" />
           ))}
@@ -209,7 +209,7 @@ export function CommunicationsPage() {
                   {stats.total} messages
                 </span>
                 {stats.unread > 0 && (
-                  <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0">
+                  <Badge variant="secondary" className="h-5 px-1.5 text-[10px] bg-primary/10 text-primary border-0">
                     {stats.unread} unread
                   </Badge>
                 )}
@@ -228,7 +228,7 @@ export function CommunicationsPage() {
         </div>
         <Button
           onClick={() => setNewMessageOpen(true)}
-          className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+          className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
           size="sm"
         >
           <Plus className="size-4" />
@@ -237,10 +237,10 @@ export function CommunicationsPage() {
       </div>
 
       {/* Two-column layout */}
-      <div className="flex h-[calc(100vh-14rem)] rounded-xl border border-border/50 bg-card overflow-hidden">
+      <div className="flex h-[calc(100vh-14rem)] rounded-xl border border-border/30 bg-card overflow-hidden">
         {/* Left panel - Message list */}
         <div
-          className={`w-full md:w-[380px] lg:w-[420px] border-r border-border/50 shrink-0 ${
+          className={`w-full md:w-[380px] lg:w-[420px] border-r border-border/30 shrink-0 ${
             showMobileDetail ? 'hidden md:flex md:flex-col' : 'flex flex-col'
           }`}
         >
@@ -263,7 +263,7 @@ export function CommunicationsPage() {
         >
           {/* Mobile back button */}
           {showMobileDetail && (
-            <div className="md:hidden border-b border-border/50 p-2">
+            <div className="md:hidden border-b border-border/30 p-2">
               <Button
                 variant="ghost"
                 size="sm"

@@ -52,7 +52,7 @@ function CustomTooltip({ active, payload, label }: {
 export function OccupancyChart({ data, loading, avgRate }: OccupancyChartProps) {
   if (loading) {
     return (
-      <Card className="border-border/50 shadow-sm">
+      <Card className="border-border/30 shadow-sm">
         <CardHeader className="pb-2">
           <Skeleton className="h-5 w-36" />
         </CardHeader>
@@ -66,7 +66,7 @@ export function OccupancyChart({ data, loading, avgRate }: OccupancyChartProps) 
   const averageRate = avgRate ?? Math.round(data.reduce((s, d) => s + d.rate, 0) / (data.length || 1))
 
   return (
-    <Card className="border-border/50 shadow-sm">
+    <Card className="border-border/30 shadow-sm">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold">Occupancy Trend</CardTitle>
@@ -81,8 +81,8 @@ export function OccupancyChart({ data, loading, avgRate }: OccupancyChartProps) 
             <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="occupancyGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#c2703a" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#c2703a" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.4} />
@@ -102,7 +102,7 @@ export function OccupancyChart({ data, loading, avgRate }: OccupancyChartProps) 
               <Tooltip content={<CustomTooltip />} />
               <ReferenceLine
                 y={averageRate}
-                stroke="#10b981"
+                stroke="#c2703a"
                 strokeDasharray="5 5"
                 strokeOpacity={0.5}
                 label={{}}
@@ -110,12 +110,12 @@ export function OccupancyChart({ data, loading, avgRate }: OccupancyChartProps) 
               <Line
                 type="monotone"
                 dataKey="rate"
-                stroke="#10b981"
+                stroke="#c2703a"
                 strokeWidth={2.5}
                 dot={false}
                 activeDot={{
                   r: 5,
-                  stroke: '#10b981',
+                  stroke: '#c2703a',
                   strokeWidth: 2,
                   fill: '#fff',
                 }}

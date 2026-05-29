@@ -52,9 +52,9 @@ const COLUMNS: ColumnDef[] = [
     key: 'resolved',
     label: 'Resolved',
     icon: CheckCircle,
-    headerColor: 'text-emerald-600 dark:text-emerald-400',
-    headerBg: 'bg-emerald-500/10',
-    columnBg: 'bg-emerald-500/[0.03] dark:bg-emerald-500/[0.04]',
+    headerColor: 'text-primary',
+    headerBg: 'bg-primary/10',
+    columnBg: 'bg-primary/5 dark:bg-primary/10',
     emptyMessage: 'No resolved tickets',
   },
 ]

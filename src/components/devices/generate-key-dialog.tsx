@@ -136,7 +136,7 @@ export function GenerateKeyDialog({ open, onOpenChange, onSuccess }: GenerateKey
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Key className="size-5 text-emerald-600 dark:text-emerald-400" />
+            <Key className="size-5 text-primary" />
             Generate License Key
           </DialogTitle>
           <DialogDescription>
@@ -172,7 +172,7 @@ export function GenerateKeyDialog({ open, onOpenChange, onSuccess }: GenerateKey
                 </SelectItem>
                 <SelectItem value="standard">
                   <div className="flex items-center gap-2">
-                    <div className="size-2 rounded-full bg-emerald-500" />
+                    <div className="size-2 rounded-full bg-primary" />
                     Standard — 5 devices, 10 users
                   </div>
                 </SelectItem>
@@ -266,7 +266,7 @@ export function GenerateKeyDialog({ open, onOpenChange, onSuccess }: GenerateKey
             Cancel
           </Button>
           <Button
-            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={handleSubmit}
             disabled={isSubmitting}
           >

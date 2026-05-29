@@ -97,8 +97,8 @@ const SUMMARY_CARDS: SummaryCardDef[] = [
     key: 'resolved',
     label: 'Resolved',
     icon: CheckCircle,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bg: 'bg-primary/10',
     statusKey: 'resolved',
   },
 ]
@@ -116,7 +116,7 @@ const STATUS_BADGE: Record<string, { label: string; color: string; bg: string }>
   open: { label: 'Open', color: 'text-amber-700 dark:text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
   in_progress: { label: 'In Progress', color: 'text-teal-700 dark:text-teal-400', bg: 'bg-teal-500/10 border-teal-500/20' },
   scheduled: { label: 'Scheduled', color: 'text-purple-700 dark:text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
-  resolved: { label: 'Resolved', color: 'text-emerald-700 dark:text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
+  resolved: { label: 'Resolved', color: 'text-primary', bg: 'bg-primary/10 border-primary/20' },
 }
 
 // ── Sort helpers ─────────────────────────────────────────────────────────────
@@ -160,9 +160,9 @@ function SortIcon({ field, currentField, dir }: { field: SortField; currentField
     return <ArrowUpDown className="size-3 text-muted-foreground/40" />
   }
   return dir === 'asc' ? (
-    <ChevronUp className="size-3 text-emerald-600 dark:text-emerald-400" />
+    <ChevronUp className="size-3 text-primary" />
   ) : (
-    <ChevronDown className="size-3 text-emerald-600 dark:text-emerald-400" />
+    <ChevronDown className="size-3 text-primary" />
   )
 }
 
@@ -354,7 +354,7 @@ export function MaintenancePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: i * 0.05 }}
               >
-                <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow">
+                <Card className="mojave-card border-border/30 hover:shadow-md transition-shadow">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -427,7 +427,7 @@ export function MaintenancePage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Card key={i} className="border-border/50">
+                <Card key={i} className="border-border/30">
                   <CardContent className="p-4 space-y-3">
                     <Skeleton className="h-4 w-20" />
                     <Skeleton className="h-3 w-16" />
@@ -439,7 +439,7 @@ export function MaintenancePage() {
             </div>
           </div>
         ) : tickets.length === 0 ? (
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30">
             <CardContent className="flex flex-col items-center justify-center py-16 text-center">
               <div className="flex size-16 items-center justify-center rounded-2xl bg-orange-500/10 mb-4">
                 <Wrench className="size-8 text-orange-600 dark:text-orange-400" />
@@ -466,7 +466,7 @@ export function MaintenancePage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="border-border/50 shadow-sm overflow-hidden">
+            <Card className="mojave-card border-border/30 overflow-hidden">
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>

@@ -118,7 +118,7 @@ export function RegisterDeviceDialog({ open, onOpenChange, onSuccess }: Register
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Monitor className="size-5 text-emerald-600 dark:text-emerald-400" />
+            <Monitor className="size-5 text-primary" />
             Register New Device
           </DialogTitle>
           <DialogDescription>
@@ -230,7 +230,7 @@ export function RegisterDeviceDialog({ open, onOpenChange, onSuccess }: Register
             Cancel
           </Button>
           <Button
-            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={handleSubmit}
             disabled={isSubmitting || !deviceName.trim()}
           >

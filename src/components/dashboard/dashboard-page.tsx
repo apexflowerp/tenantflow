@@ -35,30 +35,30 @@ const quickActions = [
   {
     label: 'Add Property',
     icon: Building2,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'hover:bg-emerald-50 dark:hover:bg-emerald-950/30',
-    border: 'hover:border-emerald-200 dark:hover:border-emerald-800',
+    color: 'text-primary',
+    bg: 'hover:bg-primary/5',
+    border: 'hover:border-primary/20',
   },
   {
     label: 'New Tenant',
     icon: UserPlus,
-    color: 'text-teal-600 dark:text-teal-400',
-    bg: 'hover:bg-teal-50 dark:hover:bg-teal-950/30',
-    border: 'hover:border-teal-200 dark:hover:border-teal-800',
+    color: 'text-primary',
+    bg: 'hover:bg-primary/5',
+    border: 'hover:border-primary/20',
   },
   {
     label: 'Create Lease',
     icon: FileText,
-    color: 'text-green-600 dark:text-green-400',
-    bg: 'hover:bg-green-50 dark:hover:bg-green-950/30',
-    border: 'hover:border-green-200 dark:hover:border-green-800',
+    color: 'text-primary',
+    bg: 'hover:bg-primary/5',
+    border: 'hover:border-primary/20',
   },
   {
     label: 'Report Issue',
     icon: Wrench,
-    color: 'text-amber-600 dark:text-amber-400',
-    bg: 'hover:bg-amber-50 dark:hover:bg-amber-950/30',
-    border: 'hover:border-amber-200 dark:hover:border-amber-800',
+    color: 'text-orange-600 dark:text-orange-400',
+    bg: 'hover:bg-orange-50 dark:hover:bg-orange-950/20',
+    border: 'hover:border-orange-200 dark:hover:border-orange-800',
   },
 ]
 
@@ -85,7 +85,7 @@ export function DashboardPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="flex size-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/30">
+        <div className="flex size-16 items-center justify-center rounded-2xl bg-red-50 dark:bg-red-950/30">
           <AlertCircle className="size-8 text-red-500" />
         </div>
         <div className="text-center space-y-1">
@@ -97,7 +97,7 @@ export function DashboardPage() {
         <Button
           variant="outline"
           onClick={() => fetchDashboardData()}
-          className="gap-2"
+          className="gap-2 rounded-xl"
         >
           <RefreshCw className="size-4" />
           Try again
@@ -107,23 +107,22 @@ export function DashboardPage() {
   }
 
   // ── Payment Breakdown Transform ──────────────────────────────────────────
-  // The API returns paymentBreakdown as { paid, pending, overdue } counts
   const paymentData = paymentBreakdown ?? undefined
 
   return (
     <div className="space-y-6">
       {/* ── Page Header ──────────────────────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
       >
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">
             Dashboard
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-0.5">
             Overview of your property portfolio performance
           </p>
         </div>
@@ -132,15 +131,15 @@ export function DashboardPage() {
           size="sm"
           onClick={() => fetchDashboardData()}
           disabled={isLoading}
-          className="gap-2 w-fit"
+          className="gap-2 w-fit rounded-xl border-border/40"
         >
-          <RefreshCw className={`size-4 ${isLoading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`size-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           Refresh
         </Button>
       </motion.div>
 
       {/* ── KPI Cards Row ────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {isLoading ? (
           <>
             <KpiCardSkeleton />
@@ -155,8 +154,8 @@ export function DashboardPage() {
               value={stats?.totalProperties ?? 0}
               subtitle="+2 this month"
               icon={Building2}
-              iconColor="text-emerald-600 dark:text-emerald-400"
-              iconBg="bg-emerald-50 dark:bg-emerald-950/40"
+              iconColor="text-primary"
+              iconBg="bg-primary/10"
               trend={12}
               trendDirection="up"
               trendLabel="vs last month"
@@ -168,8 +167,8 @@ export function DashboardPage() {
               suffix="%"
               subtitle={`${stats?.occupiedUnits ?? 0} of ${stats?.totalUnits ?? 0} units occupied`}
               icon={Home}
-              iconColor="text-teal-600 dark:text-teal-400"
-              iconBg="bg-teal-50 dark:bg-teal-950/40"
+              iconColor="text-primary"
+              iconBg="bg-primary/10"
               index={1}
             />
             <KpiCard
@@ -178,8 +177,8 @@ export function DashboardPage() {
               prefix="$"
               subtitle={`${formatCurrency(stats?.pendingPayments ?? 0)} pending`}
               icon={DollarSign}
-              iconColor="text-green-600 dark:text-green-400"
-              iconBg="bg-green-50 dark:bg-green-950/40"
+              iconColor="text-primary"
+              iconBg="bg-primary/10"
               trend={12}
               trendDirection="up"
               trendLabel="vs last month"
@@ -190,8 +189,8 @@ export function DashboardPage() {
               value={ticketBreakdown?.open ?? 0}
               subtitle={`${ticketBreakdown?.in_progress ?? 0} in progress`}
               icon={AlertTriangle}
-              iconColor="text-amber-600 dark:text-amber-400"
-              iconBg="bg-amber-50 dark:bg-amber-950/40"
+              iconColor="text-orange-600 dark:text-orange-400"
+              iconBg="bg-orange-50 dark:bg-orange-950/30"
               index={3}
             />
           </>
@@ -206,48 +205,48 @@ export function DashboardPage() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="flex items-center gap-4 px-1"
         >
-          <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+          <span className="text-[11px] font-medium text-muted-foreground whitespace-nowrap uppercase tracking-wider">
             Occupancy
           </span>
           <Progress
             value={stats.occupancyRate}
-            className="h-2 flex-1 [&>div]:bg-emerald-500"
+            className="h-1.5 flex-1 [&>div]:bg-primary"
           />
-          <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
+          <span className="text-[11px] font-semibold text-primary whitespace-nowrap">
             {stats.occupancyRate}%
           </span>
         </motion.div>
       )}
 
       {/* ── Middle Row: Revenue Chart + Quick Actions ─────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2">
           <RevenueChart data={revenueData} isLoading={isLoading} />
         </div>
 
         {/* ── Quick Actions Panel ─────────────────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.45, delay: 0.5 }}
         >
-          <Card className="border-border/50 h-full">
+          <Card className="mojave-card border-border/30 bg-card/80 h-full">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+              <CardTitle className="text-base font-semibold">Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-2">
               {quickActions.map((action, idx) => (
                 <motion.button
                   key={action.label}
-                  initial={{ opacity: 0, x: 10 }}
+                  initial={{ opacity: 0, x: 8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.5 + idx * 0.08 }}
-                  className={`flex w-full items-center gap-3 rounded-xl border border-border/60 bg-background p-4 text-left transition-all duration-200 ${action.bg} ${action.border} hover:shadow-sm`}
+                  transition={{ duration: 0.25, delay: 0.5 + idx * 0.06 }}
+                  className={`flex w-full items-center gap-3 rounded-xl border border-border/30 bg-background/50 p-3.5 text-left transition-all duration-200 ${action.bg} ${action.border} hover:shadow-sm`}
                 >
-                  <div className="flex size-10 items-center justify-center rounded-lg bg-muted/50">
-                    <action.icon className={`size-5 ${action.color}`} />
+                  <div className="flex size-9 items-center justify-center rounded-lg bg-muted/40">
+                    <action.icon className={`size-4 ${action.color}`} />
                   </div>
-                  <span className="text-sm font-medium text-foreground">
+                  <span className="text-[13px] font-medium text-foreground">
                     {action.label}
                   </span>
                 </motion.button>
@@ -258,7 +257,7 @@ export function DashboardPage() {
       </div>
 
       {/* ── Bottom Row: Activity Feed + Breakdown Charts ──────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ActivityFeed activities={recentActivities} isLoading={isLoading} />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

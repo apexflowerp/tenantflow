@@ -89,7 +89,7 @@ export function NewMessageDialog({
 
   const typeOptions = [
     { value: 'email', label: 'Email', icon: Mail, color: 'text-cyan-600' },
-    { value: 'sms', label: 'SMS', icon: MessageSquare, color: 'text-emerald-600' },
+    { value: 'sms', label: 'SMS', icon: MessageSquare, color: 'text-primary' },
     { value: 'announcement', label: 'Announcement', icon: Megaphone, color: 'text-amber-600' },
   ]
 
@@ -116,11 +116,11 @@ export function NewMessageDialog({
                     onClick={() => setType(opt.value)}
                     className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                       type === opt.value
-                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                        ? 'border-primary/20 bg-primary/10 text-primary dark:text-primary'
                         : 'border-border/60 text-muted-foreground hover:bg-accent/50'
                     }`}
                   >
-                    <Icon className={`size-4 ${type === opt.value ? 'text-emerald-600' : opt.color}`} />
+                    <Icon className={`size-4 ${type === opt.value ? 'text-primary' : opt.color}`} />
                     {opt.label}
                   </button>
                 )
@@ -186,7 +186,7 @@ export function NewMessageDialog({
           <Button
             onClick={handleSubmit}
             disabled={sending || !content.trim()}
-            className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {sending ? (
               <Loader2 className="size-4 animate-spin" />

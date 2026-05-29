@@ -78,12 +78,12 @@ export function PropertiesPage() {
               {/* Page Header */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="size-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
-                    <Building2 className="size-5 text-emerald-600" />
+                  <div className="size-10 rounded-lg bg-primary/5 flex items-center justify-center shrink-0">
+                    <Building2 className="size-5 text-primary" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h1 className="text-2xl font-bold text-foreground">Properties</h1>
+                      <h1 className="text-xl font-semibold text-foreground">Properties</h1>
                       <Badge variant="secondary" className="text-xs">
                         {properties.length}
                       </Badge>

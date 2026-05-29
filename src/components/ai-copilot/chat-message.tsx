@@ -15,7 +15,7 @@ function TypingIndicator() {
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="size-1.5 rounded-full bg-emerald-500"
+          className="size-1.5 rounded-full bg-primary"
           animate={{
             y: [0, -4, 0],
             opacity: [0.4, 1, 0.4],
@@ -51,8 +51,8 @@ export function ChatMessageBubble({ message, isLatest }: ChatMessageProps) {
       <div
         className={`flex size-8 shrink-0 items-center justify-center rounded-full ${
           isUser
-            ? 'bg-emerald-600 text-white'
-            : 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white'
+            ? 'bg-primary text-primary-foreground'
+            : 'bg-gradient-to-br from-amber-500 to-orange-600 text-white'
         }`}
       >
         {isUser ? <User className="size-4" /> : <Sparkles className="size-3.5" />}
@@ -63,7 +63,7 @@ export function ChatMessageBubble({ message, isLatest }: ChatMessageProps) {
         <div
           className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
             isUser
-              ? 'bg-emerald-600 text-white rounded-br-md'
+              ? 'bg-primary text-primary-foreground rounded-br-md'
               : 'bg-muted text-foreground rounded-bl-md'
           }`}
         >
@@ -88,7 +88,7 @@ export function TypingMessage() {
       animate={{ opacity: 1, y: 0 }}
       className="flex gap-3"
     >
-      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-white">
+      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white">
         <Bot className="size-4" />
       </div>
       <div className="rounded-2xl rounded-bl-md bg-muted px-4 py-3">

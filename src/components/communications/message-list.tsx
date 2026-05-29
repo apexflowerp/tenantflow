@@ -50,7 +50,7 @@ interface MessageListProps {
 
 const typeConfig: Record<string, { icon: React.ComponentType<{ className?: string }>; label: string; color: string; bg: string }> = {
   email: { icon: Mail, label: 'Email', color: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-100 dark:bg-cyan-900/30' },
-  sms: { icon: MessageSquare, label: 'SMS', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-900/30' },
+  sms: { icon: MessageSquare, label: 'SMS', color: 'text-primary', bg: 'bg-primary/5 dark:bg-primary/10' },
   announcement: { icon: Megaphone, label: 'Announcement', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-900/30' },
 }
 
@@ -125,20 +125,20 @@ export function MessageList({
   return (
     <div className="flex h-full flex-col">
       {/* Search */}
-      <div className="p-3 border-b border-border/50">
+      <div className="p-3 border-b border-border/30">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search messages..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 h-9 bg-muted/30 border-border/50"
+            className="pl-9 h-9 bg-muted/30 border-border/30"
           />
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-border/50">
+      <div className="flex border-b border-border/30">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -146,7 +146,7 @@ export function MessageList({
             className={cn(
               'flex-1 px-3 py-2.5 text-xs font-medium transition-colors relative',
               activeTab === tab.id
-                ? 'text-emerald-600 dark:text-emerald-400'
+                ? 'text-primary'
                 : 'text-muted-foreground hover:text-foreground'
             )}
           >
@@ -154,7 +154,7 @@ export function MessageList({
             {activeTab === tab.id && (
               <motion.div
                 layoutId="message-tab-indicator"
-                className="absolute bottom-0 left-2 right-2 h-0.5 bg-emerald-500 rounded-full"
+                className="absolute bottom-0 left-2 right-2 h-0.5 bg-primary rounded-full"
               />
             )}
           </button>
@@ -173,7 +173,7 @@ export function MessageList({
               const displayName = message.tenant?.name || 'Unknown'
               const avatarColor = isInbound(message.direction)
                 ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300'
-                : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+                : 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary'
 
               return (
                 <motion.button
@@ -184,7 +184,7 @@ export function MessageList({
                   onClick={() => onSelect(message.id)}
                   className={cn(
                     'w-full flex items-start gap-3 p-3 text-left transition-colors hover:bg-accent/50',
-                    isSelected && 'bg-emerald-500/5 border-l-2 border-l-emerald-500',
+                    isSelected && 'bg-primary/5 border-l-2 border-l-primary',
                     isUnread && 'bg-accent/30'
                   )}
                 >
@@ -201,7 +201,7 @@ export function MessageList({
                         'absolute -bottom-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full border-2 border-background',
                         isInbound(message.direction)
                           ? 'bg-cyan-500'
-                          : 'bg-emerald-500'
+                          : 'bg-primary'
                       )}
                     >
                       {isInbound(message.direction) ? (
@@ -224,7 +224,7 @@ export function MessageList({
                         {displayName}
                       </span>
                       {isUnread && (
-                        <span className="size-2 rounded-full bg-emerald-500 shrink-0" />
+                        <span className="size-2 rounded-full bg-primary shrink-0" />
                       )}
                       <span className="ml-auto text-[11px] text-muted-foreground shrink-0">
                         {formatTime(message.createdAt)}

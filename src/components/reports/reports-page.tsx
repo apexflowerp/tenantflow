@@ -67,9 +67,9 @@ const REPORT_CATEGORIES = [
     id: 'financial',
     label: 'Financial Reports',
     icon: DollarSign,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-50 dark:bg-emerald-950/30',
-    borderColor: 'border-emerald-200 dark:border-emerald-800',
+    color: 'text-primary',
+    bgColor: 'bg-primary/5',
+    borderColor: 'border-primary/20',
     reports: [
       { id: 'income-statement', name: 'Income Statement (P&L)', description: 'Revenue, expenses, and net income overview', icon: TrendingUp },
       { id: 'balance-sheet', name: 'Balance Sheet', description: 'Assets, liabilities, and equity snapshot', icon: BarChart3 },
@@ -206,7 +206,7 @@ export function ReportsPage() {
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                <h1 className="text-xl font-semibold tracking-tight text-foreground">
                   Reports & Invoices
                 </h1>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -224,7 +224,7 @@ export function ReportsPage() {
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+                    <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
                       <Plus className="mr-1.5 size-4" />
                       Generate Report
                       <ChevronDown className="ml-1.5 size-3.5" />
@@ -248,12 +248,12 @@ export function ReportsPage() {
             {/* Quick Stats */}
             <div className="grid gap-3 sm:grid-cols-4">
               {[
-                { label: 'Reports Generated', value: '24', icon: FileBarChart, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
+                { label: 'Reports Generated', value: '24', icon: FileBarChart, color: 'text-primary', bg: 'bg-primary/5' },
                 { label: 'Invoices Sent', value: '18', icon: Receipt, color: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-50 dark:bg-sky-950/30' },
                 { label: 'Total Revenue', value: '$269.8K', icon: DollarSign, color: 'text-teal-600 dark:text-teal-400', bg: 'bg-teal-50 dark:bg-teal-950/30' },
                 { label: 'Outstanding', value: '$12.4K', icon: CreditCard, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/30' },
               ].map((stat) => (
-                <Card key={stat.label} className="border-border/50 shadow-sm">
+                <Card key={stat.label} className="mojave-card border-border/30">
                   <CardContent className="flex items-center gap-3 p-4">
                     <div className={`flex size-9 items-center justify-center rounded-lg ${stat.bg}`}>
                       <stat.icon className={`size-4 ${stat.color}`} />
@@ -283,7 +283,7 @@ export function ReportsPage() {
                   onClick={() => setViewMode('grid')}
                   className={`rounded-md p-1.5 transition-colors ${
                     viewMode === 'grid'
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+                      ? 'bg-primary/10 text-primary dark:bg-primary/20'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -293,7 +293,7 @@ export function ReportsPage() {
                   onClick={() => setViewMode('list')}
                   className={`rounded-md p-1.5 transition-colors ${
                     viewMode === 'list'
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+                      ? 'bg-primary/10 text-primary dark:bg-primary/20'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -322,7 +322,7 @@ export function ReportsPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.15 }}
                       >
-                        <Card className="group border-border/50 shadow-sm transition-all hover:border-emerald-200 hover:shadow-md dark:hover:border-emerald-800">
+                        <Card className="group mojave-card border-border/30 transition-all hover:border-primary/20 hover:shadow-md dark:hover:border-primary/30">
                           <CardContent className="p-4">
                             <div className="mb-3 flex items-start gap-2.5">
                               <div className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${category.bgColor}`}>
@@ -349,7 +349,7 @@ export function ReportsPage() {
                               </Button>
                               <Button
                                 size="sm"
-                                className="h-7 flex-1 bg-emerald-600 text-xs hover:bg-emerald-700"
+                                className="h-7 flex-1 bg-primary text-xs text-primary-foreground hover:bg-primary/90"
                                 onClick={() => {
                                   setGenerateOpen(true)
                                 }}
@@ -364,7 +364,7 @@ export function ReportsPage() {
                     ))}
                   </div>
                 ) : (
-                  <Card className="border-border/50 shadow-sm">
+                  <Card className="mojave-card border-border/30">
                     <CardContent className="divide-y divide-border/50 p-0">
                       {category.reports.map((report) => (
                         <div
@@ -390,7 +390,7 @@ export function ReportsPage() {
                             </Button>
                             <Button
                               size="sm"
-                              className="h-7 bg-emerald-600 text-xs hover:bg-emerald-700"
+                              className="h-7 bg-primary text-xs text-primary-foreground hover:bg-primary/90"
                               onClick={() => setGenerateOpen(true)}
                             >
                               <Play className="mr-1 size-3" />
@@ -411,7 +411,7 @@ export function ReportsPage() {
                 <Clock className="size-4 text-muted-foreground" />
                 Recent Reports
               </h2>
-              <Card className="border-border/50 shadow-sm">
+              <Card className="mojave-card border-border/30">
                 <CardContent className="divide-y divide-border/50 p-0">
                   {RECENT_REPORTS.map((report) => (
                     <div
@@ -422,13 +422,13 @@ export function ReportsPage() {
                         className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${
                           report.type === 'invoice'
                             ? 'bg-sky-50 dark:bg-sky-950/30'
-                            : 'bg-emerald-50 dark:bg-emerald-950/30'
+                            : 'bg-primary/5'
                         }`}
                       >
                         {report.type === 'invoice' ? (
                           <Receipt className="size-4 text-sky-600 dark:text-sky-400" />
                         ) : (
-                          <FileBarChart className="size-4 text-emerald-600 dark:text-emerald-400" />
+                          <FileBarChart className="size-4 text-primary" />
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -443,7 +443,7 @@ export function ReportsPage() {
                           className={`text-[10px] ${
                             report.type === 'invoice'
                               ? 'border-sky-200 text-sky-600 dark:border-sky-800 dark:text-sky-400'
-                              : 'border-emerald-200 text-emerald-600 dark:border-emerald-800 dark:text-emerald-400'
+                              : 'border-primary/20 text-primary dark:border-primary/30'
                           }`}
                         >
                           {report.type === 'invoice' ? 'Invoice' : 'Report'}

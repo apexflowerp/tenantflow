@@ -71,8 +71,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Dashboard',
     description: 'Your property management overview at a glance',
     icon: LayoutDashboard,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Total Properties', value: '6', trend: '+2' },
       { label: 'Active Tenants', value: '15', trend: '+3' },
@@ -90,8 +90,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Analytics',
     description: 'Insights and performance metrics across your portfolio',
     icon: BarChart3,
-    color: 'text-sky-600 dark:text-sky-400',
-    bgColor: 'bg-sky-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Revenue YTD', value: '$512,400', trend: '+18%' },
       { label: 'Collection Rate', value: '94.2%', trend: '+3%' },
@@ -103,8 +103,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Reports',
     description: 'Professional invoices, reports, and document generation',
     icon: FileBarChart,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Reports Generated', value: '24' },
       { label: 'Invoices Sent', value: '18' },
@@ -124,8 +124,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Properties',
     description: 'Manage your property portfolio and units',
     icon: Building2,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Total Properties', value: '6' },
       { label: 'Total Units', value: '24' },
@@ -142,8 +142,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Tenants',
     description: 'Tenant management and communication',
     icon: Users,
-    color: 'text-teal-600 dark:text-teal-400',
-    bgColor: 'bg-teal-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Total Tenants', value: '15' },
       { label: 'Active Leases', value: '12' },
@@ -155,8 +155,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Leases',
     description: 'Lease agreements, renewals, and expirations',
     icon: FileText,
-    color: 'text-amber-600 dark:text-amber-400',
-    bgColor: 'bg-amber-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Active Leases', value: '12' },
       { label: 'Expiring (30d)', value: '3' },
@@ -168,8 +168,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Billing',
     description: 'Payments, invoices, and financial tracking',
     icon: CreditCard,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Monthly Revenue', value: '$42,800' },
       { label: 'Pending', value: '$8,550' },
@@ -194,8 +194,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Communications',
     description: 'Messages, emails, and tenant communication',
     icon: MessageSquare,
-    color: 'text-cyan-600 dark:text-cyan-400',
-    bgColor: 'bg-cyan-500/10',
+    color: 'text-sky-600 dark:text-sky-400',
+    bgColor: 'bg-sky-500/10',
     stats: [
       { label: 'Unread Messages', value: '5' },
       { label: 'Sent This Week', value: '12' },
@@ -206,8 +206,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Documents',
     description: 'File management, templates, and document storage',
     icon: FolderOpen,
-    color: 'text-slate-600 dark:text-slate-400',
-    bgColor: 'bg-slate-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Total Documents', value: '24' },
       { label: 'Recent Uploads', value: '3' },
@@ -218,8 +218,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Owner Management',
     description: 'Manage SaaS clients, licenses, and billing',
     icon: Shield,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Active Clients', value: '3' },
       { label: 'MRR', value: '$1,197' },
@@ -231,8 +231,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Device Management',
     description: 'Track devices, manage serial keys, and control sessions',
     icon: ShieldCheck,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Total Devices', value: '5' },
       { label: 'Active', value: '3' },
@@ -245,8 +245,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Audit Trail',
     description: 'Track all system activities and security events',
     icon: ScrollText,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     stats: [
       { label: 'Total Events', value: '35' },
       { label: 'Warnings', value: '6' },
@@ -259,8 +259,8 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Settings',
     description: 'Configure your workspace and preferences',
     icon: Settings,
-    color: 'text-gray-600 dark:text-gray-400',
-    bgColor: 'bg-gray-500/10',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted/50',
   },
 }
 
@@ -273,24 +273,24 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
   return (
     <motion.div
       key={moduleId}
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
       className="space-y-6"
     >
       {/* Module header */}
       <div className="flex items-start gap-4">
-        <div className={`flex size-12 items-center justify-center rounded-xl ${config.bgColor}`}>
-          <Icon className={`size-6 ${config.color}`} />
+        <div className={`flex size-11 items-center justify-center rounded-xl ${config.bgColor}`}>
+          <Icon className={`size-5 ${config.color}`} />
         </div>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">
             {config.label}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">{config.description}</p>
+          <p className="mt-0.5 text-sm text-muted-foreground">{config.description}</p>
         </div>
-        <Badge variant="secondary" className="hidden sm:flex gap-1 text-xs">
+        <Badge variant="secondary" className="hidden sm:flex gap-1 text-[10px] font-medium">
           <Activity className="size-3" />
           Live
         </Badge>
@@ -298,15 +298,15 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
 
       {/* Stats cards */}
       {config.stats && config.stats.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {config.stats.map((stat) => (
-            <Card key={stat.label} className="border-border/50 shadow-sm">
+            <Card key={stat.label} className="mojave-card border-border/40 bg-card/80">
               <CardContent className="p-4">
-                <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
+                <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</p>
                 <div className="mt-1.5 flex items-baseline gap-2">
                   <p className="text-2xl font-bold tracking-tight">{stat.value}</p>
                   {stat.trend && (
-                    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                    <span className="inline-flex items-center gap-0.5 text-[11px] font-medium text-primary">
                       <TrendingUp className="size-3" />
                       {stat.trend}
                     </span>
@@ -326,7 +326,7 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
             return (
               <button
                 key={action.label}
-                className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="inline-flex items-center gap-2 rounded-xl border border-border/40 bg-card/80 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:shadow-md"
               >
                 <ActionIcon className="size-4 text-muted-foreground" />
                 {action.label}
@@ -338,7 +338,7 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
       )}
 
       {/* Content placeholder */}
-      <Card className="border-border/50 shadow-sm">
+      <Card className="mojave-card border-border/40 bg-card/80">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">Recent Activity</CardTitle>
         </CardHeader>
@@ -355,10 +355,10 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
               and real-time updates will be available soon.
             </p>
             <div className="mt-4 flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-[10px]">
                 Coming Soon
               </Badge>
-              <Badge variant="outline" className="text-xs gap-1">
+              <Badge variant="outline" className="text-[10px] gap-1">
                 <Sparkles className="size-3" />
                 AI-Enhanced
               </Badge>
@@ -373,232 +373,39 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
 // ── Module Renderer ─────────────────────────────────────────────────────────
 
 function ModuleContent({ moduleId }: { moduleId: string }) {
-  // Use real DashboardPage for the dashboard module
-  if (moduleId === 'dashboard') {
-    return (
-      <motion.div
-        key="dashboard"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <DashboardPage />
-      </motion.div>
-    )
+  const moduleMap: Record<string, React.ComponentType> = {
+    dashboard: DashboardPage,
+    properties: PropertiesPage,
+    tenants: TenantsPage,
+    leases: LeasesPage,
+    maintenance: MaintenancePage,
+    billing: BillingPage,
+    analytics: AnalyticsPage,
+    copilot: AiCopilotPage,
+    communications: CommunicationsPage,
+    settings: SettingsPage,
+    documents: DocumentsPage,
+    reports: ReportsPage,
+    owner: OwnerPage,
+    devices: DevicesPage,
+    audit: AuditPage,
   }
 
-  // Use PropertiesPage for the properties module
-  if (moduleId === 'properties') {
-    return (
-      <motion.div
-        key="properties"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <PropertiesPage />
-      </motion.div>
-    )
-  }
+  const ModuleComponent = moduleMap[moduleId]
 
-  // Use TenantsPage for the tenants module
-  if (moduleId === 'tenants') {
-    return (
+  return (
+    <AnimatePresence mode="wait">
       <motion.div
-        key="tenants"
-        initial={{ opacity: 0, y: 12 }}
+        key={moduleId}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
       >
-        <TenantsPage />
+        {ModuleComponent ? <ModuleComponent /> : <ModulePlaceholder moduleId={moduleId} />}
       </motion.div>
-    )
-  }
-
-  // Use LeasesPage for the leases module
-  if (moduleId === 'leases') {
-    return (
-      <motion.div
-        key="leases"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <LeasesPage />
-      </motion.div>
-    )
-  }
-
-  // Use MaintenancePage for the maintenance module
-  if (moduleId === 'maintenance') {
-    return (
-      <motion.div
-        key="maintenance"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <MaintenancePage />
-      </motion.div>
-    )
-  }
-
-  // Use BillingPage for the billing module
-  if (moduleId === 'billing') {
-    return (
-      <motion.div
-        key="billing"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <BillingPage />
-      </motion.div>
-    )
-  }
-
-  // Use AnalyticsPage for the analytics module
-  if (moduleId === 'analytics') {
-    return (
-      <motion.div
-        key="analytics"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <AnalyticsPage />
-      </motion.div>
-    )
-  }
-
-  // Use AiCopilotPage for the copilot module
-  if (moduleId === 'copilot') {
-    return (
-      <motion.div
-        key="copilot"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <AiCopilotPage />
-      </motion.div>
-    )
-  }
-
-  // Use CommunicationsPage for the communications module
-  if (moduleId === 'communications') {
-    return (
-      <motion.div
-        key="communications"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <CommunicationsPage />
-      </motion.div>
-    )
-  }
-
-  // Use SettingsPage for the settings module
-  if (moduleId === 'settings') {
-    return (
-      <motion.div
-        key="settings"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <SettingsPage />
-      </motion.div>
-    )
-  }
-
-  // Use DocumentsPage for the documents module
-  if (moduleId === 'documents') {
-    return (
-      <motion.div
-        key="documents"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <DocumentsPage />
-      </motion.div>
-    )
-  }
-
-  // Use ReportsPage for the reports module
-  if (moduleId === 'reports') {
-    return (
-      <motion.div
-        key="reports"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <ReportsPage />
-      </motion.div>
-    )
-  }
-
-  // Use OwnerPage for the owner module
-  if (moduleId === 'owner') {
-    return (
-      <motion.div
-        key="owner"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <OwnerPage />
-      </motion.div>
-    )
-  }
-
-  // Use DevicesPage for the devices module
-  if (moduleId === 'devices') {
-    return (
-      <motion.div
-        key="devices"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <DevicesPage />
-      </motion.div>
-    )
-  }
-
-  // Use AuditPage for the audit module
-  if (moduleId === 'audit') {
-    return (
-      <motion.div
-        key="audit"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -12 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
-      >
-        <AuditPage />
-      </motion.div>
-    )
-  }
-
-  return <ModulePlaceholder moduleId={moduleId} />
+    </AnimatePresence>
+  )
 }
 
 // ── Main Page ───────────────────────────────────────────────────────────────
@@ -713,35 +520,33 @@ export default function Home() {
         <SidebarInset>
           <AppHeader />
 
-          {/* User info + logout in header area */}
+          {/* User info bar — macOS subtitle bar style */}
           {isAuthenticated && currentUser && (
-            <div className="flex items-center justify-between border-b border-border/50 px-4 py-2 md:px-6">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <div className="flex size-7 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-                  <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+            <div className="flex items-center justify-between border-b border-border/30 px-5 py-1.5 bg-muted/20">
+              <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
+                <div className="flex size-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
+                  <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400">
                     {currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                   </span>
                 </div>
-                <span>{currentUser.name}</span>
-                <span className="text-xs text-muted-foreground/50">·</span>
-                <span className="text-xs text-muted-foreground/70">{currentUser.email}</span>
+                <span className="font-medium text-foreground/80">{currentUser.name}</span>
+                <span className="text-muted-foreground/40">·</span>
+                <span className="text-muted-foreground/60">{currentUser.email}</span>
               </div>
               <button
                 onClick={() => logout()}
-                className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                <LogOut className="size-3.5" />
+                <LogOut className="size-3" />
                 Sign Out
               </button>
             </div>
           )}
 
-          {/* Main content area */}
+          {/* Main content area — macOS content view */}
           <div className="flex-1 overflow-auto">
-            <div className="p-4 md:p-6">
-              <AnimatePresence mode="wait">
-                <ModuleContent key={activeModule} moduleId={activeModule} />
-              </AnimatePresence>
+            <div className="p-5 md:p-6 lg:p-8">
+              <ModuleContent key={activeModule} moduleId={activeModule} />
             </div>
           </div>
         </SidebarInset>

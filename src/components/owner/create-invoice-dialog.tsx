@@ -232,7 +232,7 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button type="submit" disabled={isSubmitting || !form.clientId} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+            <Button type="submit" disabled={isSubmitting || !form.clientId} className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
               {isSubmitting ? (
                 <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (

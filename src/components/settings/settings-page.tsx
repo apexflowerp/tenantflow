@@ -90,7 +90,7 @@ const mockApiKeys = [
 
 const integrations = [
   { id: 'stripe', name: 'Stripe', description: 'Payment processing', icon: CreditCard, connected: true, color: 'text-violet-600 dark:text-violet-400', bg: 'bg-violet-100 dark:bg-violet-900/30' },
-  { id: 'quickbooks', name: 'QuickBooks', description: 'Accounting sync', icon: Globe, connected: false, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-900/30' },
+  { id: 'quickbooks', name: 'QuickBooks', description: 'Accounting sync', icon: Globe, connected: false, color: 'text-primary', bg: 'bg-primary/10 dark:bg-primary/20' },
   { id: 'slack', name: 'Slack', description: 'Team notifications', icon: MessageSquare, connected: true, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-900/30' },
   { id: 'google', name: 'Google Workspace', description: 'Calendar & email', icon: Mail, connected: false, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-100 dark:bg-red-900/30' },
   { id: 'microsoft', name: 'Microsoft 365', description: 'Office integration', icon: Monitor, connected: false, color: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-100 dark:bg-sky-900/30' },
@@ -111,7 +111,7 @@ const plans = [
 const roleColors: Record<string, string> = {
   Admin: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   Manager: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  Member: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  Member: 'bg-primary/10 text-primary dark:bg-primary/20',
   Viewer: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400',
 }
 
@@ -191,7 +191,7 @@ function GeneralSettings() {
       </SettingsSection>
 
       <div className="flex justify-end">
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
+        <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5">
           <Check className="size-4" />
           Save Changes
         </Button>
@@ -258,7 +258,7 @@ function WorkspaceSettings() {
       </SettingsSection>
 
       <div className="flex justify-end">
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
+        <Button className="bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5">
           <Check className="size-4" />
           Save Changes
         </Button>
@@ -275,12 +275,12 @@ function UsersRolesSettings() {
       <SettingsSection title="Team Members" description="Manage who has access to your workspace">
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-muted-foreground">{mockUsers.length} team members</p>
-          <Button size="sm" className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white">
+          <Button size="sm" className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
             <Plus className="size-3.5" />
             Invite User
           </Button>
         </div>
-        <div className="rounded-lg border border-border/50 overflow-hidden">
+        <div className="rounded-lg border border-border/30 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/30">
@@ -297,7 +297,7 @@ function UsersRolesSettings() {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Avatar className="size-7">
-                        <AvatarFallback className="text-[10px] font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
+                        <AvatarFallback className="text-[10px] font-medium bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40 text-amber-700 dark:text-amber-400">
                           {user.name.split(' ').map(w => w[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
@@ -328,12 +328,12 @@ function UsersRolesSettings() {
           {[
             { name: 'Admin', desc: 'Full access to all features and settings', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
             { name: 'Manager', desc: 'Manage properties, tenants, and reports', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
-            { name: 'Member', desc: 'Standard access to assigned modules', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' },
+            { name: 'Member', desc: 'Standard access to assigned modules', color: 'bg-primary/10 text-primary dark:bg-primary/20' },
             { name: 'Viewer', desc: 'Read-only access to dashboards and reports', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' },
           ].map((role) => (
             <div
               key={role.name}
-              className="rounded-lg border border-border/50 p-3 hover:bg-accent/30 transition-colors"
+              className="rounded-lg border border-border/30 p-3 hover:bg-accent/30 transition-colors"
             >
               <div className="flex items-center gap-2 mb-1">
                 <Badge variant="secondary" className={cn('text-[10px] border-0', role.color)}>
@@ -356,12 +356,12 @@ function BillingSettings() {
     <div className="space-y-6">
       {/* Current plan */}
       <SettingsSection title="Current Plan" description="Your subscription details">
-        <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4">
+        <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-semibold">Professional</h3>
-                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0 text-[10px]">
+                <Badge className="bg-primary/10 text-primary dark:bg-primary/20 border-0 text-[10px]">
                   Current Plan
                 </Badge>
               </div>
@@ -383,14 +383,14 @@ function BillingSettings() {
               className={cn(
                 'rounded-lg border p-4 transition-colors',
                 plan.current
-                  ? 'border-emerald-500 bg-emerald-500/5'
-                  : 'border-border/50 hover:border-emerald-500/30'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border/30 hover:border-primary/30'
               )}
             >
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-semibold text-sm">{plan.name}</h4>
                 {plan.current && (
-                  <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0 text-[10px]">
+                  <Badge className="bg-primary/10 text-primary dark:bg-primary/20 border-0 text-[10px]">
                     Active
                   </Badge>
                 )}
@@ -402,7 +402,7 @@ function BillingSettings() {
               <ul className="space-y-1.5 mb-4">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Check className="size-3 text-emerald-500 shrink-0" />
+                    <Check className="size-3 text-primary shrink-0" />
                     {f}
                   </li>
                 ))}
@@ -412,7 +412,7 @@ function BillingSettings() {
                 size="sm"
                 className={cn(
                   'w-full text-xs',
-                  !plan.current && 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  !plan.current && 'bg-primary text-primary-foreground hover:bg-primary/90'
                 )}
                 disabled={plan.current}
               >
@@ -433,7 +433,7 @@ function BillingSettings() {
           ].map((stat) => {
             const pct = Math.min((stat.used / stat.limit) * 100, 100)
             return (
-              <div key={stat.label} className="rounded-lg border border-border/50 p-3">
+              <div key={stat.label} className="rounded-lg border border-border/30 p-3">
                 <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
                 <div className="flex items-baseline gap-1 mt-1">
                   <span className="text-lg font-bold">{stat.used.toLocaleString()}</span>
@@ -443,7 +443,7 @@ function BillingSettings() {
                   <div
                     className={cn(
                       'h-1.5 rounded-full transition-all',
-                      pct > 80 ? 'bg-amber-500' : 'bg-emerald-500'
+                      pct > 80 ? 'bg-amber-500' : 'bg-primary'
                     )}
                     style={{ width: `${pct}%` }}
                   />
@@ -456,7 +456,7 @@ function BillingSettings() {
 
       {/* Payment method */}
       <SettingsSection title="Payment Method" description="How you pay for your subscription">
-        <div className="flex items-center gap-4 rounded-lg border border-border/50 p-4">
+        <div className="flex items-center gap-4 rounded-lg border border-border/30 p-4">
           <div className="flex size-12 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/30">
             <CreditCard className="size-6 text-violet-600 dark:text-violet-400" />
           </div>
@@ -551,7 +551,7 @@ function SecuritySettings() {
             <div className="flex items-center gap-3">
               <Switch checked={twoFactor} onCheckedChange={setTwoFactor} />
               {twoFactor && (
-                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0 text-[10px]">
+                <Badge className="bg-primary/10 text-primary dark:bg-primary/20 border-0 text-[10px]">
                   Enabled
                 </Badge>
               )}
@@ -568,19 +568,19 @@ function SecuritySettings() {
 
       <SettingsSection title="Session Management" description="Monitor and control active sessions">
         <div className="space-y-3">
-          <div className="flex items-center gap-3 rounded-lg border border-border/50 p-3">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
-              <Monitor className="size-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex items-center gap-3 rounded-lg border border-border/30 p-3">
+            <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
+              <Monitor className="size-4 text-primary" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-medium">Current Session</p>
               <p className="text-xs text-muted-foreground">Chrome on macOS · New York, US</p>
             </div>
-            <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0 text-[10px]">
+            <Badge className="bg-primary/10 text-primary dark:bg-primary/20 border-0 text-[10px]">
               Active
             </Badge>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border border-border/50 p-3">
+          <div className="flex items-center gap-3 rounded-lg border border-border/30 p-3">
             <div className="flex size-9 items-center justify-center rounded-lg bg-muted/50">
               <Smartphone className="size-4 text-muted-foreground" />
             </div>
@@ -608,7 +608,7 @@ function SecuritySettings() {
               <div className={cn(
                 'flex size-4 items-center justify-center rounded border',
                 policy.checked
-                  ? 'bg-emerald-500 border-emerald-500'
+                  ? 'bg-primary border-primary'
                   : 'border-border/60'
               )}>
                 {policy.checked && <Check className="size-3 text-white" />}
@@ -628,13 +628,13 @@ function SecuritySettings() {
             <div className="pt-2">
               <div className="flex gap-2">
                 <Input placeholder="Enter IP address (e.g., 192.168.1.0/24)" className="text-sm" />
-                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0">
+                <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 shrink-0">
                   Add
                 </Button>
               </div>
               <div className="mt-3 space-y-2">
                 {['10.0.0.0/8', '192.168.1.0/24'].map((ip) => (
-                  <div key={ip} className="flex items-center justify-between rounded-md border border-border/50 px-3 py-2">
+                  <div key={ip} className="flex items-center justify-between rounded-md border border-border/30 px-3 py-2">
                     <div className="flex items-center gap-2">
                       <MapPin className="size-3.5 text-muted-foreground" />
                       <span className="text-sm font-mono">{ip}</span>
@@ -665,7 +665,7 @@ function IntegrationsSettings() {
             return (
               <div
                 key={integration.id}
-                className="rounded-lg border border-border/50 p-4 hover:bg-accent/20 transition-colors"
+                className="rounded-lg border border-border/30 p-4 hover:bg-accent/20 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className={cn('flex size-10 items-center justify-center rounded-lg', integration.bg)}>
@@ -676,7 +676,7 @@ function IntegrationsSettings() {
                     className={cn(
                       'text-[10px] border-0',
                       integration.connected
-                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                        ? 'bg-primary/10 text-primary dark:bg-primary/20'
                         : 'bg-muted text-muted-foreground'
                     )}
                   >
@@ -690,7 +690,7 @@ function IntegrationsSettings() {
                   size="sm"
                   className={cn(
                     'mt-3 w-full text-xs',
-                    !integration.connected && 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                    !integration.connected && 'bg-primary text-primary-foreground hover:bg-primary/90'
                   )}
                 >
                   {integration.connected ? 'Disconnect' : 'Connect'}
@@ -731,7 +731,7 @@ function ApiKeysSettings() {
       <SettingsSection title="API Keys" description="Manage your API keys for programmatic access">
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-muted-foreground">{mockApiKeys.length} active keys</p>
-          <Button size="sm" className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white">
+          <Button size="sm" className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
             <Plus className="size-3.5" />
             Generate New Key
           </Button>
@@ -743,7 +743,7 @@ function ApiKeysSettings() {
             return (
               <div
                 key={apiKey.id}
-                className="rounded-lg border border-border/50 p-4"
+                className="rounded-lg border border-border/30 p-4"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
@@ -788,7 +788,7 @@ function ApiKeysSettings() {
                     <Badge
                       key={perm}
                       variant="secondary"
-                      className="text-[10px] border-0 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                      className="text-[10px] border-0 bg-primary/10 text-primary dark:bg-primary/20"
                     >
                       {perm}
                     </Badge>
@@ -882,11 +882,11 @@ export function SettingsPage() {
                 className={cn(
                   'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors text-left',
                   isActive
-                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                    ? 'bg-primary/10 text-primary'
                     : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
                 )}
               >
-                <Icon className={cn('size-4', isActive && 'text-emerald-600 dark:text-emerald-400')} />
+                <Icon className={cn('size-4', isActive && 'text-primary')} />
                 {cat.label}
               </button>
             )

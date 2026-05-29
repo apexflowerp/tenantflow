@@ -99,7 +99,7 @@ function getInitials(name: string): string {
 function getStatusColor(status: string) {
   switch (status) {
     case 'active':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+      return 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20'
     case 'inactive':
       return 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800/40 dark:text-gray-400 dark:border-gray-700'
     case 'overdue':
@@ -112,7 +112,7 @@ function getStatusColor(status: string) {
 function getPaymentStatusIcon(status: string) {
   switch (status) {
     case 'paid':
-      return <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+      return <CheckCircle2 className="h-4 w-4 text-primary" />
     case 'pending':
       return <Clock className="h-4 w-4 text-amber-500" />
     case 'overdue':
@@ -125,7 +125,7 @@ function getPaymentStatusIcon(status: string) {
 function getPaymentStatusColor(status: string) {
   switch (status) {
     case 'paid':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+      return 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20'
     case 'pending':
       return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800'
     case 'overdue':
@@ -138,7 +138,7 @@ function getPaymentStatusColor(status: string) {
 function getLeaseStatusColor(status: string) {
   switch (status) {
     case 'active':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+      return 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20'
     case 'expiring':
       return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800'
     case 'expired':
@@ -370,7 +370,7 @@ export function TenantProfile({ tenant, onBack }: TenantProfileProps) {
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Total Paid</span>
-                  <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                  <span className="text-sm font-semibold text-primary">
                     {formatCurrency(tenant.stats?.totalPaid ?? 0)}
                   </span>
                 </div>
@@ -384,7 +384,7 @@ export function TenantProfile({ tenant, onBack }: TenantProfileProps) {
                 <Separator />
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Overdue Payments</span>
-                  <Badge className={`text-xs border ${tenant.stats?.overdueCount ? 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800' : 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'}`}>
+                  <Badge className={`text-xs border ${tenant.stats?.overdueCount ? 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800' : 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20'}`}>
                     {tenant.stats?.overdueCount ?? 0}
                   </Badge>
                 </div>
@@ -505,7 +505,7 @@ export function TenantProfile({ tenant, onBack }: TenantProfileProps) {
             <Card>
               <CardContent className="p-4">
                 <p className="text-xs text-muted-foreground mb-1">Total Paid</p>
-                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                <p className="text-lg font-bold text-primary">
                   {formatCurrency(tenant.stats?.totalPaid ?? 0)}
                 </p>
               </CardContent>
@@ -607,8 +607,8 @@ export function TenantProfile({ tenant, onBack }: TenantProfileProps) {
                   </div>
                   <div className="flex gap-3">
                     <div className="flex flex-col items-center">
-                      <div className="h-8 w-8 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center">
-                        <MessageSquare className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      <div className="h-8 w-8 rounded-full bg-primary/5 dark:bg-primary/10 flex items-center justify-center">
+                        <MessageSquare className="h-4 w-4 text-primary" />
                       </div>
                     </div>
                     <div>

@@ -137,7 +137,7 @@ function statusColor(status: InvoiceData['status']) {
     case 'sent':
       return 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300'
     case 'paid':
-      return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+      return 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-amber-400'
     case 'overdue':
       return 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
     case 'void':
@@ -244,7 +244,7 @@ export function InvoiceViewer({ data = SAMPLE_INVOICE, onBack, onEdit }: Invoice
           {/* ── Header ─────────────────────────────────────────────── */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
                 <Building2 className="size-5" />
               </div>
               <div>
@@ -266,7 +266,7 @@ export function InvoiceViewer({ data = SAMPLE_INVOICE, onBack, onEdit }: Invoice
               </div>
             </div>
             <div className="text-right">
-              <h2 className="text-2xl font-bold tracking-tight text-emerald-700 dark:text-emerald-400">
+              <h2 className="text-2xl font-bold tracking-tight text-primary">
                 INVOICE
               </h2>
               <p className="mt-2 text-sm font-semibold tabular-nums text-gray-900 dark:text-gray-100">
@@ -399,7 +399,7 @@ export function InvoiceViewer({ data = SAMPLE_INVOICE, onBack, onEdit }: Invoice
                   <span className="text-gray-500 dark:text-gray-400">
                     Discount ({data.discountRate}%)
                   </span>
-                  <span className="tabular-nums font-medium text-emerald-600 dark:text-emerald-400">
+                  <span className="tabular-nums font-medium text-primary">
                     -{fmt(data.discountAmount)}
                   </span>
                 </div>

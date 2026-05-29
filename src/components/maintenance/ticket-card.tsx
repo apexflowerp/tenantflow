@@ -99,7 +99,7 @@ export function TicketCard({ ticket, index = 0, onClick }: TicketCardProps) {
       transition={{ duration: 0.2, delay: index * 0.04 }}
     >
       <Card
-        className="cursor-pointer border-border/50 bg-card shadow-sm transition-shadow hover:shadow-md group"
+        className="cursor-pointer border-border/30 bg-card shadow-sm transition-shadow hover:shadow-md group"
         onClick={onClick}
       >
         <CardContent className="p-3 space-y-2.5">
@@ -133,7 +133,7 @@ export function TicketCard({ ticket, index = 0, onClick }: TicketCardProps) {
           <div className="space-y-1 text-xs text-muted-foreground">
             {ticket.property && (
               <div className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-emerald-500 shrink-0" />
+                <span className="size-1.5 rounded-full bg-primary shrink-0" />
                 <span className="truncate">{ticket.property.name}</span>
               </div>
             )}

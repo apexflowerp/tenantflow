@@ -86,7 +86,7 @@ function getLeaseStatusInfo(lease: LeaseRow): {
   }
   return {
     label: 'Active',
-    className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
+    className: 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary border-primary/20 dark:border-primary/20',
   }
 }
 
@@ -140,7 +140,7 @@ export function LeaseCard({ lease, index = 0, onClick }: LeaseCardProps) {
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           {/* Tenant Info */}
           <div className="flex items-center gap-3 sm:w-[240px] shrink-0">
-            <Avatar className="h-10 w-10 border border-border/50 shadow-sm">
+            <Avatar className="h-10 w-10 border border-border/30 shadow-sm">
               <AvatarFallback className="bg-gradient-to-br from-amber-500 to-orange-600 text-white text-xs font-semibold">
                 {lease.tenant ? getInitials(lease.tenant.name) : '?'}
               </AvatarFallback>
@@ -157,8 +157,8 @@ export function LeaseCard({ lease, index = 0, onClick }: LeaseCardProps) {
 
           {/* Property & Unit */}
           <div className="flex items-center gap-2 sm:w-[220px] shrink-0">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-500/10">
-              <Building2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+              <Building2 className="size-4 text-primary" />
             </div>
             <div className="min-w-0">
               <p className="text-sm font-medium text-foreground truncate">

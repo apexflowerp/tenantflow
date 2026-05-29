@@ -195,7 +195,7 @@ function getDeviceIcon(type: string) {
 function getStatusBadge(status: string) {
   const config: Record<string, { label: string; className: string }> = {
     pending: { label: 'Pending', className: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800' },
-    active: { label: 'Active', className: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800' },
+    active: { label: 'Active', className: 'bg-primary/10 text-primary border-primary/20 dark:bg-primary/20 dark:border-primary/30' },
     blocked: { label: 'Blocked', className: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800' },
     deactivated: { label: 'Deactivated', className: 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950/40 dark:text-gray-400 dark:border-gray-800' },
   }
@@ -205,7 +205,7 @@ function getStatusBadge(status: string) {
 
 function getLicenseStatusBadge(status: string) {
   const config: Record<string, { label: string; className: string }> = {
-    available: { label: 'Available', className: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800' },
+    available: { label: 'Available', className: 'bg-primary/10 text-primary border-primary/20 dark:bg-primary/20 dark:border-primary/30' },
     activated: { label: 'Activated', className: 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-800' },
     expired: { label: 'Expired', className: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800' },
     revoked: { label: 'Revoked', className: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800' },
@@ -238,7 +238,7 @@ function StatCard({ title, value, icon: Icon, iconColor, iconBg, index = 0 }: {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border-border/50">
+      <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border-border/30">
         <CardContent className="p-6">
           <div className="flex items-start justify-between">
             <div className="space-y-2 flex-1 min-w-0">
@@ -474,7 +474,7 @@ export function DevicesPage() {
           description: `${d.deviceName || 'Unknown device'} (${d.serialKey}) was activated`,
           timestamp: d.activatedAt,
           icon: CheckCircle,
-          iconColor: 'text-emerald-600 dark:text-emerald-400',
+          iconColor: 'text-primary',
         })
       }
       if (d.status === 'blocked') {
@@ -554,11 +554,11 @@ export function DevicesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="flex size-12 items-center justify-center rounded-xl bg-emerald-500/10">
-            <Shield className="size-6 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+            <Shield className="size-6 text-primary" />
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">
               Device Management
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -572,7 +572,7 @@ export function DevicesPage() {
             <span className="hidden sm:inline">Generate License Key</span>
             <span className="sm:hidden">Key</span>
           </Button>
-          <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => setRegisterDialogOpen(true)}>
+          <Button size="sm" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setRegisterDialogOpen(true)}>
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Register Device</span>
             <span className="sm:hidden">Register</span>
@@ -585,7 +585,7 @@ export function DevicesPage() {
         {isLoading ? (
           <>
             {Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i} className="border-border/50">
+              <Card key={i} className="border-border/30">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="space-y-3 flex-1">
@@ -600,7 +600,7 @@ export function DevicesPage() {
           </>
         ) : (
           <>
-            <StatCard title="Total Devices" value={stats.total} icon={Monitor} iconColor="text-emerald-600 dark:text-emerald-400" iconBg="bg-emerald-50 dark:bg-emerald-950/40" index={0} />
+            <StatCard title="Total Devices" value={stats.total} icon={Monitor} iconColor="text-primary" iconBg="bg-primary/10" index={0} />
             <StatCard title="Active Devices" value={stats.active} icon={CheckCircle} iconColor="text-green-600 dark:text-green-400" iconBg="bg-green-50 dark:bg-green-950/40" index={1} />
             <StatCard title="Blocked Devices" value={stats.blocked} icon={ShieldOff} iconColor="text-red-600 dark:text-red-400" iconBg="bg-red-50 dark:bg-red-950/40" index={2} />
             <StatCard title="Active Sessions" value={stats.activeSessions} icon={Wifi} iconColor="text-sky-600 dark:text-sky-400" iconBg="bg-sky-50 dark:bg-sky-950/40" index={3} />
@@ -670,7 +670,7 @@ export function DevicesPage() {
           </div>
 
           {/* Devices Table */}
-          <Card className="border-border/50">
+          <Card className="border-border/30">
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <Table>
@@ -837,7 +837,7 @@ export function DevicesPage() {
                                         <div className="space-y-1">
                                           {device.sessions.slice(0, 3).map(s => (
                                             <div key={s.id} className="flex items-center gap-2 text-xs">
-                                              <div className={cn('size-2 rounded-full', s.isActive ? 'bg-emerald-500' : 'bg-gray-400')} />
+                                              <div className={cn('size-2 rounded-full', s.isActive ? 'bg-primary' : 'bg-gray-400')} />
                                               <span className="text-muted-foreground">{s.ipAddress || 'N/A'}</span>
                                               <span className="text-muted-foreground/50">{formatDistanceToNow(parseISO(s.createdAt), { addSuffix: true })}</span>
                                             </div>
@@ -881,13 +881,13 @@ export function DevicesPage() {
         {/* ── License Keys Tab ── */}
         <TabsContent value="license-keys" className="space-y-4">
           <div className="flex justify-end">
-            <Button size="sm" className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => setGenerateKeyDialogOpen(true)}>
+            <Button size="sm" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setGenerateKeyDialogOpen(true)}>
               <Plus className="size-4" />
               Generate Key
             </Button>
           </div>
 
-          <Card className="border-border/50">
+          <Card className="border-border/30">
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <Table>
@@ -1011,7 +1011,7 @@ export function DevicesPage() {
             </Button>
           </div>
 
-          <Card className="border-border/50">
+          <Card className="border-border/30">
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <Table>
@@ -1050,7 +1050,7 @@ export function DevicesPage() {
                         <TableRow key={session.id} className="hover:bg-muted/30 transition-colors">
                           <TableCell className="text-sm">
                             <div className="flex items-center gap-2">
-                              <div className={cn('size-2 rounded-full', session.isActive ? 'bg-emerald-500' : 'bg-gray-400')} />
+                              <div className={cn('size-2 rounded-full', session.isActive ? 'bg-primary' : 'bg-gray-400')} />
                               {session.user?.name || 'Unknown'}
                             </div>
                           </TableCell>
@@ -1065,7 +1065,7 @@ export function DevicesPage() {
                           </TableCell>
                           <TableCell>
                             {session.isActive ? (
-                              <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800">Active</Badge>
+                              <Badge variant="outline" className="text-xs bg-primary/10 text-primary border-primary/20 dark:bg-primary/20 dark:border-primary/30">Active</Badge>
                             ) : (
                               <Badge variant="outline" className="text-xs bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950/40 dark:text-gray-400 dark:border-gray-800">Expired</Badge>
                             )}
@@ -1095,7 +1095,7 @@ export function DevicesPage() {
 
         {/* ── Activity Log Tab ── */}
         <TabsContent value="activity" className="space-y-4">
-          <Card className="border-border/50">
+          <Card className="border-border/30">
             <CardHeader className="pb-4">
               <CardTitle className="text-base font-semibold">Device Activity Log</CardTitle>
               <CardDescription>Timeline of device-related activities</CardDescription>

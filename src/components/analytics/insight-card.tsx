@@ -32,10 +32,10 @@ const TYPE_CONFIG: Record<InsightType, {
 }> = {
   positive: {
     icon: TrendingUp,
-    accentColor: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-50 dark:bg-emerald-950/30',
-    borderColor: 'border-emerald-200 dark:border-emerald-800/40',
-    textColor: 'text-emerald-700 dark:text-emerald-300',
+    accentColor: 'text-primary',
+    bgColor: 'bg-primary/5 dark:bg-primary/10',
+    borderColor: 'border-primary/20 dark:border-primary/20',
+    textColor: 'text-primary',
   },
   negative: {
     icon: TrendingDown,

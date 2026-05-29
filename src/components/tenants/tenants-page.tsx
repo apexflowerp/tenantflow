@@ -184,11 +184,11 @@ export function TenantsPage() {
               {/* Page Header */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-md">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md">
                     <Users className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Tenants</h1>
+                    <h1 className="text-xl font-semibold">Tenants</h1>
                     <p className="text-sm text-muted-foreground">
                       Manage your tenants, leases, and payments
                     </p>
@@ -220,10 +220,10 @@ export function TenantsPage() {
                 <button
                   onClick={() => setStatusFilter('active')}
                   className={`rounded-lg border p-3 text-left transition-colors ${
-                    statusFilter === 'active' ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800' : 'hover:bg-muted/50'
+                    statusFilter === 'active' ? 'bg-primary/5 border-primary/20' : 'hover:bg-muted/50'
                   }`}
                 >
-                  <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{activeCount}</p>
+                  <p className="text-2xl font-bold text-primary">{activeCount}</p>
                   <p className="text-xs text-muted-foreground">Active</p>
                 </button>
                 <button

@@ -34,7 +34,7 @@ interface MessageDetailProps {
 
 const typeConfig: Record<string, { icon: React.ComponentType<{ className?: string }>; label: string; color: string; bg: string }> = {
   email: { icon: Mail, label: 'Email', color: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-100 dark:bg-cyan-900/30' },
-  sms: { icon: MessageSquare, label: 'SMS', color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-900/30' },
+  sms: { icon: MessageSquare, label: 'SMS', color: 'text-primary', bg: 'bg-primary/5 dark:bg-primary/10' },
   announcement: { icon: Megaphone, label: 'Announcement', color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-900/30' },
 }
 
@@ -98,7 +98,7 @@ export function MessageDetail({ message, onReply, onDelete }: MessageDetailProps
   const displayEmail = message.tenant?.email || ''
   const avatarColor = isInbound
     ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300'
-    : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+    : 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary'
 
   const handleReplySend = () => {
     if (!replyText.trim()) return
@@ -118,7 +118,7 @@ export function MessageDetail({ message, onReply, onDelete }: MessageDetailProps
         className="flex h-full flex-col"
       >
         {/* Header */}
-        <div className="border-b border-border/50 p-4 md:p-6">
+        <div className="border-b border-border/30 p-4 md:p-6">
           <div className="flex items-start gap-4">
             <Avatar className="size-11">
               <AvatarFallback className={cn('text-sm font-medium', avatarColor)}>
@@ -143,7 +143,7 @@ export function MessageDetail({ message, onReply, onDelete }: MessageDetailProps
                     'h-5 px-2 text-[10px] gap-1 border-0',
                     isInbound
                       ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300'
-                      : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                      : 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary'
                   )}
                 >
                   {isInbound ? (
@@ -217,7 +217,7 @@ export function MessageDetail({ message, onReply, onDelete }: MessageDetailProps
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="border-t border-border/50 overflow-hidden"
+              className="border-t border-border/30 overflow-hidden"
             >
               <div className="p-3 md:p-4 space-y-3">
                 <Textarea
@@ -242,7 +242,7 @@ export function MessageDetail({ message, onReply, onDelete }: MessageDetailProps
                     size="sm"
                     onClick={handleReplySend}
                     disabled={!replyText.trim()}
-                    className="gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                    className="gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     <Send className="size-3.5" />
                     Send Reply

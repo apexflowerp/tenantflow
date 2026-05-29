@@ -78,12 +78,12 @@ function SummaryCard({ title, value, subtitle, icon: Icon, iconColor, iconBg, pr
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
     >
-      <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border-border/50">
+      <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 mojave-card border-border/30">
         <CardContent className="p-6">
           <div className="flex items-start justify-between">
             <div className="space-y-2 flex-1 min-w-0">
               <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
-              <p className="text-3xl font-bold tracking-tight text-foreground">{value}</p>
+              <p className="text-2xl font-bold tracking-tight text-foreground">{value}</p>
               {subtitle && (
                 <p className="text-xs text-muted-foreground">{subtitle}</p>
               )}
@@ -91,7 +91,7 @@ function SummaryCard({ title, value, subtitle, icon: Icon, iconColor, iconBg, pr
                 <div className="mt-2 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-medium text-muted-foreground">Collection rate</span>
-                    <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{progress}%</span>
+                    <span className="text-xs font-semibold text-primary">{progress}%</span>
                   </div>
                   <Progress value={progress} className="h-2" />
                 </div>
@@ -109,7 +109,7 @@ function SummaryCard({ title, value, subtitle, icon: Icon, iconColor, iconBg, pr
 
 function SummaryCardSkeleton() {
   return (
-    <Card className="border-border/50">
+    <Card className="border-border/30">
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-3 flex-1">
@@ -191,7 +191,7 @@ function RevenueChart({ payments }: RevenueChartProps) {
   }, [payments])
 
   return (
-    <Card className="border-border/50">
+    <Card className="border-border/30">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div>
@@ -241,7 +241,7 @@ function RevenueChart({ payments }: RevenueChartProps) {
               <Bar
                 dataKey="collected"
                 name="Collected"
-                fill="#10b981"
+                fill="#c2703a"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={32}
               />
@@ -255,7 +255,7 @@ function RevenueChart({ payments }: RevenueChartProps) {
 
 function RevenueChartSkeleton() {
   return (
-    <Card className="border-border/50">
+    <Card className="border-border/30">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
@@ -413,11 +413,11 @@ export function BillingPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="flex size-12 items-center justify-center rounded-xl bg-emerald-500/10">
-            <CreditCard className="size-6 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+            <CreditCard className="size-6 text-primary" />
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">
               Billing & Payments
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -438,7 +438,7 @@ export function BillingPage() {
           </Button>
           <Button
             size="sm"
-            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={() => setRecordPaymentOpen(true)}
           >
             <Plus className="h-4 w-4" />
@@ -464,8 +464,8 @@ export function BillingPage() {
               value={formatCurrency(summary.totalCollected)}
               subtitle={`${summary.paidCount} payments received`}
               icon={DollarSign}
-              iconColor="text-emerald-600 dark:text-emerald-400"
-              iconBg="bg-emerald-50 dark:bg-emerald-950/40"
+              iconColor="text-primary"
+              iconBg="bg-primary/5"
               index={0}
             />
             <SummaryCard
@@ -491,8 +491,8 @@ export function BillingPage() {
               value={`${summary.collectionRate}%`}
               subtitle="Of total billed amount"
               icon={TrendingUp}
-              iconColor="text-emerald-600 dark:text-emerald-400"
-              iconBg="bg-emerald-50 dark:bg-emerald-950/40"
+              iconColor="text-primary"
+              iconBg="bg-primary/5"
               progress={summary.collectionRate}
               index={3}
             />
@@ -501,7 +501,7 @@ export function BillingPage() {
       </div>
 
       {/* Payment Table */}
-      <Card className="border-border/50">
+      <Card className="border-border/30">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>

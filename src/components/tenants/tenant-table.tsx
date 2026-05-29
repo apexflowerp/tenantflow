@@ -103,7 +103,7 @@ function getInitials(name: string): string {
 function getStatusColor(status: string) {
   switch (status) {
     case 'active':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+      return 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20'
     case 'inactive':
       return 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800/40 dark:text-gray-400 dark:border-gray-700'
     case 'overdue':
@@ -116,7 +116,7 @@ function getStatusColor(status: string) {
 function getLeaseStatusColor(status: string) {
   switch (status) {
     case 'active':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+      return 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20'
     case 'expiring':
       return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800'
     case 'expired':
@@ -145,7 +145,7 @@ function getPaymentStatusBadge(stats?: TenantStats) {
     )
   }
   return (
-    <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800 text-xs border">
+    <Badge className="bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20 text-xs border">
       Current
     </Badge>
   )

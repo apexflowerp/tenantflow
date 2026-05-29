@@ -85,8 +85,8 @@ export const SAMPLE_REPORT: ReportData = {
       type: 'bar',
       title: 'Revenue by Property',
       data: [
-        { label: 'Skyline Tower', value: 18500, color: '#059669' },
-        { label: 'Harbor View', value: 12800, color: '#10b981' },
+        { label: 'Skyline Tower', value: 18500, color: '#b8653a' },
+        { label: 'Harbor View', value: 12800, color: '#c2703a' },
         { label: 'Greenfield', value: 9600, color: '#34d399' },
         { label: 'Metro Hub', value: 22500, color: '#047857' },
         { label: 'Riverside', value: 14200, color: '#6ee7b7' },
@@ -97,8 +97,8 @@ export const SAMPLE_REPORT: ReportData = {
       type: 'pie',
       title: 'Expense Breakdown',
       data: [
-        { label: 'Maintenance', value: 12400, color: '#059669' },
-        { label: 'Insurance', value: 8200, color: '#10b981' },
+        { label: 'Maintenance', value: 12400, color: '#b8653a' },
+        { label: 'Insurance', value: 8200, color: '#c2703a' },
         { label: 'Utilities', value: 6800, color: '#34d399' },
         { label: 'Management', value: 4800, color: '#6ee7b7' },
         { label: 'Other', value: 2400, color: '#a7f3d0' },
@@ -131,7 +131,7 @@ function MiniBarChart({ data }: { data: { label: string; value: number; color?: 
               className="h-5 rounded-full"
               style={{
                 width: `${(d.value / max) * 100}%`,
-                backgroundColor: d.color ?? '#059669',
+                backgroundColor: d.color ?? '#b8653a',
                 minWidth: '4px',
               }}
             />
@@ -168,7 +168,7 @@ function MiniPieChart({ data }: { data: { label: string; value: number; color?: 
           background: `conic-gradient(${segments
             .map(
               (s) =>
-                `${s.color ?? '#059669'} ${s.start}% ${s.start + s.pct}%`
+                `${s.color ?? '#b8653a'} ${s.start}% ${s.start + s.pct}%`
             )
             .join(', ')})`,
         }}
@@ -184,7 +184,7 @@ function MiniPieChart({ data }: { data: { label: string; value: number; color?: 
           <div key={d.label} className="flex items-center gap-2 text-xs">
             <div
               className="size-2.5 shrink-0 rounded-sm"
-              style={{ backgroundColor: d.color ?? '#059669' }}
+              style={{ backgroundColor: d.color ?? '#b8653a' }}
             />
             <span className="text-gray-600 dark:text-gray-400">
               {d.label} ({((d.value / total) * 100).toFixed(0)}%)
@@ -221,7 +221,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
               Back
             </Button>
           )}
-          <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+          <Badge className="bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary">
             {data.period}
           </Badge>
         </div>
@@ -251,14 +251,14 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
           {/* ── Header ─────────────────────────────────────────────── */}
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
                 <Building2 className="size-5" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   TenantFlow OS
                 </h1>
-                <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
+                <p className="text-sm font-semibold uppercase tracking-wide text-primary">
                   {data.title}
                 </p>
               </div>
@@ -281,7 +281,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
 
           {/* ── Executive Summary ───────────────────────────────────── */}
           <section className="page-break-inside-avoid">
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-primary">
               Executive Summary
             </h2>
             <div className="grid grid-cols-3 gap-4">
@@ -321,7 +321,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
                 <p className="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500">
                   NOI
                 </p>
-                <p className="text-lg font-bold tabular-nums text-emerald-700 dark:text-emerald-400">
+                <p className="text-lg font-bold tabular-nums text-primary">
                   {fmtCurrency(summary.netOperatingIncome)}
                 </p>
               </div>
@@ -339,7 +339,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
               <ul className="mt-3 space-y-1">
                 {summary.highlights.map((h, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
-                    <TrendingUp className="mt-0.5 size-3 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                    <TrendingUp className="mt-0.5 size-3 shrink-0 text-primary" />
                     {h}
                   </li>
                 ))}
@@ -351,7 +351,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
 
           {/* ── Detailed Analysis Table ──────────────────────────────── */}
           <section className="page-break-inside-avoid">
-            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+            <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-primary">
               Detailed Analysis
             </h2>
             <table className="w-full text-sm">
@@ -399,7 +399,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
                       <span
                         className={`font-medium ${
                           p.occupancyRate >= 90
-                            ? 'text-emerald-600 dark:text-emerald-400'
+                            ? 'text-primary'
                             : p.occupancyRate >= 75
                               ? 'text-amber-600 dark:text-amber-400'
                               : 'text-red-600 dark:text-red-400'
@@ -414,7 +414,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
                     <td className="py-2.5 text-right tabular-nums text-gray-700 dark:text-gray-300">
                       {fmtCurrency(p.expenses)}
                     </td>
-                    <td className="py-2.5 text-right font-medium tabular-nums text-emerald-700 dark:text-emerald-400">
+                    <td className="py-2.5 text-right font-medium tabular-nums text-primary">
                       {fmtCurrency(p.noi)}
                     </td>
                   </tr>
@@ -438,7 +438,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
                   <td className="pt-2.5 text-right tabular-nums font-bold text-gray-900 dark:text-gray-100">
                     {fmtCurrency(summary.totalExpenses)}
                   </td>
-                  <td className="pt-2.5 text-right tabular-nums font-bold text-emerald-700 dark:text-emerald-400">
+                  <td className="pt-2.5 text-right tabular-nums font-bold text-primary">
                     {fmtCurrency(summary.netOperatingIncome)}
                   </td>
                 </tr>
@@ -451,7 +451,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
             <>
               <Separator className="my-6" />
               <section className="page-break-inside-avoid">
-                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-primary">
                   Visual Analysis
                 </h2>
                 <div className="grid gap-6 sm:grid-cols-2">
@@ -462,9 +462,9 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
                     >
                       <div className="mb-3 flex items-center gap-2">
                         {chart.type === 'bar' ? (
-                          <BarChart3 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                          <BarChart3 className="size-4 text-primary" />
                         ) : (
-                          <PieChart className="size-4 text-emerald-600 dark:text-emerald-400" />
+                          <PieChart className="size-4 text-primary" />
                         )}
                         <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                           {chart.title}

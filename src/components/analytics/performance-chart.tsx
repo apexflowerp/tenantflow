@@ -27,12 +27,12 @@ interface PerformanceChartProps {
 }
 
 const BAR_COLORS = [
-  '#10b981',
-  '#14b8a6',
-  '#0d9488',
-  '#059669',
-  '#34d399',
-  '#6ee7b7',
+  '#c2703a',
+  '#d4956a',
+  '#8b6ba5',
+  '#6ba3b5',
+  '#b8653a',
+  '#c4a882',
 ]
 
 function CustomTooltip({ active, payload, label }: {
@@ -67,7 +67,7 @@ function CustomTooltip({ active, payload, label }: {
 export function PerformanceChart({ data, loading }: PerformanceChartProps) {
   if (loading) {
     return (
-      <Card className="border-border/50 shadow-sm">
+      <Card className="border-border/30 shadow-sm">
         <CardHeader className="pb-2">
           <Skeleton className="h-5 w-48" />
         </CardHeader>
@@ -86,7 +86,7 @@ export function PerformanceChart({ data, loading }: PerformanceChartProps) {
     }))
 
   return (
-    <Card className="border-border/50 shadow-sm">
+    <Card className="border-border/30 shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Property Performance</CardTitle>
       </CardHeader>

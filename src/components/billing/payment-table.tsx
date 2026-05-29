@@ -82,7 +82,7 @@ function formatCurrency(amount: number): string {
 function getStatusColor(status: string) {
   switch (status) {
     case 'paid':
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800'
+      return 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20'
     case 'pending':
       return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800'
     case 'overdue':
@@ -99,7 +99,7 @@ function getStatusColor(status: string) {
 function getStatusDot(status: string) {
   switch (status) {
     case 'paid':
-      return 'bg-emerald-500'
+      return 'bg-primary'
     case 'pending':
       return 'bg-amber-500'
     case 'overdue':

@@ -41,7 +41,7 @@ function getStatusBadge(status: string) {
   switch (status) {
     case 'active':
       return (
-        <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100">
+        <Badge className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/10">
           Active
         </Badge>
       )
@@ -66,7 +66,7 @@ function getUnitStatusBadge(status: string) {
       )
     case 'occupied':
       return (
-        <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 text-xs">
+        <Badge className="bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 text-xs">
           Occupied
         </Badge>
       )
@@ -85,7 +85,7 @@ function getTypeBadge(type: string) {
   switch (type) {
     case 'residential':
       return (
-        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 capitalize">
+        <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 capitalize">
           {type}
         </Badge>
       )
@@ -130,8 +130,8 @@ export function PropertyDetail({ property, onBack }: PropertyDetailProps) {
       label: 'Occupied',
       value: occupiedUnits,
       icon: Users,
-      color: 'text-emerald-600',
-      bg: 'bg-emerald-50',
+      color: 'text-primary',
+      bg: 'bg-primary/5',
     },
     {
       label: 'Vacant',

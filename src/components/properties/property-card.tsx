@@ -15,7 +15,7 @@ interface PropertyCardProps {
 function getTypeColor(type: string) {
   switch (type) {
     case 'residential':
-      return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      return 'bg-primary/5 text-primary border-primary/20'
     case 'commercial':
       return 'bg-amber-50 text-amber-700 border-amber-200'
     case 'mixed':
@@ -28,11 +28,11 @@ function getTypeColor(type: string) {
 function getGradient(type: string) {
   switch (type) {
     case 'residential':
-      return 'from-emerald-400 to-teal-500'
+      return 'from-amber-400 to-orange-500'
     case 'commercial':
       return 'from-amber-400 to-orange-500'
     case 'mixed':
-      return 'from-teal-400 to-emerald-500'
+      return 'from-teal-400 to-amber-500'
     default:
       return 'from-slate-400 to-slate-500'
   }
@@ -53,7 +53,7 @@ export function PropertyCard({ property, index, onClick }: PropertyCardProps) {
       className="cursor-pointer"
       onClick={onClick}
     >
-      <Card className="overflow-hidden border border-border/50 hover:border-emerald-200 hover:shadow-md transition-all duration-300 py-0 gap-0">
+      <Card className="overflow-hidden border border-border/30 hover:border-primary/20 hover:shadow-md transition-all duration-300 py-0 gap-0">
         {/* Image placeholder */}
         <div className={`relative h-40 bg-gradient-to-br ${getGradient(property.type)} flex items-center justify-center`}>
           <Building2 className="size-16 text-white/30" />
@@ -62,7 +62,7 @@ export function PropertyCard({ property, index, onClick }: PropertyCardProps) {
             <span className="sr-only">{property.status}</span>
             <span
               className={`size-2.5 rounded-full ring-2 ring-white ${
-                property.status === 'active' ? 'bg-emerald-400' : 'bg-amber-400'
+                property.status === 'active' ? 'bg-primary-400' : 'bg-amber-400'
               }`}
             />
           </div>

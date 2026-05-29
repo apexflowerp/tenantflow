@@ -119,14 +119,14 @@ export function AppSidebar() {
     useAppStore()
 
   return (
-    <Sidebar collapsible="icon" className="border-r-0">
+    <Sidebar collapsible="icon" className="border-r-0 glass-sidebar">
       {/* ── Logo & Workspace ─────────────────────────────────────────── */}
       <SidebarHeader className="px-3 pt-3 pb-1">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-left outline-none ring-sidebar-ring transition-colors hover:bg-sidebar-accent focus-visible:ring-2">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
-                <Building2 className="size-4" />
+            <button className="flex w-full items-center gap-2.5 rounded-xl px-2 py-1.5 text-left outline-none ring-sidebar-ring transition-colors hover:bg-sidebar-accent focus-visible:ring-2">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-sm shadow-amber-600/20">
+                <Building2 className="size-4 text-white" />
               </div>
               <div className="flex-1 overflow-hidden group-data-[collapsible=icon]:hidden">
                 <p className="truncate text-sm font-semibold text-sidebar-foreground">
@@ -139,14 +139,14 @@ export function AppSidebar() {
               <ChevronsUpDown className="size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
+          <DropdownMenuContent align="start" className="w-56 rounded-xl">
             {WORKSPACES.map((ws) => (
               <DropdownMenuItem
                 key={ws.id}
                 onClick={() => setCurrentWorkspace(ws)}
                 className={cn(
-                  'cursor-pointer',
-                  currentWorkspace?.id === ws.id && 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                  'cursor-pointer rounded-lg',
+                  currentWorkspace?.id === ws.id && 'bg-amber-500/10 text-amber-700 dark:text-amber-400'
                 )}
               >
                 <Building2 className="size-4" />
@@ -157,13 +157,13 @@ export function AppSidebar() {
         </DropdownMenu>
       </SidebarHeader>
 
-      <SidebarSeparator className="mx-3" />
+      <SidebarSeparator className="mx-3 opacity-50" />
 
       {/* ── Navigation ───────────────────────────────────────────────── */}
       <SidebarContent className="px-2">
         {NAV_GROUPS.map((group) => (
           <SidebarGroup key={group.label}>
-            <SidebarGroupLabel className="text-[11px] font-medium tracking-wider text-muted-foreground/60">
+            <SidebarGroupLabel className="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground/50 uppercase">
               {group.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -177,17 +177,17 @@ export function AppSidebar() {
                         onClick={() => setActiveModule(item.id)}
                         tooltip={item.label}
                         className={cn(
-                          'transition-all duration-150',
+                          'transition-all duration-200 rounded-xl',
                           isActive
-                            ? 'bg-emerald-500/10 text-emerald-700 font-medium dark:bg-emerald-500/15 dark:text-emerald-400 hover:bg-emerald-500/15 dark:hover:bg-emerald-500/20'
-                            : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent'
+                            ? 'bg-primary/10 text-primary font-medium shadow-sm shadow-primary/5 hover:bg-primary/15'
+                            : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent'
                         )}
                       >
                         <item.icon
                           className={cn(
-                            'transition-colors',
+                            'transition-colors duration-200',
                             isActive
-                              ? 'text-emerald-600 dark:text-emerald-400'
+                              ? 'text-primary'
                               : 'text-muted-foreground group-hover/menu-button:text-sidebar-foreground'
                           )}
                         />
@@ -202,7 +202,7 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarSeparator className="mx-3" />
+      <SidebarSeparator className="mx-3 opacity-50" />
 
       {/* ── User / Footer ────────────────────────────────────────────── */}
       <SidebarFooter className="px-2 pb-3">
@@ -212,11 +212,11 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-sidebar-accent"
+                  className="data-[state=open]:bg-sidebar-accent rounded-xl"
                 >
                   <Avatar className="size-8 rounded-lg">
                     <AvatarImage src="" alt="User" />
-                    <AvatarFallback className="rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 text-xs font-semibold">
+                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 text-amber-700 dark:from-amber-900/40 dark:to-orange-900/40 dark:text-amber-400 text-xs font-semibold">
                       JD
                     </AvatarFallback>
                   </Avatar>
@@ -233,16 +233,16 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="top"
-                className="w-56"
+                className="w-56 rounded-xl"
                 align="start"
                 sideOffset={4}
               >
-                <DropdownMenuItem className="cursor-pointer">
+                <DropdownMenuItem className="cursor-pointer rounded-lg">
                   <User className="size-4" />
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="cursor-pointer"
+                  className="cursor-pointer rounded-lg"
                   onClick={() => setActiveModule('settings')}
                 >
                   <Cog className="size-4" />
@@ -250,7 +250,7 @@ export function AppSidebar() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="cursor-pointer text-destructive focus:text-destructive"
+                  className="cursor-pointer text-destructive focus:text-destructive rounded-lg"
                   variant="destructive"
                 >
                   <LogOut className="size-4" />

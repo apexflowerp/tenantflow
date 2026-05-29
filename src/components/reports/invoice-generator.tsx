@@ -153,7 +153,7 @@ export function InvoiceGenerator({ onPreview, onSaveDraft, onSend, onCancel }: I
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-600 text-white">
+          <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-white">
             <Receipt className="size-5" />
           </div>
           <div>
@@ -170,7 +170,7 @@ export function InvoiceGenerator({ onPreview, onSaveDraft, onSend, onCancel }: I
             <Save className="mr-1.5 size-4" />
             Save Draft
           </Button>
-          <Button size="sm" onClick={handleSend} className="bg-emerald-600 hover:bg-emerald-700">
+          <Button size="sm" onClick={handleSend} className="bg-primary hover:bg-primary/90">
             <Send className="mr-1.5 size-4" />
             Send
           </Button>
@@ -381,7 +381,7 @@ export function InvoiceGenerator({ onPreview, onSaveDraft, onSend, onCancel }: I
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Discount Amount</span>
-                <span className="tabular-nums font-medium text-emerald-600 dark:text-emerald-400">
+                <span className="tabular-nums font-medium text-primary">
                   -{fmt(discountAmount)}
                 </span>
               </div>
@@ -417,7 +417,7 @@ export function InvoiceGenerator({ onPreview, onSaveDraft, onSend, onCancel }: I
                 Save as Draft
               </Button>
               <Button
-                className="w-full justify-start bg-emerald-600 hover:bg-emerald-700"
+                className="w-full justify-start bg-primary hover:bg-primary/90"
                 size="sm"
                 onClick={handleSend}
               >

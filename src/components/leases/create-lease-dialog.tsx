@@ -261,7 +261,7 @@ export function CreateLeaseDialog({ open, onOpenChange, onLeaseCreated }: Create
               {/* Property & Unit */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Building2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  <Building2 className="size-4 text-primary" />
                   Property & Unit
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">

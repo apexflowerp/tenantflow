@@ -47,7 +47,7 @@ const STATUS_CONFIG: Record<
   open: { label: 'Open', color: 'text-amber-700 dark:text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
   in_progress: { label: 'In Progress', color: 'text-teal-700 dark:text-teal-400', bg: 'bg-teal-500/10 border-teal-500/20' },
   scheduled: { label: 'Scheduled', color: 'text-purple-700 dark:text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
-  resolved: { label: 'Resolved', color: 'text-emerald-700 dark:text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
+  resolved: { label: 'Resolved', color: 'text-primary', bg: 'bg-primary/10 border-primary/20' },
 }
 
 const PRIORITY_CONFIG: Record<
@@ -163,7 +163,7 @@ export function TicketDetail({ ticket, onBack, onStatusChange }: TicketDetailPro
         {/* Main content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Description */}
-          <Card className="border-border/50 shadow-sm">
+          <Card className="border-border/30 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Description</CardTitle>
             </CardHeader>
@@ -175,7 +175,7 @@ export function TicketDetail({ ticket, onBack, onStatusChange }: TicketDetailPro
           </Card>
 
           {/* Activity / Timeline */}
-          <Card className="border-border/50 shadow-sm">
+          <Card className="border-border/30 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Activity</CardTitle>
             </CardHeader>
@@ -211,7 +211,7 @@ export function TicketDetail({ ticket, onBack, onStatusChange }: TicketDetailPro
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Info grid */}
-          <Card className="border-border/50 shadow-sm">
+          <Card className="border-border/30 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Details</CardTitle>
             </CardHeader>
@@ -292,7 +292,7 @@ export function TicketDetail({ ticket, onBack, onStatusChange }: TicketDetailPro
               {/* Completed */}
               {ticket.completedAt && (
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="size-4 text-emerald-500 mt-0.5 shrink-0" />
+                  <CheckCircle2 className="size-4 text-primary mt-0.5 shrink-0" />
                   <div>
                     <p className="text-xs text-muted-foreground">Completed</p>
                     <p className="text-sm font-medium text-foreground">{formatDateTime(ticket.completedAt)}</p>
@@ -303,7 +303,7 @@ export function TicketDetail({ ticket, onBack, onStatusChange }: TicketDetailPro
           </Card>
 
           {/* Action buttons */}
-          <Card className="border-border/50 shadow-sm">
+          <Card className="border-border/30 shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Actions</CardTitle>
             </CardHeader>

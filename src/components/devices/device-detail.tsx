@@ -113,7 +113,7 @@ function getDeviceIcon(type: string) {
 function getStatusBadge(status: string) {
   const config: Record<string, { label: string; className: string }> = {
     pending: { label: 'Pending', className: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800' },
-    active: { label: 'Active', className: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800' },
+    active: { label: 'Active', className: 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20' },
     blocked: { label: 'Blocked', className: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800' },
     deactivated: { label: 'Deactivated', className: 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950/40 dark:text-gray-400 dark:border-gray-800' },
   }
@@ -123,7 +123,7 @@ function getStatusBadge(status: string) {
 
 function getLicenseStatusBadge(status: string) {
   const config: Record<string, { label: string; className: string }> = {
-    available: { label: 'Available', className: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800' },
+    available: { label: 'Available', className: 'bg-primary/5 text-primary border-primary/20 dark:bg-primary/10 dark:text-primary dark:border-primary/20' },
     activated: { label: 'Activated', className: 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-800' },
     expired: { label: 'Expired', className: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800' },
     revoked: { label: 'Revoked', className: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-800' },
@@ -161,7 +161,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
         description: `${device.deviceName || 'Device'} was activated`,
         timestamp: device.activatedAt,
         icon: CheckCircle,
-        iconColor: 'text-emerald-600 dark:text-emerald-400',
+        iconColor: 'text-primary',
       })
     }
     if (device.status === 'blocked') {
@@ -193,7 +193,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
         description: `${s.user?.name || 'User'} from ${s.ipAddress || 'N/A'}`,
         timestamp: s.createdAt,
         icon: Wifi,
-        iconColor: s.isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500',
+        iconColor: s.isActive ? 'text-primary' : 'text-gray-500',
       })
     })
 
@@ -206,16 +206,16 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
       <div className="flex items-start gap-4">
         <div className={cn(
           'flex size-14 items-center justify-center rounded-xl',
-          device.status === 'active' ? 'bg-emerald-50 dark:bg-emerald-950/40' :
+          device.status === 'active' ? 'bg-primary/5 dark:bg-primary/10' :
           device.status === 'blocked' ? 'bg-red-50 dark:bg-red-950/40' :
           device.status === 'pending' ? 'bg-amber-50 dark:bg-amber-950/40' :
           'bg-gray-50 dark:bg-gray-950/40'
         )}>
-          {deviceIconType === 'desktop' && <Monitor className={cn('size-7', device.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
-          {deviceIconType === 'laptop' && <Laptop className={cn('size-7', device.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
-          {deviceIconType === 'tablet' && <Tablet className={cn('size-7', device.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
-          {deviceIconType === 'mobile' && <Smartphone className={cn('size-7', device.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
-          {!(deviceIconType === 'desktop' || deviceIconType === 'laptop' || deviceIconType === 'tablet' || deviceIconType === 'mobile') && <Monitor className={cn('size-7', device.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
+          {deviceIconType === 'desktop' && <Monitor className={cn('size-7', device.status === 'active' ? 'text-primary' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
+          {deviceIconType === 'laptop' && <Laptop className={cn('size-7', device.status === 'active' ? 'text-primary' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
+          {deviceIconType === 'tablet' && <Tablet className={cn('size-7', device.status === 'active' ? 'text-primary' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
+          {deviceIconType === 'mobile' && <Smartphone className={cn('size-7', device.status === 'active' ? 'text-primary' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
+          {!(deviceIconType === 'desktop' || deviceIconType === 'laptop' || deviceIconType === 'tablet' || deviceIconType === 'mobile') && <Monitor className={cn('size-7', device.status === 'active' ? 'text-primary' : device.status === 'blocked' ? 'text-red-600 dark:text-red-400' : device.status === 'pending' ? 'text-amber-600 dark:text-amber-400' : 'text-gray-600 dark:text-gray-400')} />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3">
@@ -239,7 +239,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
           </Button>
         )}
         {device.status === 'blocked' && (
-          <Button variant="outline" size="sm" className="gap-2 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20" onClick={() => onAction('unblock')}>
+          <Button variant="outline" size="sm" className="gap-2 text-primary hover:bg-primary/5 dark:hover:bg-primary/10" onClick={() => onAction('unblock')}>
             <Unlock className="size-4" /> Unblock
           </Button>
         )}
@@ -249,7 +249,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
           </Button>
         )}
         {device.status === 'pending' && (
-          <Button variant="outline" size="sm" className="gap-2 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20" onClick={() => onAction('activate')}>
+          <Button variant="outline" size="sm" className="gap-2 text-primary hover:bg-primary/5 dark:hover:bg-primary/10" onClick={() => onAction('activate')}>
             <CheckCircle className="size-4" /> Activate
           </Button>
         )}
@@ -266,7 +266,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
       {/* Device Info Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Hardware Info */}
-        <Card className="border-border/50">
+        <Card className="border-border/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Monitor className="size-4 text-muted-foreground" />
@@ -290,7 +290,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
         </Card>
 
         {/* Connection Info */}
-        <Card className="border-border/50">
+        <Card className="border-border/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Globe className="size-4 text-muted-foreground" />
@@ -315,7 +315,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
       </div>
 
       {/* Session History */}
-      <Card className="border-border/50">
+      <Card className="border-border/30">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
@@ -336,7 +336,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
               <div className="space-y-2">
                 {(device.sessions || []).map(session => (
                   <div key={session.id} className="flex items-center gap-3 py-2 px-3 rounded-lg bg-muted/30 text-sm">
-                    <div className={cn('size-2 rounded-full shrink-0', session.isActive ? 'bg-emerald-500' : 'bg-gray-400')} />
+                    <div className={cn('size-2 rounded-full shrink-0', session.isActive ? 'bg-primary' : 'bg-gray-400')} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{session.user?.name || 'Unknown'}</span>
@@ -360,7 +360,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
 
       {/* License Keys */}
       {(device.licenseKeys || []).length > 0 && (
-        <Card className="border-border/50">
+        <Card className="border-border/30">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Key className="size-4 text-muted-foreground" />
@@ -392,7 +392,7 @@ export function DeviceDetail({ device, onAction, onRevokeSessions, onRefresh }: 
       )}
 
       {/* Activity Timeline */}
-      <Card className="border-border/50">
+      <Card className="border-border/30">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
             <Clock className="size-4 text-muted-foreground" />

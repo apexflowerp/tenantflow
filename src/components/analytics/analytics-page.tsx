@@ -90,7 +90,7 @@ function CollectionDonut({
 }) {
   if (loading) {
     return (
-      <Card className="border-border/50 shadow-sm">
+      <Card className="border-border/30">
         <CardHeader className="pb-2">
           <Skeleton className="h-5 w-40" />
         </CardHeader>
@@ -107,14 +107,14 @@ function CollectionDonut({
   const lateRate = 100 - onTimeRate
 
   const pieData = [
-    { name: 'On Time', value: onTimeRate, color: '#10b981' },
-    { name: 'Late', value: lateRate, color: '#f43f5e' },
+    { name: 'On Time', value: onTimeRate, color: '#c2703a' },
+    { name: 'Late', value: lateRate, color: '#dc4a3a' },
   ]
 
   return (
-    <Card className="border-border/50 shadow-sm">
+    <Card className="mojave-card border-border/30 bg-card/80">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">Payment Collection</CardTitle>
+        <CardTitle className="text-[13px] font-semibold">Payment Collection</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-center">
@@ -157,7 +157,7 @@ function CollectionDonut({
         {/* Legend */}
         <div className="mt-4 flex items-center justify-center gap-6">
           <div className="flex items-center gap-2">
-            <span className="size-2.5 rounded-full bg-emerald-500" />
+            <span className="size-2.5 rounded-full bg-primary" />
             <span className="text-xs text-muted-foreground">On Time ({onTimeRate}%)</span>
           </div>
           <div className="flex items-center gap-2">
@@ -167,9 +167,9 @@ function CollectionDonut({
         </div>
         {/* Summary */}
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-emerald-50 p-3 dark:bg-emerald-950/30">
+          <div className="rounded-lg bg-primary/5 p-3">
             <p className="text-xs text-muted-foreground">Collected</p>
-            <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+            <p className="text-sm font-semibold text-primary">
               ${collectionRate.totalCollected.toLocaleString()}
             </p>
           </div>
@@ -191,7 +191,7 @@ function CircularProgress({
   value,
   size = 80,
   strokeWidth = 6,
-  color = '#10b981',
+  color = '#c2703a',
 }: {
   value: number
   size?: number
@@ -276,11 +276,11 @@ export function AnalyticsPage() {
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10">
-            <BarChart3 className="size-5 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <BarChart3 className="size-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">
               Analytics & Insights
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -312,21 +312,21 @@ export function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0 }}
         >
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30 bg-card/80">
             <CardContent className="p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground">Collection Rate</p>
+                  <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Collection Rate</p>
                   <div className="mt-2 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold tracking-tight text-foreground">
+                    <span className="text-2xl font-bold tracking-tight text-foreground">
                       {loading ? '—' : `${collectionRate}%`}
                     </span>
-                    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                    <span className="inline-flex items-center gap-0.5 text-[11px] font-medium text-primary">
                       <ArrowUpRight className="size-3" />
                       +3%
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">vs. last quarter</p>
+                  <p className="mt-1 text-[11px] text-muted-foreground/60">vs. last quarter</p>
                 </div>
                 <CircularProgress value={collectionRate} size={64} strokeWidth={5} />
               </div>
@@ -340,23 +340,23 @@ export function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.06 }}
         >
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30 bg-card/80">
             <CardContent className="p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground">Avg Resolution Time</p>
+                  <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Avg Resolution Time</p>
                   <div className="mt-2 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold tracking-tight text-foreground">
+                    <span className="text-2xl font-bold tracking-tight text-foreground">
                       {loading ? '—' : avgResolutionDays}
                     </span>
                     <span className="text-sm text-muted-foreground">days</span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="mt-1 text-[11px] text-muted-foreground/60">
                     {data?.maintenance.totalResolved ?? 0} tickets resolved
                   </p>
                 </div>
-                <div className="flex size-14 items-center justify-center rounded-xl bg-teal-500/10">
-                  <Clock className="size-6 text-teal-600 dark:text-teal-400" />
+                <div className="flex size-14 items-center justify-center rounded-xl bg-primary/10">
+                  <Clock className="size-6 text-primary" />
                 </div>
               </div>
             </CardContent>
@@ -369,26 +369,26 @@ export function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.12 }}
         >
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30 bg-card/80">
             <CardContent className="p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground">Tenant Retention</p>
+                  <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Tenant Retention</p>
                   <div className="mt-2 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold tracking-tight text-foreground">
+                    <span className="text-2xl font-bold tracking-tight text-foreground">
                       {loading ? '—' : `${retentionRate}%`}
                     </span>
-                    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                    <span className="inline-flex items-center gap-0.5 text-[11px] font-medium text-primary">
                       <ArrowUpRight className="size-3" />
                       +2%
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="mt-1 text-[11px] text-muted-foreground/60">
                     {data?.tenantMetrics.activeTenants ?? 0} of {data?.tenantMetrics.totalTenants ?? 0} tenants
                   </p>
                 </div>
-                <div className="flex size-14 items-center justify-center rounded-xl bg-amber-500/10">
-                  <Users className="size-6 text-amber-600 dark:text-amber-400" />
+                <div className="flex size-14 items-center justify-center rounded-xl bg-primary/10">
+                  <Users className="size-6 text-primary" />
                 </div>
               </div>
             </CardContent>
@@ -401,26 +401,26 @@ export function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.18 }}
         >
-          <Card className="border-border/50 shadow-sm">
+          <Card className="mojave-card border-border/30 bg-card/80">
             <CardContent className="p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground">Net Operating Income</p>
+                  <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Net Operating Income</p>
                   <div className="mt-2 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold tracking-tight text-foreground">
+                    <span className="text-2xl font-bold tracking-tight text-foreground">
                       {loading ? '—' : `$${(netIncome / 1000).toFixed(1)}k`}
                     </span>
-                    <span className="inline-flex items-center gap-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                    <span className="inline-flex items-center gap-0.5 text-[11px] font-medium text-primary">
                       <TrendingUp className="size-3" />
                       +18%
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="mt-1 text-[11px] text-muted-foreground/60">
                     Revenue: ${totalRevenue.toLocaleString()}
                   </p>
                 </div>
-                <div className="flex size-14 items-center justify-center rounded-xl bg-emerald-500/10">
-                  <DollarSign className="size-6 text-emerald-600 dark:text-emerald-400" />
+                <div className="flex size-14 items-center justify-center rounded-xl bg-primary/10">
+                  <DollarSign className="size-6 text-primary" />
                 </div>
               </div>
             </CardContent>
@@ -462,10 +462,10 @@ export function AnalyticsPage() {
       </div>
 
       {/* ── Row 4: AI Insights ───────────────────────────────────────── */}
-      <Card className="border-border/50 shadow-sm">
+      <Card className="mojave-card border-border/30">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-600/20">
               <Sparkles className="size-4 text-white" />
             </div>
             <div>

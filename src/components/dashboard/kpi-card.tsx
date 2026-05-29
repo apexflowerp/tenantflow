@@ -79,8 +79,8 @@ export function KpiCard({
   value,
   subtitle,
   icon: Icon,
-  iconColor = 'text-emerald-600',
-  iconBg = 'bg-emerald-50 dark:bg-emerald-950/40',
+  iconColor = 'text-primary',
+  iconBg = 'bg-primary/10',
   trend,
   trendDirection = 'up',
   trendLabel,
@@ -102,43 +102,40 @@ export function KpiCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.5,
-        delay: index * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        duration: 0.45,
+        delay: index * 0.08,
+        ease: [0.25, 0.1, 0.25, 1],
       }}
     >
       <Card
         className={cn(
-          'group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer border-border/50',
+          'mojave-card group relative overflow-hidden bg-card/80 border-border/30 cursor-pointer',
           className
         )}
       >
-        {/* Subtle gradient overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-        <CardContent className="p-6">
+        <CardContent className="p-5">
           <div className="flex items-start justify-between">
-            <div className="space-y-2 flex-1 min-w-0">
-              <p className="text-sm font-medium text-muted-foreground truncate">
+            <div className="space-y-1.5 flex-1 min-w-0">
+              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider truncate">
                 {title}
               </p>
               <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-bold tracking-tight text-foreground">
+                <p className="text-2xl font-bold tracking-tight text-foreground">
                   {displayValue}
                 </p>
               </div>
               {subtitle && (
-                <p className="text-xs text-muted-foreground">{subtitle}</p>
+                <p className="text-[11px] text-muted-foreground/70">{subtitle}</p>
               )}
               {trend !== undefined && (
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 mt-1">
                   <span
                     className={cn(
-                      'inline-flex items-center gap-0.5 text-xs font-medium',
-                      trendDirection === 'up' && 'text-emerald-600 dark:text-emerald-400',
+                      'inline-flex items-center gap-0.5 text-[11px] font-medium',
+                      trendDirection === 'up' && 'text-primary',
                       trendDirection === 'down' && 'text-red-600 dark:text-red-400',
                       trendDirection === 'neutral' && 'text-muted-foreground'
                     )}
@@ -156,7 +153,7 @@ export function KpiCard({
                     {trend}%
                   </span>
                   {trendLabel && (
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-[11px] text-muted-foreground/60">
                       {trendLabel}
                     </span>
                   )}
@@ -165,11 +162,11 @@ export function KpiCard({
             </div>
             <div
               className={cn(
-                'flex size-12 shrink-0 items-center justify-center rounded-xl',
+                'flex size-11 shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105',
                 iconBg
               )}
             >
-              <Icon className={cn('size-6', iconColor)} />
+              <Icon className={cn('size-5', iconColor)} />
             </div>
           </div>
         </CardContent>
@@ -182,15 +179,15 @@ export function KpiCard({
 
 export function KpiCardSkeleton() {
   return (
-    <Card className="border-border/50">
-      <CardContent className="p-6">
+    <Card className="border-border/30 bg-card/80">
+      <CardContent className="p-5">
         <div className="flex items-start justify-between">
           <div className="space-y-3 flex-1">
-            <div className="h-4 w-24 rounded bg-muted animate-pulse" />
-            <div className="h-8 w-32 rounded bg-muted animate-pulse" />
-            <div className="h-3 w-20 rounded bg-muted animate-pulse" />
+            <div className="h-3 w-20 rounded-md bg-muted/50 animate-pulse" />
+            <div className="h-7 w-28 rounded-md bg-muted/50 animate-pulse" />
+            <div className="h-2.5 w-16 rounded-md bg-muted/50 animate-pulse" />
           </div>
-          <div className="size-12 rounded-xl bg-muted animate-pulse" />
+          <div className="size-11 rounded-xl bg-muted/50 animate-pulse" />
         </div>
       </CardContent>
     </Card>

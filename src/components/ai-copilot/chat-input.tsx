@@ -48,7 +48,7 @@ export function ChatInput({
             key={chip}
             onClick={() => handleChipClick(chip)}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm transition-all hover:border-primary/20 hover:bg-primary/5 hover:text-primary dark:hover:border-primary/20 dark:hover:bg-primary/10 dark:hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Sparkles className="size-3" />
             {chip}
@@ -63,13 +63,13 @@ export function ChatInput({
           onChange={(e) => setValue(e.target.value)}
           placeholder="Ask your AI copilot..."
           disabled={isLoading}
-          className="flex-1 rounded-xl border-border/60 bg-background px-4 py-3 text-sm shadow-sm focus-visible:ring-emerald-500/30"
+          className="flex-1 rounded-xl border-border/60 bg-background px-4 py-3 text-sm shadow-sm focus-visible:ring-primary/20"
         />
         <Button
           type="submit"
           size="icon"
           disabled={!value.trim() || isLoading}
-          className="size-10 shrink-0 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
+          className="size-10 shrink-0 rounded-xl bg-primary hover:bg-primary/90 disabled:opacity-50"
         >
           <Send className="size-4" />
         </Button>

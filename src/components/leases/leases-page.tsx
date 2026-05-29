@@ -102,13 +102,13 @@ function KanbanCard({ lease, onClick }: { lease: LeaseRow; onClick: () => void }
   const computedStatus = getLeaseComputedStatus(lease)
 
   const statusColors = {
-    active: 'border-l-emerald-500',
+    active: 'border-l-primary',
     expiring: 'border-l-amber-500',
     expired: 'border-l-red-500',
   }
 
   const statusBadge = {
-    active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
+    active: 'bg-primary/10 text-primary border-primary/20 dark:border-primary/30',
     expiring: 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-800',
     expired: 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400 border-red-200 dark:border-red-800',
   }
@@ -274,7 +274,7 @@ export function LeasesPage() {
                     <FileText className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Leases</h1>
+                    <h1 className="text-xl font-semibold">Leases</h1>
                     <p className="text-sm text-muted-foreground">
                       Manage lease agreements, renewals, and expirations
                     </p>
@@ -298,15 +298,15 @@ export function LeasesPage() {
                   onClick={() => setStatusFilter(statusFilter === 'active' ? 'all' : 'active')}
                   className={`rounded-lg border p-4 text-left transition-colors ${
                     statusFilter === 'active'
-                      ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
+                      ? 'bg-primary/5 border-primary/20'
                       : 'hover:bg-muted/50'
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <CheckCircle2 className="size-4 text-primary" />
                     <p className="text-xs font-medium text-muted-foreground">Active Leases</p>
                   </div>
-                  <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{activeLeases.length}</p>
+                  <p className="text-2xl font-bold text-primary">{activeLeases.length}</p>
                 </button>
                 <button
                   onClick={() => setStatusFilter(statusFilter === 'expiring' ? 'all' : 'expiring')}
@@ -464,13 +464,13 @@ export function LeasesPage() {
                   {/* Active Column */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 px-1">
-                      <div className="size-2.5 rounded-full bg-emerald-500" />
+                      <div className="size-2.5 rounded-full bg-primary" />
                       <h3 className="text-sm font-semibold">Active</h3>
                       <Badge variant="secondary" className="text-[10px] ml-auto">
                         {filteredLeases.filter((l) => getLeaseComputedStatus(l) === 'active').length}
                       </Badge>
                     </div>
-                    <Card className="border-border/50">
+                    <Card className="border-border/30">
                       <CardContent className="p-3 space-y-2.5 min-h-[200px]">
                         {filteredLeases
                           .filter((l) => getLeaseComputedStatus(l) === 'active')
@@ -500,7 +500,7 @@ export function LeasesPage() {
                         {filteredLeases.filter((l) => getLeaseComputedStatus(l) === 'expiring').length}
                       </Badge>
                     </div>
-                    <Card className="border-border/50">
+                    <Card className="border-border/30">
                       <CardContent className="p-3 space-y-2.5 min-h-[200px]">
                         {filteredLeases
                           .filter((l) => getLeaseComputedStatus(l) === 'expiring')
@@ -530,7 +530,7 @@ export function LeasesPage() {
                         {filteredLeases.filter((l) => getLeaseComputedStatus(l) === 'expired').length}
                       </Badge>
                     </div>
-                    <Card className="border-border/50">
+                    <Card className="border-border/30">
                       <CardContent className="p-3 space-y-2.5 min-h-[200px]">
                         {filteredLeases
                           .filter((l) => getLeaseComputedStatus(l) === 'expired')
