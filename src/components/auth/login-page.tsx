@@ -27,7 +27,7 @@ import { Separator } from '@/components/ui/separator'
 
 function MojaveBackground() {
   return (
-    <div className="absolute inset-0" style={{ background: '#2d1b69' }} />
+    <div className="absolute inset-0" style={{ background: '#0d0b14' }} />
   )
 }
 
@@ -498,7 +498,7 @@ export function LoginPage() {
         {/* Solid card */}
         <div
           className="rounded-2xl p-8 border border-white/[0.08]"
-          style={{ background: '#3b2470' }}
+          style={{ background: '#1a1726' }}
         >
           {/* Logo */}
           <motion.div
