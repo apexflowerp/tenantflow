@@ -23,62 +23,134 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
 
-// ── macOS Mojave Desert Background ────────────────────────────────────────────
+// ── macOS Mojave Desert Sunset Background ──────────────────────────────────────
+// Authentic Mojave colors: deep indigo sky → rich purple → coral → orange → gold sand
 
 function MojaveBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Base gradient — warm Mojave desert tones */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-900 via-orange-800 to-rose-900" />
+      {/* Base gradient — authentic Mojave sunset (top-to-bottom: indigo → purple → coral → orange → gold) */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            linear-gradient(
+              180deg,
+              #1a1040 0%,
+              #2d1b69 15%,
+              #5e3c92 28%,
+              #8b5a9f 38%,
+              #c4736e 50%,
+              #d98a5e 60%,
+              #e8a555 70%,
+              #f0be5a 80%,
+              #f5d062 90%,
+              #fada6e 100%
+            )
+          `,
+        }}
+      />
 
-      {/* Sand dune layer */}
-      <div className="absolute inset-0 bg-gradient-to-t from-amber-950/60 via-transparent to-orange-900/30" />
-
-      {/* Sun glow */}
-      <div className="absolute top-[15%] left-1/2 -translate-x-1/2">
-        <div className="h-64 w-64 rounded-full bg-amber-400/20 blur-3xl animate-mojave-breathe" />
-        <div className="absolute inset-0 h-48 w-48 m-auto rounded-full bg-yellow-300/15 blur-2xl" />
+      {/* Sun glow — positioned at the horizon line */}
+      <div className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div
+          className="h-[500px] w-[500px] rounded-full animate-mojave-breathe"
+          style={{
+            background: 'radial-gradient(circle, rgba(255,220,130,0.35) 0%, rgba(240,180,90,0.15) 40%, transparent 70%)',
+          }}
+        />
       </div>
 
-      {/* Warm atmospheric orbs */}
+      {/* Warm atmospheric orbs — matching the real Mojave palette */}
       <motion.div
-        className="absolute -top-20 right-[10%] h-72 w-72 rounded-full bg-rose-500/10 blur-3xl"
+        className="absolute -top-10 left-[15%] h-96 w-96 rounded-full"
+        style={{ background: 'rgba(94,60,146,0.15)' }}
         animate={{
-          x: [0, 25, 0],
-          y: [0, -15, 0],
+          x: [0, 20, 0],
+          y: [0, -12, 0],
+          scale: [1, 1.06, 1],
+        }}
+        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute top-[20%] right-[8%] h-80 w-80 rounded-full"
+        style={{ background: 'rgba(139,90,159,0.12)' }}
+        animate={{
+          x: [0, -18, 0],
+          y: [0, 15, 0],
           scale: [1, 1.08, 1],
         }}
         transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute bottom-[10%] left-[5%] h-80 w-80 rounded-full bg-amber-500/8 blur-3xl"
+        className="absolute bottom-[15%] left-[10%] h-72 w-72 rounded-full"
+        style={{ background: 'rgba(232,165,85,0.12)' }}
         animate={{
-          x: [0, -15, 0],
-          y: [0, 25, 0],
+          x: [0, 12, 0],
+          y: [0, -20, 0],
           scale: [1, 1.1, 1],
         }}
-        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute top-[40%] right-[20%] h-48 w-48 rounded-full bg-orange-400/8 blur-3xl"
+        className="absolute top-[55%] right-[15%] h-64 w-64 rounded-full"
+        style={{ background: 'rgba(196,115,110,0.1)' }}
         animate={{
-          scale: [1, 1.15, 1],
+          scale: [1, 1.12, 1],
           opacity: [0.3, 0.5, 0.3],
         }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* Subtle noise texture */}
+      {/* Desert dune silhouette at the bottom */}
+      <svg
+        className="absolute bottom-0 left-0 right-0 w-full"
+        viewBox="0 0 1440 220"
+        preserveAspectRatio="none"
+        style={{ height: '22%' }}
+      >
+        <defs>
+          <linearGradient id="dune1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#c47a3e" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#8b5a2b" stopOpacity="0.7" />
+          </linearGradient>
+          <linearGradient id="dune2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#a06830" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#6b4220" stopOpacity="0.6" />
+          </linearGradient>
+        </defs>
+        {/* Back dune */}
+        <path
+          d="M0,120 C200,40 400,90 600,60 C800,30 1000,80 1200,50 C1350,35 1400,65 1440,55 L1440,220 L0,220 Z"
+          fill="url(#dune2)"
+        />
+        {/* Front dune */}
+        <path
+          d="M0,160 C180,100 350,140 550,110 C750,80 950,130 1150,100 C1300,80 1400,120 1440,105 L1440,220 L0,220 Z"
+          fill="url(#dune1)"
+        />
+      </svg>
+
+      {/* Subtle star-like dots at the top (for the night sky area) */}
       <div
-        className="absolute inset-0 opacity-[0.025]"
+        className="absolute top-0 left-0 right-0 h-[35%] opacity-30"
         style={{
-          backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)`,
-          backgroundSize: '24px 24px',
+          backgroundImage: `radial-gradient(1px 1px at 10% 10%, rgba(255,255,255,0.6), transparent),
+            radial-gradient(1px 1px at 25% 5%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(1px 1px at 40% 15%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(1px 1px at 55% 8%, rgba(255,255,255,0.3), transparent),
+            radial-gradient(1.5px 1.5px at 70% 12%, rgba(255,255,255,0.6), transparent),
+            radial-gradient(1px 1px at 85% 6%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(1px 1px at 15% 22%, rgba(255,255,255,0.3), transparent),
+            radial-gradient(1.5px 1.5px at 92% 18%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(1px 1px at 5% 30%, rgba(255,255,255,0.2), transparent),
+            radial-gradient(1px 1px at 48% 25%, rgba(255,255,255,0.3), transparent)`,
+          backgroundSize: '100% 100%',
         }}
       />
 
-      {/* Warm vignette */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-amber-950/40" />
+      {/* Warm vignette at the bottom */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/10" />
     </div>
   )
 }
@@ -156,9 +228,13 @@ function DeviceActivationStep({
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-amber-500/15 ring-1 ring-amber-400/20"
+          className="mx-auto flex size-16 items-center justify-center rounded-2xl"
+          style={{
+            background: 'rgba(94,60,146,0.2)',
+            boxShadow: '0 0 0 1px rgba(139,90,159,0.2)',
+          }}
         >
-          <KeyRound className="size-8 text-amber-400" />
+          <KeyRound className="size-8" style={{ color: '#c4a0e8' }} />
         </motion.div>
         <motion.div
           initial={{ y: 10, opacity: 0 }}
@@ -166,7 +242,7 @@ function DeviceActivationStep({
           transition={{ delay: 0.2, duration: 0.4 }}
         >
           <h2 className="text-2xl font-bold text-white tracking-tight">Activate Your Device</h2>
-          <p className="mt-1.5 text-sm text-amber-200/60">
+          <p className="mt-1.5 text-sm" style={{ color: 'rgba(220,200,240,0.55)' }}>
             Enter your serial key to activate TenantFlow OS on this device
           </p>
         </motion.div>
@@ -179,11 +255,11 @@ function DeviceActivationStep({
         transition={{ delay: 0.3, duration: 0.4 }}
         className="space-y-3"
       >
-        <Label htmlFor="serial-key" className="text-sm font-medium text-amber-100/80">
+        <Label htmlFor="serial-key" className="text-sm font-medium" style={{ color: 'rgba(220,200,240,0.7)' }}>
           Serial Key
         </Label>
         <div className="relative">
-          <MonitorSmartphone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-amber-400/40" />
+          <MonitorSmartphone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4" style={{ color: 'rgba(196,160,232,0.4)' }} />
           <Input
             id="serial-key"
             type="text"
@@ -191,7 +267,11 @@ function DeviceActivationStep({
             onChange={handleSerialKeyChange}
             onKeyDown={handleKeyDown}
             placeholder="XXXX-XXXX-XXXX-XXXX"
-            className="h-12 bg-white/[0.06] border-white/[0.08] pl-11 pr-4 text-center font-mono text-lg tracking-widest text-white placeholder:text-white/15 focus:border-amber-500/40 focus:ring-amber-500/15 rounded-xl"
+            className="h-12 pl-11 pr-4 text-center font-mono text-lg tracking-widest text-white placeholder:text-white/15 rounded-xl"
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              borderColor: 'rgba(255,255,255,0.08)',
+            }}
             maxLength={19}
             autoComplete="off"
           />
@@ -201,7 +281,12 @@ function DeviceActivationStep({
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-2.5 text-sm text-red-300 ring-1 ring-red-500/15"
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm"
+            style={{
+              background: 'rgba(220,50,50,0.12)',
+              color: '#fca5a5',
+              boxShadow: '0 0 0 1px rgba(220,50,50,0.15)',
+            }}
           >
             <AlertCircle className="size-4 shrink-0" />
             {error}
@@ -218,7 +303,11 @@ function DeviceActivationStep({
         <Button
           onClick={handleActivate}
           disabled={isLoading || serialKey.length < 19}
-          className="h-12 w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold shadow-lg shadow-amber-900/30 transition-all duration-200 disabled:opacity-50 rounded-xl"
+          className="h-12 w-full font-semibold text-white shadow-lg transition-all duration-200 disabled:opacity-50 rounded-xl"
+          style={{
+            background: 'linear-gradient(135deg, #7b5ea7 0%, #c4736e 50%, #e8a555 100%)',
+            boxShadow: '0 8px 24px rgba(94,60,146,0.3)',
+          }}
           size="lg"
         >
           {isLoading ? (
@@ -242,8 +331,11 @@ function DeviceActivationStep({
         transition={{ delay: 0.5, duration: 0.4 }}
       >
         <div className="relative">
-          <Separator className="bg-white/[0.06]" />
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs text-white/25">
+          <Separator style={{ background: 'rgba(255,255,255,0.06)' }} />
+          <span
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs"
+            style={{ color: 'rgba(255,255,255,0.2)' }}
+          >
             or
           </span>
         </div>
@@ -258,7 +350,8 @@ function DeviceActivationStep({
       >
         <button
           onClick={onDemoMode}
-          className="group inline-flex items-center gap-2 text-sm text-amber-300/50 hover:text-amber-300/80 transition-colors duration-200"
+          className="group inline-flex items-center gap-2 text-sm transition-colors duration-200"
+          style={{ color: 'rgba(220,200,240,0.45)' }}
         >
           <Zap className="size-4" />
           Try Demo Mode — No activation required
@@ -332,9 +425,13 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-amber-500/15 ring-1 ring-amber-400/20"
+          className="mx-auto flex size-16 items-center justify-center rounded-2xl"
+          style={{
+            background: 'rgba(94,60,146,0.2)',
+            boxShadow: '0 0 0 1px rgba(139,90,159,0.2)',
+          }}
         >
-          <Shield className="size-8 text-amber-400" />
+          <Shield className="size-8" style={{ color: '#c4a0e8' }} />
         </motion.div>
         <motion.div
           initial={{ y: 10, opacity: 0 }}
@@ -342,7 +439,7 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
           transition={{ delay: 0.2, duration: 0.4 }}
         >
           <h2 className="text-2xl font-bold text-white tracking-tight">Welcome Back</h2>
-          <p className="mt-1.5 text-sm text-amber-200/60">
+          <p className="mt-1.5 text-sm" style={{ color: 'rgba(220,200,240,0.55)' }}>
             Sign in to your TenantFlow OS account
           </p>
         </motion.div>
@@ -358,11 +455,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
       >
         {/* Email */}
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium text-amber-100/80">
+          <Label htmlFor="email" className="text-sm font-medium" style={{ color: 'rgba(220,200,240,0.7)' }}>
             Email Address
           </Label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-amber-400/40" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4" style={{ color: 'rgba(196,160,232,0.4)' }} />
             <Input
               id="email"
               type="email"
@@ -372,7 +469,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
                 if (error) setError('')
               }}
               placeholder="you@company.com"
-              className="h-11 bg-white/[0.06] border-white/[0.08] pl-11 text-white placeholder:text-white/20 focus:border-amber-500/40 focus:ring-amber-500/15 rounded-xl"
+              className="h-11 pl-11 text-white placeholder:text-white/20 rounded-xl"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                borderColor: 'rgba(255,255,255,0.08)',
+              }}
               autoComplete="email"
             />
           </div>
@@ -381,18 +482,19 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
         {/* Password */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password" className="text-sm font-medium text-amber-100/80">
+            <Label htmlFor="password" className="text-sm font-medium" style={{ color: 'rgba(220,200,240,0.7)' }}>
               Password
             </Label>
             <button
               type="button"
-              className="text-xs text-amber-300/40 hover:text-amber-300/60 transition-colors"
+              className="text-xs transition-colors"
+              style={{ color: 'rgba(196,160,232,0.4)' }}
             >
               Forgot Password?
             </button>
           </div>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-amber-400/40" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4" style={{ color: 'rgba(196,160,232,0.4)' }} />
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
@@ -402,13 +504,18 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
                 if (error) setError('')
               }}
               placeholder="Enter your password"
-              className="h-11 bg-white/[0.06] border-white/[0.08] pl-11 pr-11 text-white placeholder:text-white/20 focus:border-amber-500/40 focus:ring-amber-500/15 rounded-xl"
+              className="h-11 pl-11 pr-11 text-white placeholder:text-white/20 rounded-xl"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                borderColor: 'rgba(255,255,255,0.08)',
+              }}
               autoComplete="current-password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-amber-400/40 hover:text-amber-400/70 transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
+              style={{ color: 'rgba(196,160,232,0.4)' }}
             >
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
@@ -421,11 +528,15 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
             id="remember"
             checked={rememberMe}
             onCheckedChange={(checked) => setRememberMe(checked === true)}
-            className="border-white/15 data-[state=checked]:bg-amber-600 data-[state=checked]:border-amber-600"
+            style={{
+              borderColor: 'rgba(255,255,255,0.15)',
+            }}
+            className="data-[state=checked]:bg-[#7b5ea7] data-[state=checked]:border-[#7b5ea7]"
           />
           <Label
             htmlFor="remember"
-            className="text-sm text-amber-100/50 cursor-pointer"
+            className="text-sm cursor-pointer"
+            style={{ color: 'rgba(220,200,240,0.5)' }}
           >
             Remember me for 30 days
           </Label>
@@ -436,7 +547,12 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-2.5 text-sm text-red-300 ring-1 ring-red-500/15"
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm"
+            style={{
+              background: 'rgba(220,50,50,0.12)',
+              color: '#fca5a5',
+              boxShadow: '0 0 0 1px rgba(220,50,50,0.15)',
+            }}
           >
             <AlertCircle className="size-4 shrink-0" />
             {error}
@@ -447,7 +563,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
         <Button
           type="submit"
           disabled={isLoading}
-          className="h-11 w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold shadow-lg shadow-amber-900/30 transition-all duration-200 disabled:opacity-50 rounded-xl"
+          className="h-11 w-full font-semibold text-white shadow-lg transition-all duration-200 disabled:opacity-50 rounded-xl"
+          style={{
+            background: 'linear-gradient(135deg, #7b5ea7 0%, #c4736e 50%, #e8a555 100%)',
+            boxShadow: '0 8px 24px rgba(94,60,146,0.3)',
+          }}
         >
           {isLoading ? (
             <>
@@ -465,8 +585,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
 
       {/* Divider */}
       <div className="relative">
-        <Separator className="bg-white/[0.06]" />
-        <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs text-white/20">
+        <Separator style={{ background: 'rgba(255,255,255,0.06)' }} />
+        <span
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-transparent px-3 text-xs"
+          style={{ color: 'rgba(255,255,255,0.18)' }}
+        >
           or continue with
         </span>
       </div>
@@ -481,12 +604,16 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
           onClick={handleDemoLogin}
           disabled={isLoading}
           variant="outline"
-          className="h-11 w-full border-white/[0.08] bg-white/[0.04] text-white/80 hover:bg-white/[0.08] hover:text-amber-200 transition-all duration-200 rounded-xl"
+          className="h-11 w-full text-white/80 transition-all duration-200 rounded-xl"
+          style={{
+            borderColor: 'rgba(255,255,255,0.08)',
+            background: 'rgba(255,255,255,0.04)',
+          }}
         >
           {isLoading ? (
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
-            <Zap className="mr-2 size-4 text-amber-400" />
+            <Zap className="mr-2 size-4" style={{ color: '#c4a0e8' }} />
           )}
           Demo Login
         </Button>
@@ -501,7 +628,8 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
       >
         <button
           onClick={onBack}
-          className="text-xs text-amber-300/30 hover:text-amber-300/50 transition-colors"
+          className="text-xs transition-colors"
+          style={{ color: 'rgba(220,200,240,0.25)' }}
         >
           Back to device activation
         </button>
@@ -546,8 +674,17 @@ export function LoginPage() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className="relative z-10 w-full max-w-md"
       >
-        {/* macOS-style frosted glass card */}
-        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-8 shadow-2xl shadow-black/25 backdrop-blur-2xl backdrop-saturate-150">
+        {/* macOS-style frosted glass card — with proper mojave-tinted glass */}
+        <div
+          className="rounded-2xl p-8"
+          style={{
+            background: 'rgba(26,16,64,0.55)',
+            backdropFilter: 'blur(60px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(60px) saturate(180%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            boxShadow: '0 24px 80px rgba(0,0,0,0.4), 0 0 0 0.5px rgba(255,255,255,0.06)',
+          }}
+        >
           {/* Logo */}
           <motion.div
             initial={{ y: -10, opacity: 0 }}
@@ -556,17 +693,33 @@ export function LoginPage() {
             className="mb-8 flex flex-col items-center gap-3"
           >
             <div className="flex items-center gap-2.5">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-600/30">
+              <div
+                className="flex size-10 items-center justify-center rounded-xl shadow-lg"
+                style={{
+                  background: 'linear-gradient(135deg, #7b5ea7 0%, #c4736e 50%, #e8a555 100%)',
+                  boxShadow: '0 6px 20px rgba(94,60,146,0.4)',
+                }}
+              >
                 <Building2 className="size-5 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold tracking-tight text-white">
                   TenantFlow
-                  <span className="ml-1 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">OS</span>
+                  <span
+                    className="ml-1 bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage: 'linear-gradient(135deg, #c4a0e8, #e8a555)',
+                    }}
+                  >
+                    OS
+                  </span>
                 </h1>
               </div>
             </div>
-            <p className="text-[10px] text-amber-200/30 tracking-[0.2em] uppercase">
+            <p
+              className="text-[10px] tracking-[0.2em] uppercase"
+              style={{ color: 'rgba(220,200,240,0.3)' }}
+            >
               AI-Powered Property Management
             </p>
           </motion.div>
@@ -595,10 +748,10 @@ export function LoginPage() {
           transition={{ delay: 0.8, duration: 0.5 }}
           className="mt-6 text-center"
         >
-          <p className="text-xs text-white/20">
+          <p className="text-xs" style={{ color: 'rgba(220,200,240,0.2)' }}>
             © {new Date().getFullYear()} TenantFlow OS · Enterprise Property Intelligence
           </p>
-          <div className="mt-2 flex items-center justify-center gap-3 text-xs text-white/12">
+          <div className="mt-2 flex items-center justify-center gap-3 text-xs" style={{ color: 'rgba(220,200,240,0.12)' }}>
             <span>Privacy Policy</span>
             <span>·</span>
             <span>Terms of Service</span>
