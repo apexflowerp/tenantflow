@@ -27,6 +27,7 @@ interface AuthStore {
   currentUser: CurrentUser | null
   currentDevice: CurrentDevice | null
   loginMethod: 'password' | 'demo' | null
+  isViewOnly: boolean
   sessionToken: string | null
 
   // Actions
@@ -53,6 +54,7 @@ function persistState(state: Partial<AuthStore>) {
     currentUser: state.currentUser,
     currentDevice: state.currentDevice,
     loginMethod: state.loginMethod,
+    isViewOnly: state.isViewOnly,
     sessionToken: state.sessionToken,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
@@ -84,6 +86,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   currentUser: null,
   currentDevice: null,
   loginMethod: null,
+  isViewOnly: false,
   sessionToken: null,
 
   // Hydrate from localStorage on mount
@@ -97,6 +100,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         currentUser: saved.currentUser ?? null,
         currentDevice: saved.currentDevice ?? null,
         loginMethod: saved.loginMethod ?? null,
+        isViewOnly: saved.isViewOnly ?? false,
         sessionToken: saved.sessionToken ?? null,
       })
     }
@@ -123,6 +127,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         currentUser: data.user,
         sessionToken: data.token,
         loginMethod: 'password' as const,
+        isViewOnly: false,
       }
 
       set(newState)
@@ -134,7 +139,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  // Demo login
+  // Demo login — view-only access
   demoLogin: async () => {
     try {
       const res = await fetch('/api/auth/demo', {
@@ -157,6 +162,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         currentDevice: data.device ?? null,
         sessionToken: data.token,
         loginMethod: 'demo' as const,
+        isViewOnly: true,
       }
 
       set(newState)
@@ -213,6 +219,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       currentUser: null,
       currentDevice: null,
       loginMethod: null,
+      isViewOnly: false,
       sessionToken: null,
     }
     set(newState)

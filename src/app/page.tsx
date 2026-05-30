@@ -52,6 +52,9 @@ import {
   CalendarDays,
   Store,
   BookOpen,
+  Eye,
+  Zap,
+  X,
 } from 'lucide-react'
 
 import { useAppStore } from '@/stores'
@@ -610,9 +613,44 @@ function LogoutHandler() {
 
 // ── Main Page ───────────────────────────────────────────────────────────────
 
+// ── View Only Banner ────────────────────────────────────────────────────────
+
+function ViewOnlyBanner() {
+  const { isViewOnly, logout } = useAuthStore()
+  const [dismissed, setDismissed] = React.useState(false)
+
+  if (!isViewOnly || dismissed) return null
+
+  return (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: 'auto', opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="relative flex items-center justify-center gap-3 px-4 py-2 bg-amber-500/10 border-b border-amber-500/15"
+    >
+      <div className="flex items-center gap-2 text-[12px]">
+        <Eye className="size-3.5 text-amber-600 dark:text-amber-400" />
+        <span className="font-medium text-amber-700 dark:text-amber-300">Demo Mode — View Only</span>
+        <span className="text-amber-600/60 dark:text-amber-400/50 hidden sm:inline">
+          You can browse all features but cannot create, edit, or delete data.
+        </span>
+      </div>
+      <button
+        onClick={() => setDismissed(true)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-0.5 text-amber-600/40 hover:text-amber-600/70 transition-colors"
+      >
+        <X className="size-3.5" />
+      </button>
+    </motion.div>
+  )
+}
+
+// ── Main Page ───────────────────────────────────────────────────────────────
+
 export default function Home() {
   const { activeModule } = useAppStore()
-  const { isAuthenticated, currentUser, logout } = useAuthStore()
+  const { isAuthenticated, currentUser, isViewOnly, loginMethod, logout } = useAuthStore()
 
   return (
     <AuthGate>
@@ -623,6 +661,9 @@ export default function Home() {
 
         <SidebarInset>
           <AppHeader />
+
+          {/* View-only banner */}
+          <ViewOnlyBanner />
 
           {/* User info bar — macOS subtitle bar style */}
           {isAuthenticated && currentUser && (
@@ -636,6 +677,18 @@ export default function Home() {
                 <span className="font-medium text-foreground/80">{currentUser.name}</span>
                 <span className="text-muted-foreground/40">·</span>
                 <span className="text-muted-foreground/60">{currentUser.email}</span>
+                {isViewOnly && (
+                  <Badge className="ml-1 text-[9px] px-1.5 py-0 h-4 font-semibold bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/20" variant="outline">
+                    <Eye className="size-2.5 mr-0.5" />
+                    VIEW ONLY
+                  </Badge>
+                )}
+                {loginMethod === 'demo' && (
+                  <Badge className="text-[9px] px-1.5 py-0 h-4 font-semibold bg-violet-500/15 text-violet-600 dark:text-violet-400 border-violet-500/20 hover:bg-violet-500/20" variant="outline">
+                    <Zap className="size-2.5 mr-0.5" />
+                    DEMO
+                  </Badge>
+                )}
               </div>
               <button
                 onClick={() => logout()}
