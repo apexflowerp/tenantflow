@@ -29,7 +29,7 @@ import {
   BookOpen,
 } from 'lucide-react'
 
-import { useAppStore } from '@/stores'
+import { useAppStore, useAuthStore } from '@/stores'
 import { cn } from '@/lib/utils'
 
 import {
@@ -129,6 +129,7 @@ const WORKSPACES = [
 export function AppSidebar() {
   const { activeModule, setActiveModule, currentWorkspace, setCurrentWorkspace } =
     useAppStore()
+  const { currentUser } = useAuthStore()
 
   return (
     <Sidebar collapsible="icon" className="border-r-0 glass-sidebar">
@@ -229,15 +230,15 @@ export function AppSidebar() {
                   <Avatar className="size-8 rounded-lg">
                     <AvatarImage src="" alt="User" />
                     <AvatarFallback className="rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 text-amber-700 dark:from-amber-900/40 dark:to-orange-900/40 dark:text-amber-400 text-xs font-semibold">
-                      JD
+                      {currentUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'TF'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                     <span className="truncate font-medium text-sidebar-foreground">
-                      Jordan Davis
+                      {currentUser?.name || 'TenantFlow User'}
                     </span>
                     <span className="truncate text-[11px] text-muted-foreground">
-                      jordan@tenantflow.io
+                      {currentUser?.email || 'user@tenantflow.io'}
                     </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
@@ -264,6 +265,7 @@ export function AppSidebar() {
                 <DropdownMenuItem
                   className="cursor-pointer text-destructive focus:text-destructive rounded-lg"
                   variant="destructive"
+                  onClick={() => window.dispatchEvent(new Event('tenantflow:logout'))}
                 >
                   <LogOut className="size-4" />
                   Sign Out

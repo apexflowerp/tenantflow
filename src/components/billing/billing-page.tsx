@@ -30,6 +30,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
+import { getApiUrl } from '@/lib/api'
 
 import { PaymentTable, type PaymentRow } from './payment-table'
 import { RecordPaymentDialog } from './record-payment-dialog'
@@ -317,7 +318,7 @@ export function BillingPage() {
   React.useEffect(() => {
     const fetchTenants = async () => {
       try {
-        const response = await fetch('/api/tenants')
+        const response = await fetch(getApiUrl('/api/tenants'))
         if (response.ok) {
           const data = await response.json()
           const tenantList = data.tenants ?? data ?? []

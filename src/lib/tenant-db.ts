@@ -9,14 +9,14 @@ const MAX_CACHED_CLIENTS = 20
 
 /**
  * Build a tenant database URL from the base URL and database name.
- * Pattern: {baseUrl}/{dbName}?sslmode=require
+ * Pattern: {baseUrl}/{dbName}?sslmode=require&connection_limit=2
  */
 export function buildTenantDbUrl(databaseName: string): string {
   const baseUrl = process.env.TENANT_DB_BASE_URL
   if (!baseUrl) {
     throw new Error('TENANT_DB_BASE_URL environment variable is not set')
   }
-  return `${baseUrl}/${databaseName}?sslmode=require`
+  return `${baseUrl}/${databaseName}?sslmode=require&connection_limit=2`
 }
 
 /**

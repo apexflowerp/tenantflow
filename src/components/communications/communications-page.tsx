@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { MessageList, type MessageItem } from './message-list'
 import { MessageDetail } from './message-detail'
 import { NewMessageDialog } from './new-message-dialog'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -74,7 +75,7 @@ export function CommunicationsPage() {
   // Fetch messages
   const fetchMessages = React.useCallback(async () => {
     try {
-      const res = await fetch('/api/messages')
+      const res = await fetch(getApiUrl('/api/messages'))
       if (!res.ok) throw new Error('Failed to fetch messages')
       const data = await res.json()
       setMessages(data.messages || [])
@@ -89,7 +90,7 @@ export function CommunicationsPage() {
   // Fetch tenants for dropdown
   const fetchTenants = React.useCallback(async () => {
     try {
-      const res = await fetch('/api/tenants')
+      const res = await fetch(getApiUrl('/api/tenants'))
       if (!res.ok) return
       const data = await res.json()
       const tenantList = (data.tenants || []).map((t: { id: string; name: string; email: string }) => ({
@@ -123,7 +124,7 @@ export function CommunicationsPage() {
       const original = messages.find((m) => m.id === messageId)
       if (!original) return
 
-      const res = await fetch('/api/messages', {
+      const res = await fetch(getApiUrl('/api/messages'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -156,7 +157,7 @@ export function CommunicationsPage() {
     type: string
     tenantId: string
   }) => {
-    const res = await fetch('/api/messages', {
+    const res = await fetch(getApiUrl('/api/messages'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

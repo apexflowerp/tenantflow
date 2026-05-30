@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -75,7 +76,7 @@ export const useMaintenanceStore = create<MaintenanceStore>((set, get) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const response = await fetch('/api/maintenance')
+      const response = await fetch(getApiUrl('/api/maintenance'))
 
       if (!response.ok) {
         throw new Error(`Failed to fetch maintenance tickets: ${response.status}`)

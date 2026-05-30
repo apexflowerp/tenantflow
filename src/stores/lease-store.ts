@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -79,7 +80,7 @@ export const useLeaseStore = create<LeaseStore>((set, get) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const response = await fetch('/api/leases')
+      const response = await fetch(getApiUrl('/api/leases'))
 
       if (!response.ok) {
         throw new Error(`Failed to fetch leases: ${response.status}`)

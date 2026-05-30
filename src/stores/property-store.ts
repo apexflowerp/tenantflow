@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -103,7 +104,7 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const response = await fetch('/api/properties')
+      const response = await fetch(getApiUrl('/api/properties'))
 
       if (!response.ok) {
         throw new Error(`Failed to fetch properties: ${response.status}`)

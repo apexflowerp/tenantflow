@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -76,7 +77,7 @@ export const usePaymentStore = create<PaymentStore>((set, get) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const response = await fetch('/api/payments')
+      const response = await fetch(getApiUrl('/api/payments'))
 
       if (!response.ok) {
         throw new Error(`Failed to fetch payments: ${response.status}`)

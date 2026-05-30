@@ -21,7 +21,7 @@ export async function POST() {
           status: 'active',
           plan: 'starter',
           dbStatus: 'active',
-          databaseUrl: process.env.DATABASE_URL,
+          databaseUrl: process.env.DATABASE_URL || '',
           databaseName: 'demo',
         },
       })

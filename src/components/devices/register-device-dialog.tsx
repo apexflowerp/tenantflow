@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -50,7 +51,7 @@ export function RegisterDeviceDialog({ open, onOpenChange, onSuccess }: Register
   // Fetch users for assignment dropdown
   React.useEffect(() => {
     if (open) {
-      fetch('/api/tenants')
+      fetch(getApiUrl('/api/tenants'))
         .then(res => res.ok ? res.json() : null)
         .then(data => {
           // We'll use the workspace users from the seed data
@@ -75,7 +76,7 @@ export function RegisterDeviceDialog({ open, onOpenChange, onSuccess }: Register
 
     setIsSubmitting(true)
     try {
-      const res = await fetch('/api/devices', {
+      const res = await fetch(getApiUrl('/api/devices'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

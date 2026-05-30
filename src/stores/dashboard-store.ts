@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -6,6 +7,8 @@ export interface DashboardStats {
   totalProperties: number
   totalUnits: number
   totalTenants: number
+  totalLeases: number
+  occupiedUnits: number
   occupancyRate: number
   totalRevenue: number
   pendingPayments: number
@@ -103,7 +106,7 @@ export const useDashboardStore = create<DashboardStore>((set, get) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const response = await fetch('/api/dashboard')
+      const response = await fetch(getApiUrl('/api/dashboard'))
 
       if (!response.ok) {
         throw new Error(`Failed to fetch dashboard data: ${response.status}`)

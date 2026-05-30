@@ -6,6 +6,7 @@ import { z } from 'zod/v4'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { getApiUrl } from '@/lib/api'
 
 import {
   Dialog,
@@ -117,7 +118,7 @@ export function RecordPaymentDialog({ open, onOpenChange, tenants, onSuccess }: 
   const onSubmit = async (values: RecordPaymentForm) => {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/payments', {
+      const response = await fetch(getApiUrl('/api/payments'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

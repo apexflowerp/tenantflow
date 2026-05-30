@@ -80,6 +80,7 @@ import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import { getApiUrl } from '@/lib/api'
 
 import { RegisterDeviceDialog } from './register-device-dialog'
 import { GenerateKeyDialog } from './generate-key-dialog'
@@ -288,7 +289,7 @@ export function DevicesPage() {
   // Fetch data
   const fetchDevices = React.useCallback(async () => {
     try {
-      const res = await fetch('/api/devices')
+      const res = await fetch(getApiUrl('/api/devices'))
       if (res.ok) {
         const data = await res.json()
         setDevices(data.devices || [])
@@ -301,7 +302,7 @@ export function DevicesPage() {
 
   const fetchSessions = React.useCallback(async () => {
     try {
-      const res = await fetch('/api/devices/sessions')
+      const res = await fetch(getApiUrl('/api/devices/sessions'))
       if (res.ok) {
         const data = await res.json()
         setSessions(data.sessions || [])
@@ -313,7 +314,7 @@ export function DevicesPage() {
 
   const fetchLicenseKeys = React.useCallback(async () => {
     try {
-      const res = await fetch('/api/devices/license-keys')
+      const res = await fetch(getApiUrl('/api/devices/license-keys'))
       if (res.ok) {
         const data = await res.json()
         setLicenseKeys(data.licenseKeys || [])
@@ -365,7 +366,7 @@ export function DevicesPage() {
 
   const handleRevokeSession = async (sessionId: string) => {
     try {
-      const res = await fetch('/api/devices/sessions', {
+      const res = await fetch(getApiUrl('/api/devices/sessions'), {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId }),
@@ -382,7 +383,7 @@ export function DevicesPage() {
 
   const handleRevokeAllSessions = async () => {
     try {
-      const res = await fetch('/api/devices/sessions', {
+      const res = await fetch(getApiUrl('/api/devices/sessions'), {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ revokeAll: true }),
@@ -1161,7 +1162,7 @@ export function DevicesPage() {
                 }
               }}
               onRevokeSessions={(deviceId) => {
-                fetch('/api/devices/sessions', {
+                fetch(getApiUrl('/api/devices/sessions'), {
                   method: 'DELETE',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ revokeAll: true, deviceId }),
@@ -1202,7 +1203,7 @@ export function DevicesPage() {
                 if (confirmAction.type === 'block' || confirmAction.type === 'deactivate') {
                   handleDeviceAction(confirmAction.type, confirmAction.id)
                 } else if (confirmAction.type === 'revoke-sessions') {
-                  fetch('/api/devices/sessions', {
+                  fetch(getApiUrl('/api/devices/sessions'), {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ revokeAll: true, deviceId: confirmAction.id }),

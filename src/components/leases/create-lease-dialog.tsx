@@ -42,6 +42,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 
 import { useToast } from '@/hooks/use-toast'
+import { getApiUrl } from '@/lib/api'
 
 // ── Schema ───────────────────────────────────────────────────────────────────
 
@@ -136,8 +137,8 @@ export function CreateLeaseDialog({ open, onOpenChange, onLeaseCreated }: Create
       setIsLoadingData(true)
       try {
         const [propRes, tenantRes] = await Promise.all([
-          fetch('/api/properties'),
-          fetch('/api/tenants'),
+          fetch(getApiUrl('/api/properties')),
+          fetch(getApiUrl('/api/tenants')),
         ])
 
         if (propRes.ok) {
@@ -189,7 +190,7 @@ export function CreateLeaseDialog({ open, onOpenChange, onLeaseCreated }: Create
   const onSubmit = async (data: CreateLeaseFormValues) => {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/leases', {
+      const response = await fetch(getApiUrl('/api/leases'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

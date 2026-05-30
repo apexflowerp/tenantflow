@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, User, Building2 } from 'lucide-react'
+import { getApiUrl } from '@/lib/api'
 
 import {
   Dialog,
@@ -88,7 +89,7 @@ export function AddTenantDialog({ open, onOpenChange, onTenantAdded }: AddTenant
   async function onSubmit(values: TenantFormValues) {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/tenants', {
+      const response = await fetch(getApiUrl('/api/tenants'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),

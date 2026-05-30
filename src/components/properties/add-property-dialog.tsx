@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { usePropertyStore } from '@/stores'
+import { getApiUrl } from '@/lib/api'
 
 const addPropertySchema = z.object({
   name: z.string().min(1, 'Property name is required'),
@@ -77,7 +78,7 @@ export function AddPropertyDialog({ children }: AddPropertyDialogProps) {
   async function onSubmit(values: AddPropertyFormValues) {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/properties', {
+      const response = await fetch(getApiUrl('/api/properties'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),

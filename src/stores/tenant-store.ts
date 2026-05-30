@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getApiUrl } from '@/lib/api'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -118,7 +119,7 @@ export const useTenantStore = create<TenantStore>((set, get) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const response = await fetch('/api/tenants')
+      const response = await fetch(getApiUrl('/api/tenants'))
 
       if (!response.ok) {
         throw new Error(`Failed to fetch tenants: ${response.status}`)

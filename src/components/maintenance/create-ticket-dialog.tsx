@@ -35,6 +35,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useMaintenanceStore, usePropertyStore } from '@/stores'
 import { cn } from '@/lib/utils'
+import { getApiUrl } from '@/lib/api'
 import { format } from 'date-fns'
 
 // ── Schema ───────────────────────────────────────────────────────────────────
@@ -96,7 +97,7 @@ export function CreateTicketDialog({ open, onOpenChange }: CreateTicketDialogPro
   async function onSubmit(values: CreateTicketForm) {
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/maintenance', {
+      const response = await fetch(getApiUrl('/api/maintenance'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -51,6 +51,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { useMaintenanceStore } from '@/stores'
+import { getApiUrl } from '@/lib/api'
 import type { MaintenanceTicket } from '@/stores'
 
 import { KanbanBoard } from './kanban-board'
@@ -242,7 +243,7 @@ export function MaintenancePage() {
       if (status === 'resolved') {
         updateData.completedAt = new Date().toISOString()
       }
-      await fetch('/api/maintenance', {
+      await fetch(getApiUrl('/api/maintenance'), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateData),

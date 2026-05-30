@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Progress } from '@/components/ui/progress'
+import { getApiUrl } from '@/lib/api'
 
 import { RevenueChart } from './revenue-chart'
 import { OccupancyChart } from './occupancy-chart'
@@ -239,7 +240,7 @@ export function AnalyticsPage() {
     async function fetchAnalytics() {
       setLoading(true)
       try {
-        const res = await fetch('/api/analytics')
+        const res = await fetch(getApiUrl('/api/analytics'))
         if (res.ok) {
           const json = await res.json()
           setData(json)

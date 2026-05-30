@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { Key, RefreshCw } from 'lucide-react'
+import { getApiUrl } from '@/lib/api'
 
 import {
   Dialog,
@@ -51,7 +52,6 @@ export function GenerateKeyDialog({ open, onOpenChange, onSuccess }: GenerateKey
   // Fetch clients
   React.useEffect(() => {
     if (open) {
-      // We'll provide default client options
       setClients([
         { id: 'default-client', companyName: 'TenantFlow HQ' },
       ])
@@ -71,7 +71,7 @@ export function GenerateKeyDialog({ open, onOpenChange, onSuccess }: GenerateKey
       if (expiresAt) body.expiresAt = expiresAt
       if (clientId) body.clientId = clientId
 
-      const res = await fetch('/api/devices/license-keys', {
+      const res = await fetch(getApiUrl('/api/devices/license-keys'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
