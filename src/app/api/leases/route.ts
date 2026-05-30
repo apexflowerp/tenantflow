@@ -1,14 +1,16 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { getDbForRequest } from '@/lib/db-context'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
 
-    const leases = await db.lease.findMany({
+    const leases = await tenantDb.lease.findMany({
       where: { workspaceId: workspace.id },
       include: {
         property: { select: { id: true, name: true, address: true, city: true, type: true } },
@@ -38,9 +40,11 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
@@ -52,7 +56,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Property, unit, tenant, start date, end date, and monthly rent are required' }, { status: 400 })
     }
 
-    const lease = await db.lease.create({
+    const lease = await tenantDb.lease.create({
       data: {
         propertyId,
         unitId,
@@ -73,7 +77,7 @@ export async function POST(request: Request) {
     })
 
     // Update unit status to occupied
-    await db.unit.update({
+    await tenantDb.unit.update({
       where: { id: unitId },
       data: { status: 'occupied' },
     })

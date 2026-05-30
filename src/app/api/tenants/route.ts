@@ -1,14 +1,16 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { getDbForRequest } from '@/lib/db-context'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
 
-    const tenants = await db.tenant.findMany({
+    const tenants = await tenantDb.tenant.findMany({
       where: { workspaceId: workspace.id },
       include: {
         leases: {
@@ -63,9 +65,11 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
@@ -77,7 +81,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Name and email are required' }, { status: 400 })
     }
 
-    const tenant = await db.tenant.create({
+    const tenant = await tenantDb.tenant.create({
       data: {
         name,
         email,

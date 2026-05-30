@@ -1,9 +1,11 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { getDbForRequest } from '@/lib/db-context'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
@@ -15,7 +17,7 @@ export async function GET(request: Request) {
     const where: Record<string, unknown> = { workspaceId: workspace.id }
     if (type) where.type = type
 
-    const activities = await db.activity.findMany({
+    const activities = await tenantDb.activity.findMany({
       where,
       include: {
         user: { select: { id: true, name: true, avatar: true, role: true } },

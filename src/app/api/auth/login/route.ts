@@ -14,10 +14,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Find user by email
+    // Find user by email, include workspace with clientId
     const user = await db.user.findUnique({
       where: { email },
-      include: { workspace: true },
+      include: { workspace: { select: { id: true, name: true, slug: true, plan: true, clientId: true } } },
     })
 
     if (!user) {
@@ -76,11 +76,13 @@ export async function POST(request: NextRequest) {
         email: user.email,
         role: user.role,
         workspaceId: user.workspaceId,
+        clientId: user.workspace.clientId, // from workspace.clientId
         workspace: {
           id: user.workspace.id,
           name: user.workspace.name,
           slug: user.workspace.slug,
           plan: user.workspace.plan,
+          clientId: user.workspace.clientId,
         },
       },
       token: session.token,

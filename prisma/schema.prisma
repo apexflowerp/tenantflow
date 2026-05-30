@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -139,6 +139,9 @@ model Client {
   maxUsers        Int      @default(5)
   maxDevices      Int      @default(3)
   features        String?
+  databaseUrl     String?   // Full connection URL to the tenant's PostgreSQL database
+  databaseName    String?   // Name of the tenant database (e.g., "tf_meridian")
+  dbStatus        String    @default("pending") // pending, provisioning, active, error
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

@@ -1,14 +1,16 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { getDbForRequest } from '@/lib/db-context'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
 
-    const tickets = await db.maintenanceTicket.findMany({
+    const tickets = await tenantDb.maintenanceTicket.findMany({
       where: { workspaceId: workspace.id },
       include: {
         property: { select: { id: true, name: true, address: true, city: true } },
@@ -41,9 +43,11 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
@@ -55,7 +59,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Title and property are required' }, { status: 400 })
     }
 
-    const ticket = await db.maintenanceTicket.create({
+    const ticket = await tenantDb.maintenanceTicket.create({
       data: {
         title,
         description: description || null,
@@ -76,8 +80,10 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   try {
+    const { db: tenantDb } = await getDbForRequest(request)
+
     const body = await request.json()
     const { id, status, priority, assignedTo, dueDate, completedAt } = body
 
@@ -92,7 +98,7 @@ export async function PATCH(request: Request) {
     if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null
     if (completedAt !== undefined) updateData.completedAt = completedAt ? new Date(completedAt) : null
 
-    const ticket = await db.maintenanceTicket.update({
+    const ticket = await tenantDb.maintenanceTicket.update({
       where: { id },
       data: updateData,
     })

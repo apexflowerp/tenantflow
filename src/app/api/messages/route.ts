@@ -1,9 +1,11 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { getDbForRequest } from '@/lib/db-context'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
@@ -16,7 +18,7 @@ export async function GET(request: Request) {
     if (type) where.type = type
     if (direction) where.direction = direction
 
-    const messages = await db.message.findMany({
+    const messages = await tenantDb.message.findMany({
       where,
       include: {
         tenant: { select: { id: true, name: true, email: true, phone: true, avatar: true } },
@@ -39,9 +41,11 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
@@ -53,7 +57,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 })
     }
 
-    const message = await db.message.create({
+    const message = await tenantDb.message.create({
       data: {
         subject: subject || null,
         content,

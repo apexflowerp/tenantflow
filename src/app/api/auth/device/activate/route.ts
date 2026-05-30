@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { provisionTenantDatabase } from '@/lib/tenant-db'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
@@ -129,6 +130,20 @@ export async function POST(request: NextRequest) {
         },
       })
 
+      // Trigger tenant DB provisioning if the client doesn't have an active DB yet
+      let provisioningStatus: string | null = null
+      try {
+        if (licenseKey.client.dbStatus !== 'active') {
+          await provisionTenantDatabase(licenseKey.client.id, licenseKey.client.companyName)
+          provisioningStatus = 'provisioned'
+        } else {
+          provisioningStatus = 'already_active'
+        }
+      } catch (provisionError) {
+        console.error('Tenant DB provisioning failed during device activation:', provisionError)
+        provisioningStatus = 'provisioning_failed'
+      }
+
       return NextResponse.json({
         id: newDevice.id,
         serialKey: newDevice.serialKey,
@@ -137,6 +152,8 @@ export async function POST(request: NextRequest) {
         activatedAt: newDevice.activatedAt,
         message: 'License key activated successfully. Device has been created.',
         licensePlan: licenseKey.plan,
+        clientId: licenseKey.client.id,
+        tenantProvisioning: provisioningStatus,
       })
     }
 

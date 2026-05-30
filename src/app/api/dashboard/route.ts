@@ -1,9 +1,11 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { getDbForRequest } from '@/lib/db-context'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found. Please seed the database first.' }, { status: 404 })
     }
@@ -12,20 +14,20 @@ export async function GET() {
 
     // ── Basic counts ──
     const [totalProperties, totalUnits, totalTenants, totalLeases] = await Promise.all([
-      db.property.count({ where: { workspaceId: wsId } }),
-      db.unit.count({ where: { property: { workspaceId: wsId } } }),
-      db.tenant.count({ where: { workspaceId: wsId } }),
-      db.lease.count({ where: { workspaceId: wsId } }),
+      tenantDb.property.count({ where: { workspaceId: wsId } }),
+      tenantDb.unit.count({ where: { property: { workspaceId: wsId } } }),
+      tenantDb.tenant.count({ where: { workspaceId: wsId } }),
+      tenantDb.lease.count({ where: { workspaceId: wsId } }),
     ])
 
     // ── Occupancy ──
-    const occupiedUnits = await db.unit.count({
+    const occupiedUnits = await tenantDb.unit.count({
       where: { property: { workspaceId: wsId }, status: 'occupied' },
     })
     const occupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0
 
     // ── Revenue & Payments ──
-    const allPayments = await db.payment.findMany({
+    const allPayments = await tenantDb.payment.findMany({
       where: { workspaceId: wsId },
       select: { amount: true, status: true, type: true, dueDate: true, paidDate: true, lateFee: true },
     })
@@ -50,7 +52,7 @@ export async function GET() {
     }
 
     // ── Recent activities ──
-    const recentActivities = await db.activity.findMany({
+    const recentActivities = await tenantDb.activity.findMany({
       where: { workspaceId: wsId },
       include: { user: { select: { id: true, name: true, avatar: true } } },
       orderBy: { createdAt: 'desc' },
@@ -85,7 +87,7 @@ export async function GET() {
     }
 
     // ── Property occupancy breakdown ──
-    const properties = await db.property.findMany({
+    const properties = await tenantDb.property.findMany({
       where: { workspaceId: wsId },
       include: {
         _count: { select: { units: true } },
@@ -102,7 +104,7 @@ export async function GET() {
     }))
 
     // ── Ticket status breakdown ──
-    const tickets = await db.maintenanceTicket.findMany({
+    const tickets = await tenantDb.maintenanceTicket.findMany({
       where: { workspaceId: wsId },
       select: { status: true, priority: true },
     })
@@ -122,9 +124,9 @@ export async function GET() {
 
     // ── Lease status breakdown ──
     const leaseBreakdown = {
-      active: await db.lease.count({ where: { workspaceId: wsId, status: 'active' } }),
-      expiring: await db.lease.count({ where: { workspaceId: wsId, status: 'expiring' } }),
-      expired: await db.lease.count({ where: { workspaceId: wsId, status: 'expired' } }),
+      active: await tenantDb.lease.count({ where: { workspaceId: wsId, status: 'active' } }),
+      expiring: await tenantDb.lease.count({ where: { workspaceId: wsId, status: 'expiring' } }),
+      expired: await tenantDb.lease.count({ where: { workspaceId: wsId, status: 'expired' } }),
     }
 
     return NextResponse.json({

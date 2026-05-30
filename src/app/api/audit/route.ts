@@ -1,8 +1,10 @@
-import { db } from '@/lib/db'
+import { getDbForRequest } from '@/lib/db-context'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
+    const { db: tenantDb } = await getDbForRequest(request)
+
     const { searchParams } = new URL(request.url)
     const entity = searchParams.get('entity')
     const action = searchParams.get('action')
@@ -61,10 +63,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Get total count
-    const total = await db.auditLog.count({ where })
+    const total = await tenantDb.auditLog.count({ where })
 
     // Get audit logs with user and workspace info
-    const logs = await db.auditLog.findMany({
+    const logs = await tenantDb.auditLog.findMany({
       where,
       include: {
         user: {
@@ -84,11 +86,11 @@ export async function GET(request: NextRequest) {
 
     // Get stats
     const [totalLogs, warningCount, errorCount, criticalCount, recentCount] = await Promise.all([
-      db.auditLog.count(),
-      db.auditLog.count({ where: { severity: 'warning' } }),
-      db.auditLog.count({ where: { severity: 'error' } }),
-      db.auditLog.count({ where: { severity: 'critical' } }),
-      db.auditLog.count({
+      tenantDb.auditLog.count(),
+      tenantDb.auditLog.count({ where: { severity: 'warning' } }),
+      tenantDb.auditLog.count({ where: { severity: 'error' } }),
+      tenantDb.auditLog.count({ where: { severity: 'critical' } }),
+      tenantDb.auditLog.count({
         where: {
           createdAt: {
             gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
@@ -98,14 +100,14 @@ export async function GET(request: NextRequest) {
     ])
 
     // By entity type counts
-    const entityCounts = await db.auditLog.groupBy({
+    const entityCounts = await tenantDb.auditLog.groupBy({
       by: ['entity'],
       _count: { entity: true },
       orderBy: { _count: { entity: 'desc' } },
     })
 
     // Get unique users for filter dropdown
-    const usersWithLogs = await db.auditLog.findMany({
+    const usersWithLogs = await tenantDb.auditLog.findMany({
       where: { userId: { not: null } },
       select: { userId: true, user: { select: { id: true, name: true } } },
       distinct: ['userId'],

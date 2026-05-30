@@ -60,6 +60,15 @@ import {
 import { useAppStore } from '@/stores'
 import { useAuthStore } from '@/stores/auth-store'
 
+// ── Multi-tenant API helper ──────────────────────────────────────────────────
+// Use this when making API calls that need tenant DB resolution.
+// Example: fetchWithClientId('/api/properties') → '/api/properties?clientId=abc123'
+export function buildTenantApiUrl(path: string, clientId: string | null): string {
+  if (!clientId) return path
+  const separator = path.includes('?') ? '&' : '?'
+  return `${path}${separator}clientId=${clientId}`
+}
+
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { AppHeader } from '@/components/layout/app-header'
@@ -677,6 +686,14 @@ export default function Home() {
                 <span className="font-medium text-foreground/80">{currentUser.name}</span>
                 <span className="text-muted-foreground/40">·</span>
                 <span className="text-muted-foreground/60">{currentUser.email}</span>
+                {currentUser.clientId && (
+                  <>
+                    <span className="text-muted-foreground/40">·</span>
+                    <Badge className="text-[9px] px-1.5 py-0 h-4 font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/15" variant="outline">
+                      {currentUser.clientId.slice(0, 8)}…
+                    </Badge>
+                  </>
+                )}
                 {isViewOnly && (
                   <Badge className="ml-1 text-[9px] px-1.5 py-0 h-4 font-semibold bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/20" variant="outline">
                     <Eye className="size-2.5 mr-0.5" />

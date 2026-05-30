@@ -6,20 +6,69 @@ export async function POST() {
   try {
     const demoEmail = 'demo@tenantflow.io'
 
+    // Ensure a default client exists for demo purposes
+    let defaultClient = await db.client.findFirst({
+      where: { email: 'demo@tenantflow.io' },
+    })
+
+    if (!defaultClient) {
+      // Create a demo client with active DB status (uses main DB for demo)
+      defaultClient = await db.client.create({
+        data: {
+          companyName: 'TenantFlow Demo',
+          contactName: 'Demo User',
+          email: 'demo@tenantflow.io',
+          status: 'active',
+          plan: 'starter',
+          dbStatus: 'active',
+          databaseUrl: process.env.DATABASE_URL,
+          databaseName: 'demo',
+        },
+      })
+    } else if (defaultClient.dbStatus !== 'active') {
+      // Ensure the demo client has an active DB status
+      defaultClient = await db.client.update({
+        where: { id: defaultClient.id },
+        data: {
+          dbStatus: 'active',
+          databaseUrl: defaultClient.databaseUrl || process.env.DATABASE_URL,
+          databaseName: defaultClient.databaseName || 'demo',
+        },
+      })
+    }
+
     // Find or create demo user with viewer role (view-only)
     let user = await db.user.findUnique({
       where: { email: demoEmail },
-      include: { workspace: true },
+      include: { workspace: { select: { id: true, name: true, slug: true, plan: true, clientId: true } } },
     })
 
     if (!user) {
-      // Get the first workspace
-      const workspace = await db.workspace.findFirst()
+      // Get the first workspace that belongs to the demo client, or any workspace
+      let workspace = await db.workspace.findFirst({
+        where: { clientId: defaultClient.id },
+      })
+
       if (!workspace) {
-        return NextResponse.json(
-          { error: 'No workspace found. Please seed the database first.' },
-          { status: 500 }
-        )
+        // Get any workspace or create one tied to the demo client
+        workspace = await db.workspace.findFirst()
+        if (workspace) {
+          // Link workspace to demo client
+          workspace = await db.workspace.update({
+            where: { id: workspace.id },
+            data: { clientId: defaultClient.id },
+          })
+        } else {
+          // Create a workspace tied to the demo client
+          workspace = await db.workspace.create({
+            data: {
+              name: 'Demo Workspace',
+              slug: 'demo-workspace',
+              plan: 'starter',
+              clientId: defaultClient.id,
+            },
+          })
+        }
       }
 
       // Create demo user with viewer role — view-only access
@@ -33,21 +82,35 @@ export async function POST() {
           lastLogin: new Date(),
           workspaceId: workspace.id,
         },
-        include: { workspace: true },
+        include: { workspace: { select: { id: true, name: true, slug: true, plan: true, clientId: true } } },
       })
     } else if (user.role !== 'viewer') {
       // Ensure existing demo user has viewer role
       user = await db.user.update({
         where: { id: user.id },
-        data: { role: 'viewer', name: 'Demo Viewer', lastLogin: new Date() },
-        include: { workspace: true },
+        data: {
+          role: 'viewer',
+          name: 'Demo Viewer',
+          lastLogin: new Date(),
+          // Ensure workspace is linked to demo client
+          workspace: user.workspace.clientId
+            ? undefined
+            : { update: { clientId: defaultClient.id } },
+        },
+        include: { workspace: { select: { id: true, name: true, slug: true, plan: true, clientId: true } } },
       })
     } else {
       // Update last login
       user = await db.user.update({
         where: { id: user.id },
-        data: { lastLogin: new Date() },
-        include: { workspace: true },
+        data: {
+          lastLogin: new Date(),
+          // Ensure workspace is linked to demo client
+          workspace: user.workspace.clientId
+            ? undefined
+            : { update: { clientId: defaultClient.id } },
+        },
+        include: { workspace: { select: { id: true, name: true, slug: true, plan: true, clientId: true } } },
       })
     }
 
@@ -57,7 +120,6 @@ export async function POST() {
     })
 
     if (!device) {
-      const workspace = await db.workspace.findFirst()
       device = await db.device.create({
         data: {
           serialKey: 'TFOW-2024-DEMO-0000',
@@ -68,7 +130,7 @@ export async function POST() {
           status: 'active',
           activatedAt: new Date(),
           lastSeenAt: new Date(),
-          workspaceId: workspace?.id ?? user.workspaceId,
+          workspaceId: user.workspaceId,
           userId: user.id,
         },
       })
@@ -105,11 +167,13 @@ export async function POST() {
         email: user.email,
         role: 'viewer',
         workspaceId: user.workspaceId,
+        clientId: user.workspace.clientId, // from workspace.clientId
         workspace: {
           id: user.workspace.id,
           name: user.workspace.name,
           slug: user.workspace.slug,
           plan: user.workspace.plan,
+          clientId: user.workspace.clientId,
         },
       },
       device: {

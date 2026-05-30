@@ -10,6 +10,7 @@ interface CurrentUser {
   email: string
   role: string
   workspaceId: string
+  clientId: string | null  // for multi-tenant DB resolution
 }
 
 interface CurrentDevice {
@@ -124,7 +125,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       const data = await res.json()
       const newState = {
         isAuthenticated: true,
-        currentUser: data.user,
+        currentUser: {
+          ...data.user,
+          clientId: data.user.clientId ?? data.user.workspace?.clientId ?? null,
+        },
         sessionToken: data.token,
         loginMethod: 'password' as const,
         isViewOnly: false,
@@ -158,7 +162,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         isAuthenticated: true,
         isDeviceActivated: true,
         requiresActivation: false,
-        currentUser: data.user,
+        currentUser: {
+          ...data.user,
+          clientId: data.user.clientId ?? data.user.workspace?.clientId ?? null,
+        },
         currentDevice: data.device ?? null,
         sessionToken: data.token,
         loginMethod: 'demo' as const,

@@ -1,9 +1,11 @@
-import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { getDbForRequest } from '@/lib/db-context'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const workspace = await db.workspace.findFirst()
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const workspace = await tenantDb.workspace.findFirst()
     if (!workspace) {
       return NextResponse.json({ error: 'No workspace found' }, { status: 404 })
     }
@@ -12,7 +14,7 @@ export async function GET() {
     const now = new Date()
 
     // ── Revenue Trends (monthly for 12 months) ──
-    const allPayments = await db.payment.findMany({
+    const allPayments = await tenantDb.payment.findMany({
       where: { workspaceId: wsId },
       select: { amount: true, status: true, type: true, dueDate: true, paidDate: true, lateFee: true },
     })
@@ -38,8 +40,8 @@ export async function GET() {
     }
 
     // ── Occupancy Trends ──
-    const totalUnits = await db.unit.count({ where: { property: { workspaceId: wsId } } })
-    const currentOccupied = await db.unit.count({ where: { property: { workspaceId: wsId }, status: 'occupied' } })
+    const totalUnits = await tenantDb.unit.count({ where: { property: { workspaceId: wsId } } })
+    const currentOccupied = await tenantDb.unit.count({ where: { property: { workspaceId: wsId }, status: 'occupied' } })
 
     // Simulate historical occupancy (gradually increasing)
     const occupancyTrends: Array<{ month: string; rate: number; units: number }> = []
@@ -91,7 +93,7 @@ export async function GET() {
     }
 
     // ── Maintenance Resolution Time ──
-    const resolvedTickets = await db.maintenanceTicket.findMany({
+    const resolvedTickets = await tenantDb.maintenanceTicket.findMany({
       where: { workspaceId: wsId, status: 'resolved', completedAt: { not: null } },
       select: { createdAt: true, completedAt: true, category: true, priority: true },
     })
@@ -132,7 +134,7 @@ export async function GET() {
     }
 
     // ── Property Performance Comparison ──
-    const properties = await db.property.findMany({
+    const properties = await tenantDb.property.findMany({
       where: { workspaceId: wsId },
       include: {
         units: { select: { id: true, rent: true, status: true } },
@@ -166,7 +168,7 @@ export async function GET() {
     })
 
     // ── Tenant Acquisition & Retention ──
-    const tenants = await db.tenant.findMany({
+    const tenants = await tenantDb.tenant.findMany({
       where: { workspaceId: wsId },
       select: { id: true, createdAt: true, moveInDate: true, moveOutDate: true, status: true },
     })
