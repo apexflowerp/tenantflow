@@ -164,6 +164,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'PLATFORM',
     items: [
       { id: 'owner', label: 'Owner Mgmt', icon: Shield },
+      { id: 'owner_reports', label: 'Owner Reports', icon: BarChart3, color: 'text-tahoe-purple' },
       { id: 'portal', label: 'Portal', icon: Globe, color: 'text-tahoe-pink' },
     ],
   },

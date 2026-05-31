@@ -178,6 +178,7 @@ model Client {
   invoices        Invoice[]
   licenseKeys     LicenseKey[]
   auditLogs       AuditLog[]
+  quotations      Quotation[]
 }
 
 model LicenseKey {
@@ -1235,4 +1236,29 @@ model MarketIntel {
   updatedAt     DateTime @updatedAt
 
   workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Quotation {
+  id              String   @id @default(cuid())
+  quotationNumber String   @unique
+  clientId        String
+  status          String   @default("draft") // draft, sent, viewed, accepted, rejected, expired, converted
+  subject         String
+  validUntil      DateTime
+  subtotal        Float    @default(0)
+  taxRate         Float    @default(0)
+  taxAmount       Float    @default(0)
+  discount        Float    @default(0)
+  total           Float    @default(0)
+  currency        String   @default("USD")
+  items           String?  // JSON string of line items
+  notes           String?
+  terms           String?
+  introMessage    String?  // introductory message for the client
+  convertedToInvoice Boolean @default(false)
+  convertedInvoiceId  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  client          Client   @relation(fields: [clientId], references: [id])
 }

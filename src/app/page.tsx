@@ -13,7 +13,7 @@ import { AiCopilotPage } from '@/components/ai-copilot'
 import { DocumentsPage } from '@/components/documents'
 import { ReportsPage } from '@/components/reports'
 import { LoginPage } from '@/components/auth/login-page'
-import { OwnerPage } from '@/components/owner'
+import { OwnerPage, ReportsPage as OwnerReportsPage } from '@/components/owner'
 import { DevicesPage } from '@/components/devices'
 import { AuditPage } from '@/components/audit'
 import { AccountingPage } from '@/components/accounting'
@@ -686,6 +686,20 @@ const MODULES: Record<string, ModuleConfig> = {
       { label: 'Trial Clients', value: '2' },
     ],
   },
+  owner_reports: {
+    id: 'owner_reports',
+    label: 'Owner Reports',
+    description: 'Professional business reports with print and export capabilities',
+    icon: BarChart3,
+    color: 'text-tahoe-purple',
+    bgColor: 'bg-tahoe-purple/10',
+    stats: [
+      { label: 'Report Types', value: '5' },
+      { label: 'Total Revenue', value: '$61.2K' },
+      { label: 'Utilization', value: '76.2%' },
+      { label: 'Churn Rate', value: '4.2%' },
+    ],
+  },
   portal: {
     id: 'portal',
     label: 'Portal Settings',
@@ -874,6 +888,7 @@ function ModuleContent({ moduleId }: { moduleId: string }) {
     documents: DocumentsPage,
     reports: ReportsPage,
     owner: OwnerPage,
+    owner_reports: OwnerReportsPage,
     devices: DevicesPage,
     inspections: InspectionsPage,
     insurance: InsurancePage,
