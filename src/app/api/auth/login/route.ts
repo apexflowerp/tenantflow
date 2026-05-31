@@ -38,11 +38,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Password validation:
-    // - Admin user (admin@tenantflow.io) requires password 'Admin@180H'
+    // - Admin user (admin@apexflow.cloud) requires password 'Admin@180H'
     // - Demo user (demo@tenantflow.io) any password works
     // - Other users with null passwordHash accept any password
     // - Users with passwordHash must match exactly
-    const isAdminUser = email === 'admin@tenantflow.io'
+    const isAdminUser = email === 'admin@apexflow.cloud'
     const isDemoUser = email === 'demo@tenantflow.io'
     const isPasswordValid = isAdminUser
       ? password === 'Admin@180H'

@@ -7,12 +7,12 @@ async function main() {
 
   // ── 1. Create default Client (SaaS owner) ──────────────────────────────────
   const ownerClient = await db.client.upsert({
-    where: { email: 'admin@tenantflow.io' },
+    where: { email: 'admin@apexflow.cloud' },
     update: {},
     create: {
       companyName: 'TenantFlow HQ Corp',
       contactName: 'Admin',
-      email: 'admin@tenantflow.io',
+      email: 'admin@apexflow.cloud',
       status: 'active',
       plan: 'professional',
       billingCycle: 'monthly',
@@ -66,10 +66,10 @@ async function main() {
 
   // ── 4. Create Users ────────────────────────────────────────────────────────
   const adminUser = await db.user.upsert({
-    where: { email: 'admin@tenantflow.io' },
+    where: { email: 'admin@apexflow.cloud' },
     update: {},
     create: {
-      email: 'admin@tenantflow.io',
+      email: 'admin@apexflow.cloud',
       name: 'Admin',
       role: 'admin',
       department: 'Operations',
@@ -404,7 +404,7 @@ async function main() {
   console.log('\n📋 Key Information:')
   console.log('  🔑 Owner Serial Key:  TFOW-OWNR-180H-XK9Z')
   console.log('  🔑 License Key:        TFOL-OWNR-180H-XK9Z')
-  console.log('  👤 Admin Email:        admin@tenantflow.io')
+  console.log('  👤 Admin Email:        admin@apexflow.cloud')
   console.log('  🔑 Admin Password:     Admin@180H')
   console.log('  📱 Demo Key:           TFOW-2024-XKCD-7A3B')
 }

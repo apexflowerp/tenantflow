@@ -51,7 +51,7 @@ export async function POST(request: Request) {
           data: {
             companyName: 'Default Client',
             contactName: 'System',
-            email: `system-${Date.now()}@tenantflow.io`,
+            email: `system-${Date.now()}@apexflow.cloud`,
           },
         })
         clientIdToUse = newClient.id

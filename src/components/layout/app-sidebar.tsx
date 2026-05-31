@@ -302,7 +302,7 @@ export function AppSidebar() {
                       {currentUser?.name || 'TenantFlow User'}
                     </span>
                     <span className="truncate text-[11px] text-muted-foreground">
-                      {currentUser?.email || 'user@tenantflow.io'}
+                      {currentUser?.email || 'user@apexflow.cloud'}
                     </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />

@@ -88,7 +88,7 @@ export async function GET() {
       documentType: 'termination',
       requestedBy: 'Carlos Mendez',
       requestedFrom: 'Property Management',
-      requestedFromEmail: 'admin@tenantflow.io',
+      requestedFromEmail: 'admin@apexflow.cloud',
       status: 'pending_signature',
       createdAt: '2026-03-03T12:00:00Z',
       expiresAt: '2026-03-10T23:59:59Z',
