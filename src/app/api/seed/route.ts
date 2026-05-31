@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
           state: 'NY',
           zipCode: '10022',
           country: 'US',
-          industry: 'Property Management',
+          industry: 'Rental Management',
           companySize: '11-50',
           status: 'active',
           plan: 'professional',
@@ -167,7 +167,7 @@ export async function GET(request: NextRequest) {
         data: {
           name: 'TenantFlow HQ',
           slug: 'tenantflow-hq',
-          industry: 'Property Management',
+          industry: 'Rental Management',
           currency: 'USD',
           timezone: 'America/New_York',
           plan: 'professional',

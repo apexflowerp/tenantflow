@@ -15,12 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TenantFlow OS — AI-Powered Property Management",
+  title: "TenantFlow OS — AI-Powered Rental Management",
   description:
-    "Modern property management platform powered by AI. Manage properties, tenants, leases, billing, and maintenance with ease.",
+    "Modern rental management platform powered by AI. Manage properties, tenants, leases, billing, and maintenance with ease.",
   keywords: [
     "TenantFlow",
-    "Property Management",
+    "Rental Management",
     "SaaS",
     "AI",
     "Real Estate",

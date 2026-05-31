@@ -487,7 +487,7 @@ export function ReportViewer({ data = SAMPLE_REPORT, onBack }: ReportViewerProps
           {/* ── Footer ─────────────────────────────────────────────── */}
           <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-gray-500">
             <span>Confidential</span>
-            <span>TenantFlow OS - Property Management</span>
+            <span>TenantFlow OS - Rental Management</span>
             <span>Page 1 of 1</span>
           </div>
         </div>

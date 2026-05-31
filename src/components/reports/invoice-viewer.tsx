@@ -252,7 +252,7 @@ export function InvoiceViewer({ data = SAMPLE_INVOICE, onBack, onEdit }: Invoice
                   TenantFlow OS
                 </h1>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  AI-Powered Property Management
+                  AI-Powered Rental Management
                 </p>
                 <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                   123 Business Ave, Suite 100

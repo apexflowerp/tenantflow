@@ -146,7 +146,7 @@ export function AppSidebar() {
                   {currentWorkspace?.name ?? 'TenantFlow OS'}
                 </p>
                 <p className="truncate text-[11px] text-muted-foreground">
-                  Property Management
+                  Rental Management
                 </p>
               </div>
               <ChevronsUpDown className="size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />

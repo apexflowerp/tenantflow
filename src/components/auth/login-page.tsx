@@ -352,7 +352,7 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
     setError('')
 
     try {
-      const success = await login(email, password || 'tenantflow')
+      const success = await login(email, password || 'Admin@180H')
       if (!success) {
         setError('Invalid email or password. Try the demo login instead.')
       }
@@ -644,7 +644,7 @@ export function LoginPage() {
               </div>
             </div>
             <p className="text-[10px] tracking-[0.2em] uppercase text-white/20">
-              AI-Powered Property Management
+              AI-Powered Rental Management
             </p>
           </motion.div>
 
@@ -676,7 +676,7 @@ export function LoginPage() {
           className="mt-5 text-center"
         >
           <p className="text-[11px] text-white/15">
-            © {new Date().getFullYear()} TenantFlow OS · Enterprise Property Intelligence
+            © {new Date().getFullYear()} TenantFlow OS · AI-Powered Rental Intelligence
           </p>
           <div className="mt-1.5 flex items-center justify-center gap-3 text-[10px] text-white/10">
             <span>Privacy Policy</span>

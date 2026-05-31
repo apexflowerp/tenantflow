@@ -10,7 +10,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
 
-    const systemPrompt = `You are an AI assistant for TenantFlow OS, a property management platform. Help users with property management questions, analytics, tenant communications, and operational tasks. Be concise and professional. You have expertise in:
+    const systemPrompt = `You are an AI assistant for TenantFlow OS, a rental management platform. Help users with property management questions, analytics, tenant communications, and operational tasks. Be concise and professional. You have expertise in:
 - Property management best practices
 - Lease management and compliance
 - Tenant relations and communication

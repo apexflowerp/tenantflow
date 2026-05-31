@@ -1,6 +1,9 @@
 import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
-import { randomUUID } from 'crypto'
+
+function generateToken(): string {
+  return 'tf-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,10 +37,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // For demo user (demo@tenantflow.io), any password works
-    // For other users, check password hash (simplified: accept any password for now)
+    // Password validation:
+    // - Admin user (admin@tenantflow.io) requires password 'Admin@180H'
+    // - Demo user (demo@tenantflow.io) any password works
+    // - Other users with null passwordHash accept any password
+    // - Users with passwordHash must match exactly
+    const isAdminUser = email === 'admin@tenantflow.io'
     const isDemoUser = email === 'demo@tenantflow.io'
-    const isPasswordValid = isDemoUser || password === 'tenantflow' || user.passwordHash === null || user.passwordHash === password
+    const isPasswordValid = isAdminUser
+      ? password === 'Admin@180H'
+      : isDemoUser
+        ? true
+        : user.passwordHash === null || user.passwordHash === password
 
     if (!isPasswordValid) {
       return NextResponse.json(
@@ -47,7 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate session token
-    const token = randomUUID()
+    const token = generateToken()
     const expiresAt = new Date()
     expiresAt.setDate(expiresAt.getDate() + 7) // 7 day expiry
 
@@ -58,8 +69,6 @@ export async function POST(request: NextRequest) {
         token,
         isActive: true,
         expiresAt,
-        userAgent: request.headers.get('user-agent') ?? undefined,
-        ipAddress: request.headers.get('x-forwarded-for') ?? undefined,
       },
     })
 
@@ -76,7 +85,7 @@ export async function POST(request: NextRequest) {
         email: user.email,
         role: user.role,
         workspaceId: user.workspaceId,
-        clientId: user.workspace.clientId, // from workspace.clientId
+        clientId: user.workspace.clientId,
         workspace: {
           id: user.workspace.id,
           name: user.workspace.name,

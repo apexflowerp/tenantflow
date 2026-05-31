@@ -130,7 +130,7 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
                 <Select value={form.industry} onValueChange={(v) => updateField('industry', v)}>
                   <SelectTrigger><SelectValue placeholder="Select industry" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="property-management">Property Management</SelectItem>
+                    <SelectItem value="property-management">Rental Management</SelectItem>
                     <SelectItem value="real-estate">Real Estate</SelectItem>
                     <SelectItem value="hospitality">Hospitality</SelectItem>
                     <SelectItem value="commercial">Commercial</SelectItem>

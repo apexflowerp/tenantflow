@@ -8,18 +8,6 @@ const tenantClients = new Map<string, PrismaClient>()
 const MAX_CACHED_CLIENTS = 20
 
 /**
- * Build a tenant database URL from the base URL and database name.
- * Pattern: {baseUrl}/{dbName}?sslmode=require&connection_limit=2
- */
-export function buildTenantDbUrl(databaseName: string): string {
-  const baseUrl = process.env.TENANT_DB_BASE_URL
-  if (!baseUrl) {
-    throw new Error('TENANT_DB_BASE_URL environment variable is not set')
-  }
-  return `${baseUrl}/${databaseName}?sslmode=require&connection_limit=2`
-}
-
-/**
  * Get or create a PrismaClient for a specific database URL.
  * Caches clients for reuse.
  */
@@ -48,6 +36,7 @@ export function getTenantDbByUrl(databaseUrl: string): PrismaClient {
 /**
  * Get a tenant PrismaClient for a specific client ID.
  * Looks up the client's databaseUrl from the main DB.
+ * For SQLite, returns the main DB since we use a single-file database.
  */
 export async function getTenantDbForClient(clientId: string): Promise<PrismaClient> {
   const client = await db.client.findUnique({
@@ -59,11 +48,17 @@ export async function getTenantDbForClient(clientId: string): Promise<PrismaClie
     throw new Error(`Client not found: ${clientId}`)
   }
 
-  if (client.dbStatus !== 'active' || !client.databaseUrl) {
+  if (client.dbStatus !== 'active') {
     throw new Error(`Tenant database not active for client: ${clientId} (status: ${client.dbStatus})`)
   }
 
-  return getTenantDbByUrl(client.databaseUrl)
+  // For SQLite, all tenants share the main database
+  // In a production PostgreSQL setup, this would use the client's databaseUrl
+  if (client.databaseUrl) {
+    return getTenantDbByUrl(client.databaseUrl)
+  }
+
+  return db
 }
 
 /**
@@ -73,14 +68,14 @@ export async function getTenantDbForClient(clientId: string): Promise<PrismaClie
 export async function getTenantDbFromToken(token: string): Promise<{ tenantDb: PrismaClient; clientId: string; userId: string }> {
   const session = await db.session.findUnique({
     where: { token },
-    include: { user: { select: { id: true, clientId: true } } },
+    include: { user: { select: { id: true, workspace: { select: { clientId: true } } } } },
   })
 
   if (!session || !session.isActive) {
     throw new Error('Invalid or expired session')
   }
 
-  const clientId = (session.user as any).clientId
+  const clientId = (session.user as any).workspace?.clientId
   if (!clientId) {
     throw new Error('User has no client association')
   }
@@ -91,10 +86,11 @@ export async function getTenantDbFromToken(token: string): Promise<{ tenantDb: P
 
 /**
  * Create a new tenant database and configure the client.
+ * For SQLite, this just updates the client status since all data is in one DB.
  */
 export async function provisionTenantDatabase(clientId: string, slug: string): Promise<{ databaseUrl: string; databaseName: string }> {
-  const databaseName = `tf_${slug.replace(/[^a-z0-9]/gi, '_').toLowerCase()}`
-  const databaseUrl = buildTenantDbUrl(databaseName)
+  const databaseName = `af_${slug.replace(/[^a-z0-9]/gi, '_').toLowerCase()}`
+  const databaseUrl = process.env.DATABASE_URL || ''
 
   // Update client status to provisioning
   await db.client.update({
@@ -103,17 +99,8 @@ export async function provisionTenantDatabase(clientId: string, slug: string): P
   })
 
   try {
-    // Create the database using raw SQL on the main connection
-    await db.$executeRawUnsafe(`CREATE DATABASE "${databaseName}"`)
-
-    // Push schema to the new tenant database
-    const tenantClient = new PrismaClient({
-      datasources: { db: { url: databaseUrl } },
-    })
-
-    // Test connection
-    await tenantClient.$connect()
-    await tenantClient.$disconnect()
+    // For SQLite, we use the same database file
+    // In production with PostgreSQL, this would create a new database
 
     // Update client status to active
     await db.client.update({

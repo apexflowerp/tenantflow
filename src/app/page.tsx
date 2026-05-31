@@ -93,7 +93,7 @@ const MODULES: Record<string, ModuleConfig> = {
   dashboard: {
     id: 'dashboard',
     label: 'Dashboard',
-    description: 'Your property management overview at a glance',
+    description: 'Your rental management overview at a glance',
     icon: LayoutDashboard,
     color: 'text-primary',
     bgColor: 'bg-primary/10',
@@ -138,7 +138,7 @@ const MODULES: Record<string, ModuleConfig> = {
   copilot: {
     id: 'copilot',
     label: 'AI Copilot',
-    description: 'Your AI-powered property management assistant',
+    description: 'Your AI-powered rental management assistant',
     icon: Sparkles,
     color: 'text-violet-600 dark:text-violet-400',
     bgColor: 'bg-violet-500/10',
