@@ -655,3 +655,29 @@ Stage Summary:
 - Reports tab renders full ReportsPage with revenue, client summary, invoice aging, license utilization, churn analysis
 - All API endpoints return full client details for document viewers
 - Store supports full CRUD for clients, invoices, quotations, and license keys
+
+---
+Task ID: 8
+Agent: Bug Fix Agent
+Task: Re-apply all bug fixes after git reset
+
+Work Log:
+- Read worklog.md to understand prior work context
+- Read all 9 target files that needed modifications
+- Fix 1: Changed seed route from GET to POST in /src/app/api/seed/route.ts
+- Fix 2: Added workspaceId validation (400 error if missing) and removed 'ws-default' fallback in /src/app/api/devices/route.ts
+- Fix 3: Replaced logout function in /src/stores/auth-store.ts to preserve isDeviceActivated and currentDevice on logout, with persistState call
+- Fix 4: Removed admin password fallback 'Admin@180H' in /src/components/auth/login-page.tsx, added explicit password check with error message
+- Fix 5: Expanded MODULE_LABELS from 16 to 47 entries in /src/components/layout/app-header.tsx, added resolvedTheme from useTheme(), fixed theme toggle to use resolvedTheme
+- Fix 6: Added step === 'activation' guard and eslint-disable comment to isDeviceActivated useEffect in login-page.tsx
+- Fix 7: Added .filter(Boolean) and .slice(0, 2) to name initials in /src/app/page.tsx
+- Fix 8: Replaced forEach+setTimeout with map+setTimeout and proper cleanup return in /src/app/page.tsx
+- Fix 9: Fixed all apexflow.cloud → tenantflow.io references across 4 files: e-signatures/route.ts, devices/license-keys/route.ts, app-sidebar.tsx, auth/login/route.ts, seed/route.ts
+- Fix 10: Changed dead Forgot Password <button> to <span> in login-page.tsx
+- Fixed JSX parsing error (missing closing parenthesis) in app-header.tsx onClick handler
+- Ran lint: 0 errors, 3 pre-existing warnings (2 TanStack Table, 1 unused eslint-disable)
+
+Stage Summary:
+- All 10 bug fixes successfully re-applied
+- Zero apexflow.cloud references remain in source code
+- Lint passes with 0 errors (3 pre-existing warnings unrelated to fixes)

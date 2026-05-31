@@ -40,18 +40,49 @@ import { NotificationPanel } from './notification-panel'
 const MODULE_LABELS: Record<string, string> = {
   dashboard: 'Dashboard',
   analytics: 'Analytics',
+  reports: 'Reports',
   copilot: 'AI Copilot',
+  market_intel: 'Market Intel',
   properties: 'Properties',
   tenants: 'Tenants',
   leases: 'Leases',
+  screening: 'Screening',
+  renewals: 'Renewals',
+  move_inout: 'Move In/Out',
+  e_signatures: 'E-Signatures',
   billing: 'Billing',
+  accounting: 'Accounting',
+  budget: 'Budget',
+  late_fees: 'Late Fees',
+  payment_plans: 'Payment Plans',
+  marketplace: 'Marketplace',
   maintenance: 'Maintenance',
+  inspections: 'Inspections',
+  vendors: 'Vendors',
+  assets: 'Assets',
+  insurance: 'Insurance',
+  calendar: 'Calendar',
   communications: 'Communications',
-  documents: 'Documents',
+  compliance: 'Compliance',
+  workflows: 'Workflows',
+  energy: 'Energy',
+  utilities: 'Utilities',
+  visitors: 'Visitors',
+  packages: 'Packages',
+  parking: 'Parking',
+  amenities: 'Amenities',
+  keys: 'Key Management',
+  pets: 'Pets',
+  smart_home: 'Smart Home',
+  announcements: 'Announcements',
+  surveys: 'Surveys',
+  disputes: 'Disputes',
   owner: 'Owner Management',
+  owner_reports: 'Owner Reports',
+  portal: 'Portal',
   devices: 'Device Management',
+  documents: 'Documents',
   audit: 'Audit Trail',
-  reports: 'Reports',
   settings: 'Settings',
 }
 
@@ -59,7 +90,7 @@ const MODULE_LABELS: Record<string, string> = {
 
 export function AppHeader() {
   const { activeModule, setCommandPaletteOpen } = useAppStore()
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme, resolvedTheme } = useTheme()
 
   const moduleLabel = MODULE_LABELS[activeModule] ?? 'Dashboard'
 
@@ -178,7 +209,7 @@ export function AppHeader() {
           variant="ghost"
           size="icon"
           className="size-8 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
         >
           <Sun className="size-[16px] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute size-[16px] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />

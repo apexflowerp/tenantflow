@@ -370,7 +370,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
     setError('')
 
     try {
-      const success = await login(email, password || 'Admin@180H')
+      if (!password) {
+        setError('Please enter your password')
+        return
+      }
+      const success = await login(email, password)
       if (!success) {
         setError('Invalid email or password. Try the demo login instead.')
       }
@@ -467,12 +471,11 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
             <Label htmlFor="password" className="text-xs font-medium text-white/50 uppercase tracking-wider">
               Password
             </Label>
-            <button
-              type="button"
-              className="text-[11px] text-white/25 hover:text-white/40 transition-colors"
+            <span
+              className="text-[11px] text-white/25"
             >
               Forgot Password?
-            </button>
+            </span>
           </div>
           <div className="relative">
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-white/25" />
@@ -617,9 +620,10 @@ export function LoginPage() {
   }, [_hydrate])
 
   React.useEffect(() => {
-    if (isDeviceActivated) {
+    if (isDeviceActivated && step === 'activation') {
       setStep('login')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDeviceActivated])
 
   const handleDemoMode = async () => {

@@ -986,9 +986,10 @@ function AppInitializer() {
       },
     ]
 
-    demoNotifications.forEach((n, i) => {
+    const timers = demoNotifications.map((n, i) =>
       setTimeout(() => addNotification(n), i * 100)
-    })
+    )
+    return () => timers.forEach(clearTimeout)
   }, [addNotification, setCurrentWorkspace])
 
   return null
@@ -1097,7 +1098,7 @@ export default function Home() {
               <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
                 <div className="flex size-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
                   <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400">
-                    {currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {currentUser.name.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2)}
                   </span>
                 </div>
                 <span className="font-medium text-foreground/80">{currentUser.name}</span>

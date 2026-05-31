@@ -35,6 +35,10 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { deviceName, deviceType, os, browser, ipAddress, macAddress, userId, workspaceId } = body
 
+    if (!workspaceId) {
+      return NextResponse.json({ error: 'workspaceId is required' }, { status: 400 })
+    }
+
     // Auto-generate serial key
     const serialKey = `TF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`
 
@@ -49,7 +53,7 @@ export async function POST(request: Request) {
         macAddress: macAddress || null,
         status: 'pending',
         userId: userId || null,
-        workspaceId: workspaceId || 'ws-default',
+        workspaceId: workspaceId,
       },
       include: {
         user: { select: { id: true, name: true, email: true, avatar: true } },

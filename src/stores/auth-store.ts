@@ -219,18 +219,20 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   // Logout
   logout: () => {
+    const { isDeviceActivated, currentDevice } = get()
     const newState = {
       isAuthenticated: false,
-      isDeviceActivated: false,
-      requiresActivation: true,
+      isDeviceActivated: isDeviceActivated,
+      requiresActivation: !isDeviceActivated,
       currentUser: null,
-      currentDevice: null,
+      currentDevice: currentDevice,
       loginMethod: null,
       isViewOnly: false,
       sessionToken: null,
     }
     set(newState)
     clearState()
+    persistState({ ...get(), ...newState })
   },
 
   // Check device status
