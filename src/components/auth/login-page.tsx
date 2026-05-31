@@ -123,6 +123,7 @@ function DeviceActivationStep({
   const { activateDevice } = useAuthStore()
   const [serialKey, setSerialKey] = React.useState('')
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isDemoLoading, setIsDemoLoading] = React.useState(false)
   const [error, setError] = React.useState('')
   const [activationSuccess, setActivationSuccess] = React.useState(false)
 
@@ -307,18 +308,35 @@ function DeviceActivationStep({
           className="space-y-3"
         >
           <Button
-            onClick={onDemoMode}
+            onClick={async () => {
+              setIsDemoLoading(true)
+              setError('')
+              try {
+                await onDemoMode()
+              } catch {
+                setError('Failed to start demo session. Please try again.')
+              } finally {
+                setIsDemoLoading(false)
+              }
+            }}
+            disabled={isDemoLoading || isLoading}
             className="h-11 w-full font-semibold text-white/80 hover:text-white transition-all duration-200 rounded-xl border border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.07]"
             variant="outline"
           >
-            <Zap className="mr-2 size-4" style={{ color: '#c4a0e8' }} />
-            Demo Login
-            <Badge
-              className="ml-2 text-[9px] px-1.5 py-0 h-4 font-semibold bg-amber-500/15 text-amber-400 border-amber-500/20 hover:bg-amber-500/20"
-              variant="outline"
-            >
-              VIEW ONLY
-            </Badge>
+            {isDemoLoading ? (
+              <Loader2 className="mr-2 size-4 animate-spin" />
+            ) : (
+              <Zap className="mr-2 size-4" style={{ color: '#c4a0e8' }} />
+            )}
+            {isDemoLoading ? 'Starting Demo...' : 'Demo Login'}
+            {!isDemoLoading && (
+              <Badge
+                className="ml-2 text-[9px] px-1.5 py-0 h-4 font-semibold bg-amber-500/15 text-amber-400 border-amber-500/20 hover:bg-amber-500/20"
+                variant="outline"
+              >
+                VIEW ONLY
+              </Badge>
+            )}
           </Button>
           <p className="text-center text-[11px] text-white/20">
             Explore all features in read-only mode · No serial key needed
@@ -370,7 +388,10 @@ function LoginFormStep({ onBack }: { onBack: () => void }) {
     setPassword('demo')
 
     try {
-      await demoLogin()
+      const success = await demoLogin()
+      if (!success) {
+        setError('Failed to start demo session. Please try again.')
+      }
     } catch {
       setError('Failed to start demo session. Please try again.')
     } finally {
@@ -603,7 +624,10 @@ export function LoginPage() {
 
   const handleDemoMode = async () => {
     const { demoLogin } = useAuthStore.getState()
-    await demoLogin()
+    const success = await demoLogin()
+    if (!success) {
+      throw new Error('Demo login failed')
+    }
   }
 
   return (
