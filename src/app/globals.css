@@ -3,6 +3,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Liquid Glass Design System
+   ═══════════════════════════════════════════════════════════════════════════════
+
+   Inspired by macOS 26 Tahoe's Liquid Glass design language:
+   - Translucent, frosted glass panels with deep backdrop-blur
+   - Vibrancy: content bleeds through glass surfaces subtly
+   - Rich, retina-grade Apple color palette
+   - Generous border-radius and layered soft shadows
+   - Spring-like micro-interactions
+   - Seamless light/dark mode switching
+
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -41,144 +55,656 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Tahoe accent colors — always available in both modes */
+  --color-tahoe-blue: var(--tahoe-blue);
+  --color-tahoe-green: var(--tahoe-green);
+  --color-tahoe-orange: var(--tahoe-orange);
+  --color-tahoe-red: var(--tahoe-red);
+  --color-tahoe-purple: var(--tahoe-purple);
+  --color-tahoe-teal: var(--tahoe-teal);
+  --color-tahoe-pink: var(--tahoe-pink);
 }
 
+
 /* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Light Mode
-   Warm, sandy undertones with soft shadows and translucent layers.
-   Inspired by: Finder, System Preferences, Notification Center.
+   macOS Tahoe — Light Mode
+   Apple's signature #f5f5f7 canvas, frosted white glass, vivid accents.
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.75rem;
 
-  /* Base: warm paper-like whites (not cool blue-white) */
-  --background: oklch(0.975 0.002 75);
-  --foreground: oklch(0.18 0.01 60);
+  /* ── Tahoe Accent Palette ────────────────────────────────────────────────── */
+  --tahoe-blue: #0071e3;
+  --tahoe-green: #34c759;
+  --tahoe-orange: #ff9500;
+  --tahoe-red: #ff3b30;
+  --tahoe-purple: #af52de;
+  --tahoe-teal: #5ac8fa;
+  --tahoe-pink: #ff2d55;
 
-  /* Cards: slightly elevated warm white */
-  --card: oklch(0.995 0.001 75);
-  --card-foreground: oklch(0.18 0.01 60);
+  /* ── Base Canvas ─────────────────────────────────────────────────────────── */
+  --background: #f5f5f7;
+  --foreground: #1d1d1f;
 
-  /* Popover */
-  --popover: oklch(0.995 0.001 75);
-  --popover-foreground: oklch(0.18 0.01 60);
+  /* ── Glass Surfaces ─────────────────────────────────────────────────────── */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-blur: 40px;
+  --glass-saturate: 180%;
+  --glass-border: rgba(255, 255, 255, 0.50);
+  --glass-border-subtle: rgba(0, 0, 0, 0.06);
+  --glass-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  --glass-shadow-elevated: 0 0 0 0.5px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06), 0 12px 40px rgba(0, 0, 0, 0.08);
 
-  /* Primary: Mojave sunset accent — warm coral/terracotta */
-  --primary: oklch(0.62 0.15 25);
-  --primary-foreground: oklch(0.99 0.002 75);
+  /* ── Cards ───────────────────────────────────────────────────────────────── */
+  --card: rgba(255, 255, 255, 0.80);
+  --card-foreground: #1d1d1f;
 
-  /* Secondary */
-  --secondary: oklch(0.94 0.008 75);
-  --secondary-foreground: oklch(0.25 0.01 60);
+  /* ── Popover ─────────────────────────────────────────────────────────────── */
+  --popover: rgba(255, 255, 255, 0.85);
+  --popover-foreground: #1d1d1f;
 
-  /* Muted */
-  --muted: oklch(0.94 0.006 75);
-  --muted-foreground: oklch(0.50 0.012 60);
+  /* ── Primary: Apple Blue ─────────────────────────────────────────────────── */
+  --primary: #0071e3;
+  --primary-foreground: #ffffff;
 
-  /* Accent */
-  --accent: oklch(0.92 0.015 75);
-  --accent-foreground: oklch(0.22 0.015 60);
+  /* ── Secondary ───────────────────────────────────────────────────────────── */
+  --secondary: rgba(0, 0, 0, 0.04);
+  --secondary-foreground: #1d1d1f;
 
-  /* Destructive */
-  --destructive: oklch(0.577 0.245 27.325);
+  /* ── Muted ───────────────────────────────────────────────────────────────── */
+  --muted: rgba(0, 0, 0, 0.04);
+  --muted-foreground: #86868b;
 
-  /* Borders: warm subtle */
-  --border: oklch(0.91 0.006 75);
-  --input: oklch(0.91 0.006 75);
-  --ring: oklch(0.62 0.15 25);
+  /* ── Accent ──────────────────────────────────────────────────────────────── */
+  --accent: rgba(0, 113, 227, 0.08);
+  --accent-foreground: #0071e3;
 
-  /* Chart colors — warm Mojave palette */
-  --chart-1: oklch(0.62 0.15 25);
-  --chart-2: oklch(0.65 0.13 45);
-  --chart-3: oklch(0.58 0.12 150);
-  --chart-4: oklch(0.70 0.10 290);
-  --chart-5: oklch(0.55 0.10 200);
+  /* ── Destructive ─────────────────────────────────────────────────────────── */
+  --destructive: #ff3b30;
+  --destructive-foreground: #ffffff;
 
-  /* Sidebar: frosted glass with warm tint (like Finder sidebar) */
-  --sidebar: oklch(0.96 0.005 75 / 85%);
-  --sidebar-foreground: oklch(0.22 0.01 60);
-  --sidebar-primary: oklch(0.62 0.15 25);
-  --sidebar-primary-foreground: oklch(0.99 0.002 75);
-  --sidebar-accent: oklch(0.90 0.015 75);
-  --sidebar-accent-foreground: oklch(0.22 0.015 60);
-  --sidebar-border: oklch(0.90 0.006 75);
-  --sidebar-ring: oklch(0.62 0.15 25);
+  /* ── Borders & Input ─────────────────────────────────────────────────────── */
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.08);
+  --ring: rgba(0, 113, 227, 0.40);
+
+  /* ── Chart Colors ────────────────────────────────────────────────────────── */
+  --chart-1: #0071e3;
+  --chart-2: #34c759;
+  --chart-3: #ff9500;
+  --chart-4: #af52de;
+  --chart-5: #5ac8fa;
+
+  /* ── Sidebar ─────────────────────────────────────────────────────────────── */
+  --sidebar: rgba(255, 255, 255, 0.65);
+  --sidebar-foreground: #1d1d1f;
+  --sidebar-primary: #0071e3;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(0, 113, 227, 0.08);
+  --sidebar-accent-foreground: #0071e3;
+  --sidebar-border: rgba(0, 0, 0, 0.06);
+  --sidebar-ring: rgba(0, 113, 227, 0.40);
 }
 
+
 /* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Dark Mode
-   Deep warm darks with subtle vibrancy. Inspired by Mojave Dark desktop,
-   with warm charcoal tones and blue-tinted depth.
+   macOS Tahoe — Dark Mode
+   Pure black canvas, deep frosted glass, vibrant accents against darkness.
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 .dark {
-  /* Base: warm deep charcoal (not pure black, slight warm tint) */
-  --background: oklch(0.17 0.008 55);
-  --foreground: oklch(0.95 0.005 75);
+  /* ── Tahoe Accent Palette (dark-adjusted) ────────────────────────────────── */
+  --tahoe-blue: #0a84ff;
+  --tahoe-green: #30d158;
+  --tahoe-orange: #ff9f0a;
+  --tahoe-red: #ff453a;
+  --tahoe-purple: #bf5af2;
+  --tahoe-teal: #64d2ff;
+  --tahoe-pink: #ff375f;
 
-  /* Cards: slightly lighter warm dark with subtle vibrancy */
-  --card: oklch(0.21 0.01 55);
-  --card-foreground: oklch(0.95 0.005 75);
+  /* ── Base Canvas ─────────────────────────────────────────────────────────── */
+  --background: #000000;
+  --foreground: #f5f5f7;
 
-  /* Popover */
-  --popover: oklch(0.22 0.01 55);
-  --popover-foreground: oklch(0.95 0.005 75);
+  /* ── Glass Surfaces ─────────────────────────────────────────────────────── */
+  --glass-bg: rgba(30, 30, 30, 0.72);
+  --glass-blur: 50px;
+  --glass-saturate: 200%;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-subtle: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.30), 0 8px 24px rgba(0, 0, 0, 0.20);
+  --glass-shadow-elevated: 0 0 0 0.5px rgba(255, 255, 255, 0.08), 0 4px 16px rgba(0, 0, 0, 0.35), 0 12px 40px rgba(0, 0, 0, 0.25);
 
-  /* Primary: warm golden sunset accent */
-  --primary: oklch(0.72 0.14 55);
-  --primary-foreground: oklch(0.15 0.01 55);
+  /* ── Cards ───────────────────────────────────────────────────────────────── */
+  --card: rgba(28, 28, 30, 0.75);
+  --card-foreground: #f5f5f7;
 
-  /* Secondary */
-  --secondary: oklch(0.25 0.012 55);
-  --secondary-foreground: oklch(0.95 0.005 75);
+  /* ── Popover ─────────────────────────────────────────────────────────────── */
+  --popover: rgba(28, 28, 30, 0.85);
+  --popover-foreground: #f5f5f7;
 
-  /* Muted */
-  --muted: oklch(0.25 0.01 55);
-  --muted-foreground: oklch(0.62 0.012 55);
+  /* ── Primary: Apple Blue (dark) ──────────────────────────────────────────── */
+  --primary: #0a84ff;
+  --primary-foreground: #ffffff;
 
-  /* Accent */
-  --accent: oklch(0.27 0.015 55);
-  --accent-foreground: oklch(0.92 0.01 75);
+  /* ── Secondary ───────────────────────────────────────────────────────────── */
+  --secondary: rgba(255, 255, 255, 0.06);
+  --secondary-foreground: #f5f5f7;
 
-  /* Destructive */
-  --destructive: oklch(0.704 0.191 22.216);
+  /* ── Muted ───────────────────────────────────────────────────────────────── */
+  --muted: rgba(255, 255, 255, 0.06);
+  --muted-foreground: #86868b;
 
-  /* Borders: subtle warm lines */
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.72 0.14 55);
+  /* ── Accent ──────────────────────────────────────────────────────────────── */
+  --accent: rgba(10, 132, 255, 0.12);
+  --accent-foreground: #0a84ff;
 
-  /* Chart colors — warm Mojave dark palette */
-  --chart-1: oklch(0.72 0.14 55);
-  --chart-2: oklch(0.68 0.12 35);
-  --chart-3: oklch(0.65 0.11 150);
-  --chart-4: oklch(0.70 0.10 290);
-  --chart-5: oklch(0.60 0.08 200);
+  /* ── Destructive ─────────────────────────────────────────────────────────── */
+  --destructive: #ff453a;
+  --destructive-foreground: #ffffff;
 
-  /* Sidebar: deep frosted glass with warm tint */
-  --sidebar: oklch(0.19 0.01 55 / 90%);
-  --sidebar-foreground: oklch(0.93 0.005 75);
-  --sidebar-primary: oklch(0.72 0.14 55);
-  --sidebar-primary-foreground: oklch(0.15 0.01 55);
-  --sidebar-accent: oklch(0.26 0.015 55);
-  --sidebar-accent-foreground: oklch(0.92 0.01 75);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.72 0.14 55);
+  /* ── Borders & Input ─────────────────────────────────────────────────────── */
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.10);
+  --ring: rgba(10, 132, 255, 0.40);
+
+  /* ── Chart Colors ────────────────────────────────────────────────────────── */
+  --chart-1: #0a84ff;
+  --chart-2: #30d158;
+  --chart-3: #ff9f0a;
+  --chart-4: #bf5af2;
+  --chart-5: #64d2ff;
+
+  /* ── Sidebar ─────────────────────────────────────────────────────────────── */
+  --sidebar: rgba(22, 22, 24, 0.78);
+  --sidebar-foreground: #f5f5f7;
+  --sidebar-primary: #0a84ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(10, 132, 255, 0.12);
+  --sidebar-accent-foreground: #0a84ff;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: rgba(10, 132, 255, 0.40);
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Base Layer — Global Resets & Defaults
+   ═══════════════════════════════════════════════════════════════════════════════ */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   }
 }
 
+
 /* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Custom Scrollbar
-   Thin, rounded, translucent — just like macOS native.
+   macOS Tahoe — Liquid Glass Components
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Glass Panel ──────────────────────────────────────────────────────────────
+   Primary glass surface. Used for main content areas, containers.
+   Features deep blur, vibrancy, and a subtle glass-edge highlight.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 0.5px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Glass-edge highlight (top-edge luminance, like real glass refraction) */
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.40) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dark .glass-panel::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    transparent 100%
+  );
+}
+
+
+/* ── Glass Sidebar ────────────────────────────────────────────────────────────
+   Stronger blur for sidebars. More opaque, deeper frosted effect.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.glass-sidebar {
+  background: var(--sidebar);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  border-right: 0.5px solid var(--sidebar-border);
+  position: relative;
+  isolation: isolate;
+}
+
+.glass-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 100%
+  );
+}
+
+.dark .glass-sidebar::before {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 100%
+  );
+}
+
+
+/* ── Glass Toolbar ────────────────────────────────────────────────────────────
+   Header/toolbar glass. Medium blur with a bottom-edge separator.
+   Mimics macOS title bars and Finder toolbars.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.glass-toolbar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-bottom: 0.5px solid var(--glass-border-subtle);
+  position: relative;
+  isolation: isolate;
+}
+
+.glass-toolbar::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 0.5px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--glass-border-subtle) 20%,
+    var(--glass-border-subtle) 80%,
+    transparent 100%
+  );
+}
+
+
+/* ── Glass Card ───────────────────────────────────────────────────────────────
+   Card-level glass. Lighter blur, elevated above the surface.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.glass-card {
+  background: var(--card);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 0.5px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  isolation: isolate;
+  transition: box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.glass-card:hover {
+  box-shadow: var(--glass-shadow-elevated);
+}
+
+/* Top-edge glass highlight for cards */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.50) 0%,
+    rgba(255, 255, 255, 0.10) 30%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dark .glass-card::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.02) 30%,
+    transparent 100%
+  );
+}
+
+
+/* ── Glass Input ──────────────────────────────────────────────────────────────
+   Input fields with a subtle glass backdrop. Inline focus ring.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.glass-input {
+  background: var(--secondary);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 0.5px solid var(--glass-border-subtle);
+  border-radius: 10px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.glass-input:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px var(--ring);
+  background: var(--glass-bg);
+  outline: none;
+}
+
+.glass-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+
+/* ── Glass Modal ──────────────────────────────────────────────────────────────
+   Modal/dialog glass. Heaviest blur, most opaque, deep shadow.
+   Centered floating panel like a macOS sheet or alert.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.glass-modal {
+  background: var(--popover);
+  backdrop-filter: blur(60px) saturate(200%);
+  -webkit-backdrop-filter: blur(60px) saturate(200%);
+  border: 0.5px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow-elevated);
+  position: relative;
+  isolation: isolate;
+}
+
+.glass-modal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.12) 35%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dark .glass-modal::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.03) 35%,
+    transparent 100%
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Liquid Glass Utility Modifiers
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Increase blur intensity */
+.glass-heavy {
+  backdrop-filter: blur(60px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(220%) !important;
+}
+
+/* Reduce blur intensity */
+.glass-light {
+  backdrop-filter: blur(16px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+}
+
+/* No blur (just translucency) */
+.glass-flat {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Vibrancy tint — apply a colored bleed-through */
+.glass-tint-blue {
+  background: rgba(0, 113, 227, 0.06) !important;
+}
+.dark .glass-tint-blue {
+  background: rgba(10, 132, 255, 0.08) !important;
+}
+
+.glass-tint-purple {
+  background: rgba(175, 82, 222, 0.06) !important;
+}
+.dark .glass-tint-purple {
+  background: rgba(191, 90, 242, 0.08) !important;
+}
+
+.glass-tint-green {
+  background: rgba(52, 199, 89, 0.06) !important;
+}
+.dark .glass-tint-green {
+  background: rgba(48, 209, 88, 0.08) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Micro-interaction Animations
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Tahoe Hover ──────────────────────────────────────────────────────────────
+   Subtle scale-up + brightness lift on hover. Spring-like feel.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.tahoe-hover {
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, filter;
+}
+
+.tahoe-hover:hover {
+  transform: scale(1.015);
+  filter: brightness(1.03);
+}
+
+.tahoe-hover:active {
+  transform: scale(0.985);
+  filter: brightness(0.98);
+}
+
+
+/* ── Tahoe Press ──────────────────────────────────────────────────────────────
+   Scale-down press effect. Satisfying tactile feedback.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.tahoe-press {
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.tahoe-press:active {
+  transform: scale(0.97);
+}
+
+
+/* ── Tahoe Transition ─────────────────────────────────────────────────────────
+   Smooth spring-like transitions for any property.
+   Apply to elements that need Apple-quality motion.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.tahoe-transition {
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tahoe-transition-fast {
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tahoe-transition-slow {
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+
+/* ── Tahoe Keyframe Animations ──────────────────────────────────────────────── */
+
+@keyframes tahoe-breathe {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes tahoe-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes tahoe-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes tahoe-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes tahoe-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tahoe-slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tahoe-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-tahoe-breathe {
+  animation: tahoe-breathe 6s ease-in-out infinite;
+}
+
+.animate-tahoe-float {
+  animation: tahoe-float 4s ease-in-out infinite;
+}
+
+.animate-tahoe-pulse-ring {
+  animation: tahoe-pulse-ring 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+.animate-tahoe-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: tahoe-shimmer 2.5s ease-in-out infinite;
+}
+
+.animate-tahoe-slide-up {
+  animation: tahoe-slide-up 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.animate-tahoe-slide-down {
+  animation: tahoe-slide-down 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.animate-tahoe-fade-in {
+  animation: tahoe-fade-in 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Custom Scrollbar
+   Thin, rounded, translucent — just like macOS native overlay scrollbars.
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 ::-webkit-scrollbar {
@@ -191,146 +717,348 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.5 0 0 / 20%);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.5 0 0 / 35%);
+  background: rgba(0, 0, 0, 0.28);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: oklch(0.7 0 0 / 18%);
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.7 0 0 / 30%);
+  background: rgba(255, 255, 255, 0.22);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
+
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Frosted Glass Utilities
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-.glass-mojave {
-  background: oklch(0.97 0.005 75 / 72%);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-}
-
-.dark .glass-mojave {
-  background: oklch(0.20 0.008 55 / 72%);
-}
-
-.glass-sidebar {
-  background: oklch(0.96 0.005 75 / 82%);
-  backdrop-filter: blur(50px) saturate(200%);
-  -webkit-backdrop-filter: blur(50px) saturate(200%);
-}
-
-.dark .glass-sidebar {
-  background: oklch(0.18 0.01 55 / 85%);
-}
-
-.glass-toolbar {
-  background: oklch(0.97 0.005 75 / 80%);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-}
-
-.dark .glass-toolbar {
-  background: oklch(0.19 0.008 55 / 80%);
-}
-
-.glass-card {
-  background: oklch(0.99 0.002 75 / 65%);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-}
-
-.dark .glass-card {
-  background: oklch(0.22 0.008 55 / 55%);
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Card Enhancements
-   Soft layered shadows like macOS windows.
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-.mojave-card {
-  border-radius: 0.75rem;
-  box-shadow:
-    0 0 0 0.5px oklch(0 0 0 / 6%),
-    0 1px 3px oklch(0 0 0 / 4%),
-    0 4px 12px oklch(0 0 0 / 3%);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.mojave-card:hover {
-  box-shadow:
-    0 0 0 0.5px oklch(0 0 0 / 8%),
-    0 2px 6px oklch(0 0 0 / 6%),
-    0 8px 24px oklch(0 0 0 / 5%);
-}
-
-.dark .mojave-card {
-  box-shadow:
-    0 0 0 0.5px oklch(1 0 0 / 6%),
-    0 1px 3px oklch(0 0 0 / 20%),
-    0 4px 12px oklch(0 0 0 / 15%);
-}
-
-.dark .mojave-card:hover {
-  box-shadow:
-    0 0 0 0.5px oklch(1 0 0 / 10%),
-    0 2px 6px oklch(0 0 0 / 25%),
-    0 8px 24px oklch(0 0 0 / 20%);
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Selection Highlight
+   macOS Tahoe — Selection Highlight
+   Apple-blue tinted selection, matching the system accent.
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 ::selection {
-  background: oklch(0.72 0.14 55 / 30%);
+  background: rgba(0, 113, 227, 0.18);
   color: inherit;
 }
 
 .dark ::selection {
-  background: oklch(0.72 0.14 55 / 25%);
+  background: rgba(10, 132, 255, 0.25);
 }
 
+
 /* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Focus Ring
+   macOS Tahoe — Focus Ring
+   System-accent-colored focus ring with generous offset.
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 :focus-visible {
-  outline: 2px solid oklch(0.72 0.14 55 / 50%);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2.5px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
-.dark :focus-visible {
-  outline: 2px solid oklch(0.72 0.14 55 / 40%);
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   macOS Mojave Retina — Animations
+   macOS Tahoe — Button Styles
+   Apple-quality button rendering with glass and accent variants.
    ═══════════════════════════════════════════════════════════════════════════════ */
 
-@keyframes mojave-breathe {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
+.tahoe-btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.04),
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 113, 227, 0.15);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-@keyframes mojave-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+.tahoe-btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.04),
+    0 2px 6px rgba(0, 0, 0, 0.10),
+    0 4px 16px rgba(0, 113, 227, 0.20);
+  transform: translateY(-0.5px);
 }
 
-.animate-mojave-breathe {
-  animation: mojave-breathe 6s ease-in-out infinite;
+.tahoe-btn-primary:active {
+  transform: scale(0.97) translateY(0);
+  filter: brightness(0.96);
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
-.animate-mojave-float {
-  animation: mojave-float 4s ease-in-out infinite;
+.tahoe-btn-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  color: var(--foreground);
+  border: 0.5px solid var(--glass-border);
+  border-radius: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tahoe-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--glass-shadow);
+  transform: translateY(-0.5px);
+}
+
+.dark .tahoe-btn-glass:hover {
+  background: rgba(40, 40, 42, 0.82);
+}
+
+.tahoe-btn-glass:active {
+  transform: scale(0.97) translateY(0);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Badge / Tag Styles
+   Frosted pill badges with accent colors.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.tahoe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  border: 0.5px solid var(--glass-border-subtle);
+}
+
+.tahoe-badge-blue {
+  background: rgba(0, 113, 227, 0.10);
+  color: var(--tahoe-blue);
+}
+
+.tahoe-badge-green {
+  background: rgba(52, 199, 89, 0.10);
+  color: var(--tahoe-green);
+}
+
+.tahoe-badge-orange {
+  background: rgba(255, 149, 0, 0.10);
+  color: var(--tahoe-orange);
+}
+
+.tahoe-badge-red {
+  background: rgba(255, 59, 48, 0.10);
+  color: var(--tahoe-red);
+}
+
+.tahoe-badge-purple {
+  background: rgba(175, 82, 222, 0.10);
+  color: var(--tahoe-purple);
+}
+
+.tahoe-badge-teal {
+  background: rgba(90, 200, 250, 0.10);
+  color: var(--tahoe-teal);
+}
+
+.tahoe-badge-pink {
+  background: rgba(255, 45, 85, 0.10);
+  color: var(--tahoe-pink);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Divider
+   Subtle glass-like separator, fading at edges.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.tahoe-divider {
+  height: 0.5px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--glass-border-subtle) 15%,
+    var(--glass-border-subtle) 85%,
+    transparent 100%
+  );
+  border: none;
+  margin: 0;
+}
+
+.tahoe-divider-vertical {
+  width: 0.5px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--glass-border-subtle) 15%,
+    var(--glass-border-subtle) 85%,
+    transparent 100%
+  );
+  border: none;
+  margin: 0;
+  align-self: stretch;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Window Chrome
+   Mimics the macOS traffic light buttons and title bar.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.tahoe-traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.tahoe-traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  transition: filter 0.15s ease;
+}
+
+.tahoe-traffic-light:active {
+  filter: brightness(0.85);
+}
+
+.tahoe-traffic-light-close {
+  background: #ff5f57;
+}
+
+.tahoe-traffic-light-minimize {
+  background: #febc2e;
+}
+
+.tahoe-traffic-light-maximize {
+  background: #28c840;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Typography Utilities
+   SF Pro-inspired typographic scale and treatment.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.tahoe-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--foreground);
+}
+
+.tahoe-headline {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--foreground);
+}
+
+.tahoe-body {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+.tahoe-caption {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+
+.tahoe-overline {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   macOS Tahoe — Elevation Shadows
+   Layered shadow system for depth hierarchy.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.tahoe-shadow-sm {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.03),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.tahoe-shadow-md {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.tahoe-shadow-lg {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.tahoe-shadow-xl {
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 20px 48px rgba(0, 0, 0, 0.12);
+}
+
+.dark .tahoe-shadow-sm {
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.dark .tahoe-shadow-md {
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.30),
+    0 4px 16px rgba(0, 0, 0, 0.20);
+}
+
+.dark .tahoe-shadow-lg {
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.dark .tahoe-shadow-xl {
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.40),
+    0 20px 48px rgba(0, 0, 0, 0.30);
 }

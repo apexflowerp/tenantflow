@@ -1,5 +1,1 @@
 export { DashboardPage } from './dashboard-page'
-export { KpiCard, KpiCardSkeleton } from './kpi-card'
-export { RevenueChart } from './revenue-chart'
-export { ActivityFeed } from './activity-feed'
-export { BreakdownChart } from './breakdown-chart'

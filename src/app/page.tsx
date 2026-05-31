@@ -22,6 +22,30 @@ import { CalendarPage } from '@/components/calendar'
 import { InspectionsPage } from '@/components/inspections'
 import { VendorsPage } from '@/components/vendors'
 import { MarketplacePage } from '@/components/marketplace'
+import { TenantScreeningPage } from '@/components/screening'
+import { CompliancePage } from '@/components/compliance'
+import { WorkflowsPage } from '@/components/workflows'
+import { PortalPage } from '@/components/portal'
+import { UtilitiesPage } from '@/components/utilities'
+import { ParkingPage } from '@/components/parking'
+import { AmenitiesPage } from '@/components/amenities'
+import { AnnouncementsPage } from '@/components/announcements'
+import { SurveysPage } from '@/components/surveys'
+import { SmartHomePage } from '@/components/smart-home'
+import { KeyManagementPage } from '@/components/keys'
+import { RenewalsPage } from '@/components/renewals'
+import { LateFeesPage } from '@/components/late-fees'
+import { PaymentPlansPage } from '@/components/payment-plans'
+import { EnergyPage } from '@/components/energy'
+import { VisitorsPage } from '@/components/visitors'
+import { PackagesPage } from '@/components/packages'
+import { MoveInOutPage } from '@/components/move-inout'
+import { BudgetPage } from '@/components/budget'
+import { ESignaturesPage } from '@/components/e-signatures'
+import { PetsPage } from '@/components/pets'
+import { DisputesPage } from '@/components/disputes'
+import { AssetsPage } from '@/components/assets'
+import { MarketIntelPage } from '@/components/market-intel'
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -55,14 +79,31 @@ import {
   Eye,
   Zap,
   X,
+  Scale,
+  Globe,
+  Car,
+  Waves,
+  Megaphone,
+  ClipboardList,
+  Key,
+  Repeat,
+  Receipt,
+  Wallet,
+  UserCheck,
+  Package,
+  LogIn,
+  PiggyBank,
+  PenTool,
+  PawPrint,
+  AlertTriangle,
+  Warehouse,
+  Leaf,
 } from 'lucide-react'
 
 import { useAppStore } from '@/stores'
 import { useAuthStore } from '@/stores/auth-store'
 
 // ── Multi-tenant API helper ──────────────────────────────────────────────────
-// Use this when making API calls that need tenant DB resolution.
-// Example: fetchWithClientId('/api/properties') → '/api/properties?clientId=abc123'
 export function buildTenantApiUrl(path: string, clientId: string | null): string {
   if (!clientId) return path
   const separator = path.includes('?') ? '&' : '?'
@@ -93,15 +134,15 @@ const MODULES: Record<string, ModuleConfig> = {
   dashboard: {
     id: 'dashboard',
     label: 'Dashboard',
-    description: 'Your rental management overview at a glance',
+    description: 'Enterprise command center with real-time insights',
     icon: LayoutDashboard,
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Total Properties', value: '6', trend: '+2' },
-      { label: 'Active Tenants', value: '15', trend: '+3' },
-      { label: 'Occupancy Rate', value: '89%', trend: '+5%' },
-      { label: 'Monthly Revenue', value: '$42,800', trend: '+12%' },
+      { label: 'Total Properties', value: '48', trend: '+3' },
+      { label: 'Active Tenants', value: '156', trend: '+8' },
+      { label: 'Occupancy Rate', value: '94%', trend: '+5%' },
+      { label: 'Monthly Revenue', value: '$142.8K', trend: '+12%' },
     ],
     quickActions: [
       { label: 'View Analytics', icon: BarChart3 },
@@ -112,12 +153,12 @@ const MODULES: Record<string, ModuleConfig> = {
   analytics: {
     id: 'analytics',
     label: 'Analytics',
-    description: 'Insights and performance metrics across your portfolio',
+    description: 'AI-powered insights and performance metrics across your portfolio',
     icon: BarChart3,
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Revenue YTD', value: '$512,400', trend: '+18%' },
+      { label: 'Revenue YTD', value: '$1.71M', trend: '+18%' },
       { label: 'Collection Rate', value: '94.2%', trend: '+3%' },
       { label: 'Avg. Lease Value', value: '$2,850', trend: '+8%' },
     ],
@@ -130,9 +171,9 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Reports Generated', value: '24' },
-      { label: 'Invoices Sent', value: '18' },
-      { label: 'Total Revenue', value: '$269.8K' },
+      { label: 'Reports Generated', value: '48', trend: '+12' },
+      { label: 'Invoices Sent', value: '36', trend: '+8' },
+      { label: 'Total Revenue', value: '$512.4K', trend: '+22%' },
     ],
   },
   copilot: {
@@ -140,8 +181,22 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'AI Copilot',
     description: 'Your AI-powered rental management assistant',
     icon: Sparkles,
-    color: 'text-violet-600 dark:text-violet-400',
-    bgColor: 'bg-violet-500/10',
+    color: 'text-tahoe-purple',
+    bgColor: 'bg-tahoe-purple/10',
+  },
+  market_intel: {
+    id: 'market_intel',
+    label: 'Market Intelligence',
+    description: 'AI-powered market analysis and comparables',
+    icon: TrendingUp,
+    color: 'text-tahoe-green',
+    bgColor: 'bg-tahoe-green/10',
+    stats: [
+      { label: 'Avg Rent', value: '$2,450', trend: '+4.2%' },
+      { label: 'Market Trend', value: '↑ Rising', trend: '+4.2%' },
+      { label: 'Days on Market', value: '18', trend: '-3' },
+      { label: 'Comparables', value: '24', trend: '+6' },
+    ],
   },
   properties: {
     id: 'properties',
@@ -151,10 +206,10 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Total Properties', value: '6' },
-      { label: 'Total Units', value: '24' },
-      { label: 'Occupied', value: '21' },
-      { label: 'Vacant', value: '3' },
+      { label: 'Total Properties', value: '48', trend: '+3' },
+      { label: 'Total Units', value: '312' },
+      { label: 'Occupied', value: '294' },
+      { label: 'Vacant', value: '18' },
     ],
     quickActions: [
       { label: 'Add Property', icon: Building2 },
@@ -169,9 +224,9 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Total Tenants', value: '15' },
-      { label: 'Active Leases', value: '12' },
-      { label: 'Expiring Soon', value: '3' },
+      { label: 'Total Tenants', value: '156' },
+      { label: 'Active Leases', value: '142' },
+      { label: 'Expiring Soon', value: '8' },
     ],
   },
   leases: {
@@ -182,9 +237,65 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Active Leases', value: '12' },
-      { label: 'Expiring (30d)', value: '3' },
-      { label: 'Expired', value: '1' },
+      { label: 'Active Leases', value: '142' },
+      { label: 'Expiring (30d)', value: '8' },
+      { label: 'Expired', value: '2' },
+    ],
+  },
+  screening: {
+    id: 'screening',
+    label: 'Tenant Screening',
+    description: 'Background checks, credit reports & eviction history',
+    icon: ShieldCheck,
+    color: 'text-tahoe-blue',
+    bgColor: 'bg-tahoe-blue/10',
+    stats: [
+      { label: 'Pending', value: '12' },
+      { label: 'Approved', value: '284' },
+      { label: 'Flagged', value: '8' },
+      { label: 'Completion Rate', value: '94.2%' },
+    ],
+  },
+  renewals: {
+    id: 'renewals',
+    label: 'Lease Renewals',
+    description: 'Track & manage lease renewals',
+    icon: Repeat,
+    color: 'text-tahoe-purple',
+    bgColor: 'bg-tahoe-purple/10',
+    stats: [
+      { label: 'Upcoming', value: '12' },
+      { label: 'Sent', value: '5' },
+      { label: 'Accepted', value: '4' },
+      { label: 'Expired', value: '3' },
+    ],
+  },
+  move_inout: {
+    id: 'move_inout',
+    label: 'Move In/Out',
+    description: 'Manage tenant transitions with structured checklists',
+    icon: LogIn,
+    color: 'text-tahoe-purple',
+    bgColor: 'bg-tahoe-purple/10',
+    stats: [
+      { label: 'Upcoming Move-Ins', value: '3' },
+      { label: 'Pending Move-Outs', value: '2' },
+      { label: 'In Progress', value: '1' },
+      { label: 'Completed', value: '7' },
+    ],
+  },
+  e_signatures: {
+    id: 'e_signatures',
+    label: 'E-Signatures',
+    description: 'Track digital signatures and document execution',
+    icon: PenTool,
+    color: 'text-tahoe-pink',
+    bgColor: 'bg-tahoe-pink/10',
+    stats: [
+      { label: 'Pending', value: '5' },
+      { label: 'Completed', value: '42' },
+      { label: 'Avg Turnaround', value: '1.8d' },
+      { label: 'Expiring Soon', value: '2' },
     ],
   },
   billing: {
@@ -195,23 +306,9 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Monthly Revenue', value: '$42,800' },
-      { label: 'Pending', value: '$8,550' },
-      { label: 'Overdue', value: '$2,100' },
-    ],
-  },
-  marketplace: {
-    id: 'marketplace',
-    label: 'Marketplace',
-    description: 'Listings, applications, and tenant placement',
-    icon: Store,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    stats: [
-      { label: 'Active Listings', value: '4' },
-      { label: 'Total Applications', value: '6' },
-      { label: 'Approval Rate', value: '33%' },
-      { label: 'Avg. Days to Fill', value: '18' },
+      { label: 'Monthly Revenue', value: '$142.8K' },
+      { label: 'Pending', value: '$18.5K' },
+      { label: 'Overdue', value: '$4.2K' },
     ],
   },
   accounting: {
@@ -222,10 +319,66 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Total Revenue', value: '$524,400' },
-      { label: 'Net Income', value: '$358,600' },
-      { label: 'Accounts', value: '17' },
-      { label: 'Transactions', value: '8' },
+      { label: 'Total Revenue', value: '$1.71M' },
+      { label: 'Net Income', value: '$1.08M' },
+      { label: 'Accounts', value: '24' },
+      { label: 'Transactions', value: '856' },
+    ],
+  },
+  budget: {
+    id: 'budget',
+    label: 'Budget & Forecasting',
+    description: 'Plan budgets, track spending, and forecast expenses',
+    icon: PiggyBank,
+    color: 'text-tahoe-teal',
+    bgColor: 'bg-tahoe-teal/10',
+    stats: [
+      { label: 'Annual Budget', value: '$485K' },
+      { label: 'Spent YTD', value: '$312K' },
+      { label: 'Remaining', value: '$173K' },
+      { label: 'Variance', value: '-3.2%' },
+    ],
+  },
+  late_fees: {
+    id: 'late_fees',
+    label: 'Late Fees',
+    description: 'Late fee configuration & tracking',
+    icon: Receipt,
+    color: 'text-tahoe-red',
+    bgColor: 'bg-tahoe-red/10',
+    stats: [
+      { label: 'Active Configs', value: '6' },
+      { label: 'Collected', value: '$685' },
+      { label: 'Outstanding', value: '$405' },
+      { label: 'Waived', value: '$120' },
+    ],
+  },
+  payment_plans: {
+    id: 'payment_plans',
+    label: 'Payment Plans',
+    description: 'Payment plans for overdue tenants',
+    icon: Wallet,
+    color: 'text-tahoe-green',
+    bgColor: 'bg-tahoe-green/10',
+    stats: [
+      { label: 'Active Plans', value: '5' },
+      { label: 'Enrolled', value: '12' },
+      { label: 'Collection Rate', value: '68%' },
+      { label: 'Avg Duration', value: '12 mo' },
+    ],
+  },
+  marketplace: {
+    id: 'marketplace',
+    label: 'Marketplace',
+    description: 'Listings, applications, and tenant placement',
+    icon: Store,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Active Listings', value: '8' },
+      { label: 'Total Applications', value: '24' },
+      { label: 'Approval Rate', value: '42%' },
+      { label: 'Avg. Days to Fill', value: '14' },
     ],
   },
   maintenance: {
@@ -233,104 +386,12 @@ const MODULES: Record<string, ModuleConfig> = {
     label: 'Maintenance',
     description: 'Work orders, tickets, and maintenance scheduling',
     icon: Wrench,
-    color: 'text-orange-600 dark:text-orange-400',
-    bgColor: 'bg-orange-500/10',
+    color: 'text-tahoe-orange',
+    bgColor: 'bg-tahoe-orange/10',
     stats: [
-      { label: 'Open Tickets', value: '8' },
-      { label: 'In Progress', value: '4' },
-      { label: 'Resolved', value: '3' },
-    ],
-  },
-  vendors: {
-    id: 'vendors',
-    label: 'Vendors & Contractors',
-    description: 'Manage service providers, contractors, and vendor relationships',
-    icon: Truck,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    stats: [
-      { label: 'Total Vendors', value: '6' },
-      { label: 'Active', value: '5' },
-      { label: 'Top Rated', value: '4' },
-      { label: 'Total Spent', value: '$85.5k' },
-    ],
-  },
-  communications: {
-    id: 'communications',
-    label: 'Communications',
-    description: 'Messages, emails, and tenant communication',
-    icon: MessageSquare,
-    color: 'text-sky-600 dark:text-sky-400',
-    bgColor: 'bg-sky-500/10',
-    stats: [
-      { label: 'Unread Messages', value: '5' },
-      { label: 'Sent This Week', value: '12' },
-    ],
-  },
-  documents: {
-    id: 'documents',
-    label: 'Documents',
-    description: 'File management, templates, and document storage',
-    icon: FolderOpen,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    stats: [
-      { label: 'Total Documents', value: '24' },
-      { label: 'Recent Uploads', value: '3' },
-    ],
-  },
-  owner: {
-    id: 'owner',
-    label: 'Owner Management',
-    description: 'Manage SaaS clients, licenses, and billing',
-    icon: Shield,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    stats: [
-      { label: 'Active Clients', value: '3' },
-      { label: 'MRR', value: '$1,197' },
-      { label: 'Trial Clients', value: '1' },
-    ],
-  },
-  devices: {
-    id: 'devices',
-    label: 'Device Management',
-    description: 'Track devices, manage serial keys, and control sessions',
-    icon: ShieldCheck,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    stats: [
-      { label: 'Total Devices', value: '5' },
-      { label: 'Active', value: '3' },
-      { label: 'Blocked', value: '1' },
-      { label: 'Active Sessions', value: '5' },
-    ],
-  },
-  insurance: {
-    id: 'insurance',
-    label: 'Insurance',
-    description: 'Manage policies, coverage, and compliance',
-    icon: ShieldAlert,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    stats: [
-      { label: 'Active Policies', value: '5' },
-      { label: 'Total Coverage', value: '$9.5M' },
-      { label: 'Annual Premium', value: '$40.3K' },
-      { label: 'Expiring Soon', value: '0' },
-    ],
-  },
-  calendar: {
-    id: 'calendar',
-    label: 'Calendar',
-    description: 'Schedule showings, inspections, and events',
-    icon: CalendarDays,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-    stats: [
-      { label: 'Upcoming Events', value: '8' },
-      { label: 'This Week', value: '3' },
-      { label: 'Showings', value: '2' },
+      { label: 'Open Tickets', value: '12' },
+      { label: 'In Progress', value: '8' },
+      { label: 'Resolved', value: '42' },
     ],
   },
   inspections: {
@@ -341,13 +402,326 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Total Inspections', value: '6' },
-      { label: 'Scheduled', value: '2' },
-      { label: 'Completed', value: '3' },
-      { label: 'Avg Rating', value: '4.2' },
+      { label: 'Total Inspections', value: '18' },
+      { label: 'Scheduled', value: '4' },
+      { label: 'Completed', value: '12' },
+      { label: 'Avg Rating', value: '4.3' },
     ],
     quickActions: [
       { label: 'Schedule Inspection', icon: ClipboardCheck },
+    ],
+  },
+  vendors: {
+    id: 'vendors',
+    label: 'Vendors & Contractors',
+    description: 'Manage service providers, contractors, and vendor relationships',
+    icon: Truck,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Total Vendors', value: '18' },
+      { label: 'Active', value: '15' },
+      { label: 'Top Rated', value: '12' },
+      { label: 'Total Spent', value: '$185.5K' },
+    ],
+  },
+  assets: {
+    id: 'assets',
+    label: 'Asset Management',
+    description: 'Track property assets, depreciation, and maintenance',
+    icon: Warehouse,
+    color: 'text-tahoe-blue',
+    bgColor: 'bg-tahoe-blue/10',
+    stats: [
+      { label: 'Total Assets', value: '42' },
+      { label: 'Total Value', value: '$285K' },
+      { label: 'Depreciated', value: '$48K' },
+      { label: 'Maintenance Due', value: '3' },
+    ],
+  },
+  insurance: {
+    id: 'insurance',
+    label: 'Insurance',
+    description: 'Manage policies, coverage, and compliance',
+    icon: ShieldAlert,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Active Policies', value: '8' },
+      { label: 'Total Coverage', value: '$12.5M' },
+      { label: 'Annual Premium', value: '$68.3K' },
+      { label: 'Expiring Soon', value: '1' },
+    ],
+  },
+  calendar: {
+    id: 'calendar',
+    label: 'Calendar',
+    description: 'Schedule showings, inspections, and events',
+    icon: CalendarDays,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Upcoming Events', value: '12' },
+      { label: 'This Week', value: '5' },
+      { label: 'Showings', value: '3' },
+    ],
+  },
+  communications: {
+    id: 'communications',
+    label: 'Communications',
+    description: 'Messages, emails, and tenant communication',
+    icon: MessageSquare,
+    color: 'text-tahoe-teal',
+    bgColor: 'bg-tahoe-teal/10',
+    stats: [
+      { label: 'Unread Messages', value: '8' },
+      { label: 'Sent This Week', value: '24' },
+    ],
+  },
+  compliance: {
+    id: 'compliance',
+    label: 'Compliance',
+    description: 'Legal & regulatory compliance tracking',
+    icon: Scale,
+    color: 'text-tahoe-purple',
+    bgColor: 'bg-tahoe-purple/10',
+    stats: [
+      { label: 'Active Rules', value: '36' },
+      { label: 'Compliant', value: '32' },
+      { label: 'Violations', value: '4' },
+      { label: 'Upcoming Deadlines', value: '8' },
+    ],
+  },
+  workflows: {
+    id: 'workflows',
+    label: 'Workflows',
+    description: 'Automation workflows & triggers',
+    icon: Zap,
+    color: 'text-tahoe-teal',
+    bgColor: 'bg-tahoe-teal/10',
+    stats: [
+      { label: 'Active', value: '12' },
+      { label: 'Automations Run', value: '2.4K' },
+      { label: 'Avg Response', value: '1.8s' },
+      { label: 'Error Rate', value: '0.2%' },
+    ],
+  },
+  energy: {
+    id: 'energy',
+    label: 'Energy Management',
+    description: 'Monitor energy consumption, costs, and carbon footprint',
+    icon: Leaf,
+    color: 'text-tahoe-green',
+    bgColor: 'bg-tahoe-green/10',
+    stats: [
+      { label: 'Monthly Cost', value: '$3,842' },
+      { label: 'Avg/Unit', value: '$128' },
+      { label: 'Carbon Footprint', value: '12.4t' },
+      { label: 'Savings', value: '18%' },
+    ],
+  },
+  utilities: {
+    id: 'utilities',
+    label: 'Utilities',
+    description: 'Utility tracking & meter readings',
+    icon: Zap,
+    color: 'text-tahoe-orange',
+    bgColor: 'bg-tahoe-orange/10',
+    stats: [
+      { label: 'Total Cost', value: '$2,416' },
+      { label: 'Avg/Unit', value: '$116' },
+      { label: 'Overdue', value: '3' },
+    ],
+  },
+  visitors: {
+    id: 'visitors',
+    label: 'Visitor Management',
+    description: 'Track visitors, check-ins, and access control',
+    icon: UserCheck,
+    color: 'text-tahoe-blue',
+    bgColor: 'bg-tahoe-blue/10',
+    stats: [
+      { label: "Today's Visitors", value: '8' },
+      { label: 'Expected', value: '3' },
+      { label: 'Checked In', value: '5' },
+      { label: 'Pending', value: '1' },
+    ],
+  },
+  packages: {
+    id: 'packages',
+    label: 'Package Management',
+    description: 'Track deliveries and pickups',
+    icon: Package,
+    color: 'text-tahoe-orange',
+    bgColor: 'bg-tahoe-orange/10',
+    stats: [
+      { label: 'Pending Pickup', value: '12' },
+      { label: 'Delivered Today', value: '8' },
+      { label: 'Overdue', value: '3' },
+      { label: 'This Month', value: '156' },
+    ],
+  },
+  parking: {
+    id: 'parking',
+    label: 'Parking',
+    description: 'Parking spot management & assignment',
+    icon: Car,
+    color: 'text-tahoe-blue',
+    bgColor: 'bg-tahoe-blue/10',
+    stats: [
+      { label: 'Total Spots', value: '48' },
+      { label: 'Assigned', value: '36' },
+      { label: 'Available', value: '8' },
+      { label: 'Reserved', value: '4' },
+    ],
+  },
+  amenities: {
+    id: 'amenities',
+    label: 'Amenities',
+    description: 'Amenity booking & management system',
+    icon: Waves,
+    color: 'text-tahoe-teal',
+    bgColor: 'bg-tahoe-teal/10',
+    stats: [
+      { label: 'Amenities', value: '8' },
+      { label: 'Bookings', value: '2,498' },
+      { label: 'Utilization', value: '72%' },
+      { label: 'Revenue', value: '$14,850' },
+    ],
+  },
+  announcements: {
+    id: 'announcements',
+    label: 'Announcements',
+    description: 'Building announcements & notifications',
+    icon: Megaphone,
+    color: 'text-tahoe-blue',
+    bgColor: 'bg-tahoe-blue/10',
+    stats: [
+      { label: 'Active', value: '12' },
+      { label: 'Total Views', value: '845' },
+      { label: 'Acknowledged', value: '82%' },
+      { label: 'Expiring', value: '3' },
+    ],
+  },
+  surveys: {
+    id: 'surveys',
+    label: 'Surveys',
+    description: 'Tenant satisfaction & feedback surveys',
+    icon: ClipboardList,
+    color: 'text-tahoe-orange',
+    bgColor: 'bg-tahoe-orange/10',
+    stats: [
+      { label: 'Active', value: '4' },
+      { label: 'Responses', value: '544' },
+      { label: 'Avg Score', value: '4.2/5' },
+      { label: 'Completion', value: '72%' },
+    ],
+  },
+  pets: {
+    id: 'pets',
+    label: 'Pet Management',
+    description: 'Pet registry, approvals, and policy compliance',
+    icon: PawPrint,
+    color: 'text-tahoe-orange',
+    bgColor: 'bg-tahoe-orange/10',
+    stats: [
+      { label: 'Registered', value: '18' },
+      { label: 'Dogs', value: '12' },
+      { label: 'Cats', value: '5' },
+      { label: 'Pending', value: '2' },
+    ],
+  },
+  disputes: {
+    id: 'disputes',
+    label: 'Dispute Resolution',
+    description: 'Track and resolve tenant disputes',
+    icon: AlertTriangle,
+    color: 'text-tahoe-red',
+    bgColor: 'bg-tahoe-red/10',
+    stats: [
+      { label: 'Open', value: '4' },
+      { label: 'Under Review', value: '2' },
+      { label: 'Resolved', value: '18' },
+      { label: 'Avg Resolution', value: '5.2d' },
+    ],
+  },
+  smart_home: {
+    id: 'smart_home',
+    label: 'Smart Home',
+    description: 'IoT & smart device integration',
+    icon: HomeIcon,
+    color: 'text-tahoe-green',
+    bgColor: 'bg-tahoe-green/10',
+    stats: [
+      { label: 'Devices', value: '24' },
+      { label: 'Online', value: '21' },
+      { label: 'Alerts', value: '3' },
+      { label: 'Energy Saved', value: '22%' },
+    ],
+  },
+  keys: {
+    id: 'keys',
+    label: 'Key Management',
+    description: 'Physical & digital key tracking',
+    icon: Key,
+    color: 'text-tahoe-blue',
+    bgColor: 'bg-tahoe-blue/10',
+    stats: [
+      { label: 'Total Keys', value: '24' },
+      { label: 'Assigned', value: '16' },
+      { label: 'Available', value: '6' },
+      { label: 'Overdue', value: '2' },
+    ],
+  },
+  owner: {
+    id: 'owner',
+    label: 'Owner Management',
+    description: 'Manage SaaS clients, licenses, and billing',
+    icon: Shield,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Active Clients', value: '8' },
+      { label: 'MRR', value: '$4,792' },
+      { label: 'Trial Clients', value: '2' },
+    ],
+  },
+  portal: {
+    id: 'portal',
+    label: 'Portal Settings',
+    description: 'Tenant & owner portal configuration',
+    icon: Globe,
+    color: 'text-tahoe-pink',
+    bgColor: 'bg-tahoe-pink/10',
+    stats: [
+      { label: 'Tenant Features', value: '5/6' },
+      { label: 'Owner Features', value: '4/6' },
+    ],
+  },
+  devices: {
+    id: 'devices',
+    label: 'Device Management',
+    description: 'Track devices, manage serial keys, and control sessions',
+    icon: ShieldCheck,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Total Devices', value: '12' },
+      { label: 'Active', value: '8' },
+      { label: 'Blocked', value: '2' },
+      { label: 'Active Sessions', value: '10' },
+    ],
+  },
+  documents: {
+    id: 'documents',
+    label: 'Documents',
+    description: 'File management, templates, and document storage',
+    icon: FolderOpen,
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    stats: [
+      { label: 'Total Documents', value: '48' },
+      { label: 'Recent Uploads', value: '6' },
     ],
   },
   audit: {
@@ -358,10 +732,10 @@ const MODULES: Record<string, ModuleConfig> = {
     color: 'text-primary',
     bgColor: 'bg-primary/10',
     stats: [
-      { label: 'Total Events', value: '35' },
-      { label: 'Warnings', value: '6' },
-      { label: 'Errors', value: '2' },
-      { label: 'Critical', value: '2' },
+      { label: 'Total Events', value: '856' },
+      { label: 'Warnings', value: '12' },
+      { label: 'Errors', value: '3' },
+      { label: 'Critical', value: '1' },
     ],
   },
   settings: {
@@ -410,7 +784,7 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
       {config.stats && config.stats.length > 0 && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {config.stats.map((stat) => (
-            <Card key={stat.label} className="mojave-card border-border/40 bg-card/80">
+            <Card key={stat.label} className="glass-card border-border/40 bg-card/80">
               <CardContent className="p-4">
                 <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</p>
                 <div className="mt-1.5 flex items-baseline gap-2">
@@ -436,7 +810,7 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
             return (
               <button
                 key={action.label}
-                className="inline-flex items-center gap-2 rounded-xl border border-border/40 bg-card/80 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:bg-accent hover:text-accent-foreground hover:shadow-md"
+                className="tahoe-btn-glass inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium"
               >
                 <ActionIcon className="size-4 text-muted-foreground" />
                 {action.label}
@@ -448,7 +822,7 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
       )}
 
       {/* Content placeholder */}
-      <Card className="mojave-card border-border/40 bg-card/80">
+      <Card className="glass-card border-border/40">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">Recent Activity</CardTitle>
         </CardHeader>
@@ -505,6 +879,30 @@ function ModuleContent({ moduleId }: { moduleId: string }) {
     insurance: InsurancePage,
     calendar: CalendarPage,
     audit: AuditPage,
+    screening: TenantScreeningPage,
+    compliance: CompliancePage,
+    workflows: WorkflowsPage,
+    portal: PortalPage,
+    utilities: UtilitiesPage,
+    parking: ParkingPage,
+    amenities: AmenitiesPage,
+    announcements: AnnouncementsPage,
+    surveys: SurveysPage,
+    smart_home: SmartHomePage,
+    keys: KeyManagementPage,
+    renewals: RenewalsPage,
+    late_fees: LateFeesPage,
+    payment_plans: PaymentPlansPage,
+    energy: EnergyPage,
+    visitors: VisitorsPage,
+    packages: PackagesPage,
+    move_inout: MoveInOutPage,
+    budget: BudgetPage,
+    e_signatures: ESignaturesPage,
+    pets: PetsPage,
+    disputes: DisputesPage,
+    assets: AssetsPage,
+    market_intel: MarketIntelPage,
   }
 
   const ModuleComponent = moduleMap[moduleId]
@@ -530,14 +928,12 @@ function AppInitializer() {
   const { addNotification, setCurrentWorkspace } = useAppStore()
 
   React.useEffect(() => {
-    // Set default workspace
     setCurrentWorkspace({
       id: 'ws-1',
       name: 'TenantFlow HQ',
       slug: 'tenantflow-hq',
     })
 
-    // Add demo notifications
     const demoNotifications: Array<{
       title: string
       message: string
@@ -563,6 +959,16 @@ function AppInitializer() {
         message: 'Sarah Mitchell applied for Unit 7C at Greenfield Gardens',
         type: 'info',
       },
+      {
+        title: 'Package Delivered',
+        message: 'Package for Unit 5A delivered to front desk — pending pickup',
+        type: 'info',
+      },
+      {
+        title: 'Visitor Checked In',
+        message: 'John Smith checked in to visit Unit 12B',
+        type: 'success',
+      },
     ]
 
     demoNotifications.forEach((n, i) => {
@@ -584,7 +990,6 @@ function AuthGate({ children }: { children: React.ReactNode }) {
     setHydrated(true)
   }, [_hydrate])
 
-  // Show nothing while hydrating to prevent flash
   if (!hydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -609,7 +1014,6 @@ function LogoutHandler() {
   const { logout } = useAuthStore()
 
   React.useEffect(() => {
-    // Listen for logout events from the sidebar/user menu
     const handleLogout = () => {
       logout()
     }
@@ -619,8 +1023,6 @@ function LogoutHandler() {
 
   return null
 }
-
-// ── Main Page ───────────────────────────────────────────────────────────────
 
 // ── View Only Banner ────────────────────────────────────────────────────────
 

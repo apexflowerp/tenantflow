@@ -40,6 +40,35 @@ model Workspace {
   calendarEvents CalendarEvent[]
   listings    Listing[]
   applications Application[]
+  tenantScreenings  TenantScreening[]
+  notifications     Notification[]
+  workflows         Workflow[]
+  complianceRules   ComplianceRule[]
+  complianceChecks  ComplianceCheck[]
+  portalSettings    PortalSetting[]
+  rentAdjustments   RentAdjustment[]
+  utilityReadings   UtilityReading[]
+  keyManagement     KeyManagement[]
+  parkingSpots      ParkingSpot[]
+  amenityBookings   AmenityBooking[]
+  announcements     Announcement[]
+  surveys           Survey[]
+  surveyResponses   SurveyResponse[]
+  emergencyContacts EmergencyContact[]
+  leaseRenewals     LeaseRenewal[]
+  lateFeeConfigs    LateFeeConfig[]
+  paymentPlans      PaymentPlan[]
+  smartDevices      SmartDevice[]
+  visitors          Visitor[]
+  packages          Package[]
+  energyReadings    EnergyReading[]
+  budgets           Budget[]
+  moveInOuts        MoveInOut[]
+  eSignatures       ESignature[]
+  pets              Pet[]
+  disputes          Dispute[]
+  assets            Asset[]
+  marketIntels      MarketIntel[]
   client      Client?  @relation(fields: [clientId], references: [id])
 }
 
@@ -574,6 +603,632 @@ model Application {
   status        String   @default("submitted")
   score         Float?
   documents     String?
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+// ── Enterprise Models ──────────────────────────────────────────────────────────
+
+model TenantScreening {
+  id              String   @id @default(cuid())
+  tenantId        String
+  type            String   @default("background") // background, credit, eviction, criminal
+  status          String   @default("pending") // pending, in_progress, completed, failed
+  provider        String? // screening provider name
+  reportUrl       String? // link to full report
+  creditScore     Int?
+  criminalFound   Boolean  @default(false)
+  evictionFound   Boolean  @default(false)
+  riskLevel       String   @default("low") // low, medium, high
+  submittedAt     DateTime?
+  completedAt     DateTime?
+  notes           String?
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String?
+  title       String
+  message     String
+  type        String   @default("info") // info, warning, error, success
+  category    String   @default("general") // general, lease, payment, maintenance, system
+  link        String? // deep link to related entity
+  isRead      Boolean  @default(false)
+  readAt      DateTime?
+  sentVia     String   @default("in_app") // in_app, email, sms, push
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Workflow {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  type        String   @default("lease_renewal") // lease_renewal, rent_reminder, move_in, move_out, inspection
+  trigger     String   @default("manual") // manual, scheduled, event
+  schedule    String? // cron expression for scheduled triggers
+  isActive    Boolean  @default(true)
+  priority    String   @default("medium") // low, medium, high
+  steps       WorkflowStep[]
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model WorkflowStep {
+  id           String   @id @default(cuid())
+  workflowId   String
+  stepOrder    Int
+  name         String
+  description  String?
+  action       String // send_email, create_task, update_status, notify, delay
+  config       String? // JSON string for action configuration
+  assignTo     String? // user id or role
+  delayMinutes Int      @default(0)
+  status       String   @default("pending") // pending, active, completed, skipped, failed
+  completedAt  DateTime?
+  workspaceId  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  workflow     Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model ComplianceRule {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  category     String   @default("legal") // legal, safety, health, housing, fair_housing
+  jurisdiction String? // city, state, or federal level
+  requirement  String? // description of the requirement
+  frequency    String   @default("annual") // one_time, monthly, quarterly, annual
+  isActive     Boolean  @default(true)
+  penalty      String? // description of penalty for non-compliance
+  reference    String? // legal reference or statute
+  workspaceId  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  workspace        Workspace        @relation(fields: [workspaceId], references: [id])
+  complianceChecks ComplianceCheck[]
+}
+
+model ComplianceCheck {
+  id            String   @id @default(cuid())
+  ruleId        String
+  propertyId    String?
+  status        String   @default("pending") // pending, passed, failed, waived
+  checkedBy     String? // user id
+  checkedAt     DateTime?
+  nextCheckDate DateTime?
+  findings      String?
+  documents     String? // JSON string of document references
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  complianceRule ComplianceRule @relation(fields: [ruleId], references: [id])
+  workspace      Workspace      @relation(fields: [workspaceId], references: [id])
+}
+
+model PortalSetting {
+  id               String   @id @default(cuid())
+  portalType       String   @default("tenant") // tenant, owner
+  propertyId       String?
+  allowPayments    Boolean  @default(true)
+  allowMaintenance Boolean  @default(true)
+  allowLeaseView   Boolean  @default(true)
+  allowMessaging   Boolean  @default(true)
+  allowDocuments   Boolean  @default(false)
+  customWelcome    String? // custom welcome message
+  brandColor       String?
+  logoUrl          String?
+  termsUrl         String?
+  privacyUrl       String?
+  supportEmail     String?
+  supportPhone     String?
+  isActive         Boolean  @default(true)
+  workspaceId      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workspace        Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model RentAdjustment {
+  id            String   @id @default(cuid())
+  leaseId       String
+  type          String   @default("increase") // increase, decrease, concession, promo
+  amount        Float
+  reason        String?
+  effectiveDate DateTime
+  endDate       DateTime?
+  isPermanent   Boolean  @default(true)
+  approvedBy    String? // user id
+  status        String   @default("pending") // pending, approved, rejected, cancelled
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model UtilityReading {
+  id               String   @id @default(cuid())
+  propertyId       String
+  unitId           String?
+  utilityType      String   @default("electric") // electric, gas, water, sewer, trash, internet
+  meterNumber      String?
+  previousReading  Float?
+  currentReading   Float
+  consumption      Float    @default(0)
+  unit             String   @default("kwh") // kwh, therms, gallons, cubic_feet
+  readingDate      DateTime
+  readBy           String? // user id or vendor
+  imageUrl         String? // photo of meter
+  notes            String?
+  workspaceId      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workspace        Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model KeyManagement {
+  id            String   @id @default(cuid())
+  propertyId    String
+  unitId        String?
+  keyType       String   @default("physical") // physical, digital, fob, code
+  label         String
+  keyNumber     String?
+  keyCode       String? // access code for digital locks
+  holderName    String? // current holder
+  holderContact String? // phone or email of holder
+  issuedAt      DateTime?
+  returnedAt    DateTime?
+  status        String   @default("available") // available, issued, lost, damaged, disabled
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model ParkingSpot {
+  id           String   @id @default(cuid())
+  propertyId   String
+  spotNumber   String
+  level        String? // floor or level
+  type         String   @default("standard") // standard, compact, handicap, ev_charging, motorcycle
+  vehicleLimit Int      @default(1)
+  tenantId     String?
+  leaseId      String?
+  monthlyFee   Float    @default(0)
+  status       String   @default("available") // available, occupied, reserved, maintenance, unavailable
+  assignedAt   DateTime?
+  notes        String?
+  workspaceId  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  workspace    Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model AmenityBooking {
+  id          String   @id @default(cuid())
+  propertyId  String
+  amenityName String // pool, gym, rooftop, laundry, conference_room, etc.
+  tenantId    String?
+  startTime   DateTime
+  endTime     DateTime
+  status      String   @default("confirmed") // confirmed, cancelled, completed, no_show
+  notes       String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Announcement {
+  id              String   @id @default(cuid())
+  propertyId      String?
+  title           String
+  content         String
+  type            String   @default("general") // general, urgent, maintenance, event, policy
+  priority        String   @default("normal") // low, normal, high, critical
+  isActive        Boolean  @default(true)
+  publishAt       DateTime @default(now())
+  expiresAt       DateTime?
+  targetAudience  String   @default("all") // all, tenants, owners, staff
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Survey {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  type            String   @default("satisfaction") // satisfaction, move_out, feedback, nps
+  questions       String // JSON string of questions
+  propertyId      String?
+  targetAudience  String   @default("tenants") // tenants, owners, all
+  isAnonymous     Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  publishAt       DateTime @default(now())
+  closesAt        DateTime?
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace       Workspace      @relation(fields: [workspaceId], references: [id])
+  responses       SurveyResponse[]
+}
+
+model SurveyResponse {
+  id          String   @id @default(cuid())
+  surveyId    String
+  tenantId    String?
+  answers     String // JSON string of answers
+  rating      Float? // overall rating if applicable
+  completedAt DateTime @default(now())
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  survey      Survey    @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model EmergencyContact {
+  id             String   @id @default(cuid())
+  propertyId     String
+  name           String
+  role           String   @default("manager") // manager, maintenance, security, fire, medical, police
+  phone          String
+  email          String?
+  alternatePhone String?
+  isPrimary      Boolean  @default(false)
+  availableHours String? // e.g. "24/7" or "9am-5pm M-F"
+  notes          String?
+  workspaceId    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workspace      Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model LeaseRenewal {
+  id             String   @id @default(cuid())
+  leaseId        String
+  newStartDate   DateTime
+  newEndDate     DateTime
+  newMonthlyRent Float
+  rentChange     Float    @default(0)
+  terms          String? // new lease terms
+  status         String   @default("proposed") // proposed, negotiated, accepted, rejected, expired
+  proposedAt     DateTime @default(now())
+  respondedAt    DateTime?
+  tenantNotified Boolean  @default(false)
+  notes          String?
+  workspaceId    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workspace      Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model LateFeeConfig {
+  id              String   @id @default(cuid())
+  propertyId      String?
+  gracePeriodDays Int      @default(5)
+  feeType         String   @default("flat") // flat, percentage
+  feeAmount       Float    @default(0)
+  feePercent      Float    @default(0)
+  recurring       Boolean  @default(false) // apply fee repeatedly
+  recurringPeriod String   @default("daily") // daily, weekly, monthly
+  maxFeeAmount    Float? // cap on total late fees
+  waiveFirst      Boolean  @default(false) // waive first occurrence
+  isActive        Boolean  @default(true)
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model PaymentPlan {
+  id               String   @id @default(cuid())
+  tenantId         String
+  leaseId          String?
+  totalOwed        Float
+  installmentAmount Float
+  installmentCount Int
+  installmentsPaid Int      @default(0)
+  frequency        String   @default("monthly") // weekly, biweekly, monthly
+  startDate        DateTime
+  endDate          DateTime
+  status           String   @default("active") // active, completed, defaulted, cancelled
+  lateFeeWaived    Boolean  @default(false)
+  approvedBy       String? // user id
+  notes            String?
+  workspaceId      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workspace        Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model SmartDevice {
+  id              String   @id @default(cuid())
+  propertyId      String
+  unitId          String?
+  name            String
+  deviceType      String   @default("thermostat") // thermostat, lock, camera, sensor, light, smoke_detector, leak_sensor
+  manufacturer    String?
+  model           String?
+  serialNumber    String?
+  firmwareVersion String?
+  connectionType  String   @default("wifi") // wifi, zigbee, z_wave, bluetooth, wired
+  status          String   @default("offline") // online, offline, error, updating
+  lastPingAt      DateTime?
+  batteryLevel    Int? // percentage
+  config          String? // JSON string for device-specific settings
+  isShared        Boolean  @default(false) // visible to tenant
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+// ── Enterprise Feature Models ──────────────────────────────────────────────────
+
+model Visitor {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?
+  phone       String?
+  purpose     String
+  hostName    String
+  hostUnit    String?
+  propertyId  String
+  checkIn     DateTime?
+  checkOut    DateTime?
+  status      String   @default("pending") // pending, checked_in, checked_out, declined
+  idType      String?
+  idNumber    String?
+  photoUrl    String?
+  vehiclePlate String?
+  notes       String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Package {
+  id               String   @id @default(cuid())
+  trackingNumber   String?
+  sender           String
+  carrier          String?
+  propertyId       String
+  unitId           String?
+  recipientName    String
+  recipientUnit    String?
+  description      String?
+  size             String   @default("medium") // small, medium, large, oversized
+  status           String   @default("pending") // pending, picked_up, delivered, returned
+  receivedAt       DateTime?
+  pickedUpAt       DateTime?
+  pickedUpBy       String?
+  shelfLocation    String?
+  imageUrl         String?
+  requiresSignature Boolean  @default(false)
+  signatureUrl     String?
+  notes            String?
+  workspaceId      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workspace        Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model EnergyReading {
+  id                 String   @id @default(cuid())
+  propertyId         String
+  unitId             String?
+  type               String   @default("electric") // electric, gas, water, solar, hvac
+  reading            Float
+  unit               String   @default("kwh")
+  cost               Float    @default(0)
+  readingDate        DateTime
+  previousReading    Float?
+  consumption        Float?
+  peakDemand         Float?
+  offPeakConsumption Float?
+  source             String   @default("meter") // meter, iot, estimated
+  deviceId           String?
+  notes              String?
+  workspaceId        String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  workspace          Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Budget {
+  id          String   @id @default(cuid())
+  name        String
+  category    String   @default("operating") // operating, capital, maintenance, marketing, admin
+  type        String   @default("expense") // income, expense
+  amount      Float
+  spent       Float    @default(0)
+  remaining   Float?
+  period      String   @default("monthly") // monthly, quarterly, annual
+  startDate   DateTime
+  endDate     DateTime
+  status      String   @default("draft") // draft, active, closed
+  propertyId  String?
+  notes       String?
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model MoveInOut {
+  id                String   @id @default(cuid())
+  type              String   @default("move_in") // move_in, move_out
+  tenantId          String
+  propertyId        String
+  unitId            String?
+  leaseId           String?
+  scheduledDate     DateTime
+  completedDate     DateTime?
+  status            String   @default("scheduled") // scheduled, in_progress, completed, cancelled
+  checklist         String?
+  checklistProgress Float    @default(0)
+  conditionReport   String?
+  notes             String?
+  workspaceId       String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  workspace         Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model ESignature {
+  id            String   @id @default(cuid())
+  documentName  String
+  documentUrl   String?
+  type          String   @default("lease") // lease, addendum, notice, other
+  status        String   @default("pending") // pending, signed, declined, expired
+  requestedBy   String
+  requestedFrom String
+  requestedAt   DateTime @default(now())
+  signedAt      DateTime?
+  expiresAt     DateTime?
+  signatureUrl  String?
+  ipAddress     String?
+  documentId    String?
+  notes         String?
+  workspaceId   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Pet {
+  id              String   @id @default(cuid())
+  tenantId        String
+  propertyId      String
+  name            String
+  type            String   @default("dog") // dog, cat, bird, fish, reptile, other
+  breed           String?
+  weight          Float?
+  color           String?
+  licenseNumber   String?
+  vaccinationUrl  String?
+  isApproved      Boolean  @default(false)
+  approvedAt      DateTime?
+  notes           String?
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Dispute {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  type            String   @default("noise") // noise, damage, lease, payment, common_area, other
+  status          String   @default("open") // open, under_review, mediation, resolved, closed
+  priority        String   @default("medium") // low, medium, high, critical
+  reportedBy      String
+  reportedAgainst String?
+  propertyId      String
+  unitId          String?
+  resolution      String?
+  resolvedAt      DateTime?
+  resolvedBy      String?
+  mediationNotes  String?
+  attachments     String?
+  workspaceId     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Asset {
+  id               String   @id @default(cuid())
+  name             String
+  category         String   @default("appliance") // appliance, hvac, plumbing, electrical, furniture, vehicle, other
+  propertyId       String
+  unitId           String?
+  purchaseDate     DateTime?
+  purchasePrice    Float?
+  currentValue     Float?
+  manufacturer     String?
+  model            String?
+  serialNumber     String?
+  warrantyExpiry   DateTime?
+  condition        String   @default("good") // excellent, good, fair, poor
+  depreciationRate Float?
+  lastServicedAt   DateTime?
+  nextServiceDate  DateTime?
+  notes            String?
+  workspaceId      String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workspace        Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model MarketIntel {
+  id            String   @id @default(cuid())
+  propertyId    String?
+  address       String
+  city          String
+  state         String
+  zipCode       String
+  type          String   @default("rental") // rental, sale
+  price         Float
+  bedrooms      Int?
+  bathrooms     Int?
+  area          Float?
+  pricePerSqFt  Float?
+  source        String   @default("other") // zillow, redfin, mls, other
+  listedDate    DateTime?
+  soldDate      DateTime?
+  daysOnMarket  Int?
+  comparables   String?
   notes         String?
   workspaceId   String
   createdAt     DateTime @default(now())

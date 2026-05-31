@@ -27,6 +27,27 @@ import {
   ShieldAlert,
   CalendarDays,
   BookOpen,
+  Scale,
+  Globe,
+  Car,
+  Waves,
+  Megaphone,
+  ClipboardList,
+  Key,
+  Repeat,
+  Receipt,
+  Wallet,
+  Zap,
+  UserCheck,
+  Package,
+  LogIn,
+  PiggyBank,
+  PenTool,
+  PawPrint,
+  AlertTriangle,
+  Warehouse,
+  TrendingUp,
+  Leaf,
 } from 'lucide-react'
 
 import { useAppStore, useAuthStore } from '@/stores'
@@ -61,6 +82,7 @@ interface NavItem {
   id: string
   label: string
   icon: React.ComponentType<{ className?: string }>
+  color?: string // optional accent color
 }
 
 interface NavGroup {
@@ -75,7 +97,8 @@ const NAV_GROUPS: NavGroup[] = [
       { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { id: 'analytics', label: 'Analytics', icon: BarChart3 },
       { id: 'reports', label: 'Reports', icon: FileBarChart },
-      { id: 'copilot', label: 'AI Copilot', icon: Sparkles },
+      { id: 'copilot', label: 'AI Copilot', icon: Sparkles, color: 'text-tahoe-purple' },
+      { id: 'market_intel', label: 'Market Intel', icon: TrendingUp, color: 'text-tahoe-green' },
     ],
   },
   {
@@ -84,26 +107,64 @@ const NAV_GROUPS: NavGroup[] = [
       { id: 'properties', label: 'Properties', icon: Building2 },
       { id: 'tenants', label: 'Tenants', icon: Users },
       { id: 'leases', label: 'Leases', icon: FileText },
+      { id: 'screening', label: 'Screening', icon: ShieldCheck, color: 'text-tahoe-blue' },
+      { id: 'renewals', label: 'Renewals', icon: Repeat, color: 'text-tahoe-purple' },
+      { id: 'move_inout', label: 'Move In/Out', icon: LogIn, color: 'text-tahoe-purple' },
+      { id: 'e_signatures', label: 'E-Signatures', icon: PenTool, color: 'text-tahoe-pink' },
+    ],
+  },
+  {
+    label: 'FINANCIAL',
+    items: [
+      { id: 'billing', label: 'Billing', icon: CreditCard },
+      { id: 'accounting', label: 'Accounting', icon: BookOpen },
+      { id: 'budget', label: 'Budget', icon: PiggyBank, color: 'text-tahoe-teal' },
+      { id: 'late_fees', label: 'Late Fees', icon: Receipt, color: 'text-tahoe-red' },
+      { id: 'payment_plans', label: 'Payment Plans', icon: Wallet, color: 'text-tahoe-green' },
+      { id: 'marketplace', label: 'Marketplace', icon: Store },
     ],
   },
   {
     label: 'OPERATIONS',
     items: [
-      { id: 'billing', label: 'Billing', icon: CreditCard },
-      { id: 'marketplace', label: 'Marketplace', icon: Store },
-      { id: 'accounting', label: 'Accounting', icon: BookOpen },
-      { id: 'maintenance', label: 'Maintenance', icon: Wrench },
+      { id: 'maintenance', label: 'Maintenance', icon: Wrench, color: 'text-tahoe-orange' },
       { id: 'inspections', label: 'Inspections', icon: ClipboardCheck },
       { id: 'vendors', label: 'Vendors', icon: Truck },
+      { id: 'assets', label: 'Assets', icon: Warehouse, color: 'text-tahoe-blue' },
       { id: 'insurance', label: 'Insurance', icon: ShieldAlert },
       { id: 'calendar', label: 'Calendar', icon: CalendarDays },
-      { id: 'communications', label: 'Communications', icon: MessageSquare },
+      { id: 'communications', label: 'Communications', icon: MessageSquare, color: 'text-tahoe-teal' },
+    ],
+  },
+  {
+    label: 'BUILDING',
+    items: [
+      { id: 'compliance', label: 'Compliance', icon: Scale, color: 'text-tahoe-purple' },
+      { id: 'workflows', label: 'Workflows', icon: Zap, color: 'text-tahoe-teal' },
+      { id: 'energy', label: 'Energy', icon: Leaf, color: 'text-tahoe-green' },
+      { id: 'utilities', label: 'Utilities', icon: Zap, color: 'text-tahoe-orange' },
+      { id: 'visitors', label: 'Visitors', icon: UserCheck, color: 'text-tahoe-blue' },
+      { id: 'packages', label: 'Packages', icon: Package, color: 'text-tahoe-orange' },
+      { id: 'parking', label: 'Parking', icon: Car, color: 'text-tahoe-blue' },
+      { id: 'amenities', label: 'Amenities', icon: Waves, color: 'text-tahoe-teal' },
+      { id: 'keys', label: 'Key Mgmt', icon: Key, color: 'text-tahoe-blue' },
+      { id: 'pets', label: 'Pets', icon: PawPrint, color: 'text-tahoe-orange' },
+      { id: 'smart_home', label: 'Smart Home', icon: Building2, color: 'text-tahoe-green' },
+    ],
+  },
+  {
+    label: 'COMMUNITY',
+    items: [
+      { id: 'announcements', label: 'Announcements', icon: Megaphone, color: 'text-tahoe-blue' },
+      { id: 'surveys', label: 'Surveys', icon: ClipboardList, color: 'text-tahoe-orange' },
+      { id: 'disputes', label: 'Disputes', icon: AlertTriangle, color: 'text-tahoe-red' },
     ],
   },
   {
     label: 'PLATFORM',
     items: [
       { id: 'owner', label: 'Owner Mgmt', icon: Shield },
+      { id: 'portal', label: 'Portal', icon: Globe, color: 'text-tahoe-pink' },
     ],
   },
   {
@@ -146,13 +207,13 @@ export function AppSidebar() {
                   {currentWorkspace?.name ?? 'TenantFlow OS'}
                 </p>
                 <p className="truncate text-[11px] text-muted-foreground">
-                  Rental Management
+                  Enterprise Management
                 </p>
               </div>
               <ChevronsUpDown className="size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56 rounded-xl">
+          <DropdownMenuContent align="start" className="w-56 rounded-xl glass-modal">
             {WORKSPACES.map((ws) => (
               <DropdownMenuItem
                 key={ws.id}
@@ -173,7 +234,7 @@ export function AppSidebar() {
       <SidebarSeparator className="mx-3 opacity-50" />
 
       {/* ── Navigation ───────────────────────────────────────────────── */}
-      <SidebarContent className="px-2">
+      <SidebarContent className="px-2 overflow-y-auto">
         {NAV_GROUPS.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel className="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground/50 uppercase">
@@ -201,7 +262,9 @@ export function AppSidebar() {
                             'transition-colors duration-200',
                             isActive
                               ? 'text-primary'
-                              : 'text-muted-foreground group-hover/menu-button:text-sidebar-foreground'
+                              : item.color
+                                ? `${item.color} opacity-70 group-hover/menu-button:opacity-100`
+                                : 'text-muted-foreground group-hover/menu-button:text-sidebar-foreground'
                           )}
                         />
                         <span>{item.label}</span>
@@ -246,7 +309,7 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="top"
-                className="w-56 rounded-xl"
+                className="w-56 rounded-xl glass-modal"
                 align="start"
                 sideOffset={4}
               >
