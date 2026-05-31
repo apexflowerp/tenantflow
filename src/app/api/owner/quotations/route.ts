@@ -1,13 +1,29 @@
 import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
-// GET /api/owner/quotations - List all quotations with client info
+// GET /api/owner/quotations - List all quotations with full client info
 export async function GET() {
   try {
     const quotations = await db.quotation.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        client: { select: { id: true, companyName: true, plan: true, status: true } },
+        client: {
+          select: {
+            id: true,
+            companyName: true,
+            contactName: true,
+            email: true,
+            phone: true,
+            address: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            country: true,
+            plan: true,
+            status: true,
+            taxId: true,
+          },
+        },
       },
     })
 
@@ -73,7 +89,23 @@ export async function POST(request: NextRequest) {
         introMessage: body.introMessage || null,
       },
       include: {
-        client: { select: { id: true, companyName: true, plan: true, status: true } },
+        client: {
+          select: {
+            id: true,
+            companyName: true,
+            contactName: true,
+            email: true,
+            phone: true,
+            address: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            country: true,
+            plan: true,
+            status: true,
+            taxId: true,
+          },
+        },
       },
     })
 

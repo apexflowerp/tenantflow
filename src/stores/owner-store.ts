@@ -83,6 +83,30 @@ export interface InvoiceData {
   client?: ClientData
 }
 
+export interface QuotationData {
+  id: string
+  quotationNumber: string
+  clientId: string
+  status: string
+  subject: string
+  validUntil: string
+  subtotal: number
+  taxRate: number
+  taxAmount: number
+  discount: number
+  total: number
+  currency: string
+  items: string | null
+  notes: string | null
+  terms: string | null
+  introMessage: string | null
+  convertedToInvoice: boolean
+  convertedInvoiceId: string | null
+  createdAt: string
+  updatedAt: string
+  client?: ClientData
+}
+
 export interface DashboardStats {
   totalClients: number
   activeClients: number
@@ -104,6 +128,7 @@ interface OwnerStore {
   selectedClient: ClientData | null
   licenseKeys: LicenseKeyData[]
   invoices: InvoiceData[]
+  quotations: QuotationData[]
   dashboardStats: DashboardStats | null
   isLoading: boolean
   error: string | null
@@ -113,12 +138,17 @@ interface OwnerStore {
   clearSelection: () => void
   fetchLicenseKeys: () => Promise<void>
   fetchInvoices: () => Promise<void>
+  fetchQuotations: () => Promise<void>
   fetchDashboard: () => Promise<void>
   addClient: (data: Partial<ClientData>) => Promise<void>
   updateClient: (id: string, data: Partial<ClientData>) => Promise<void>
   deleteClient: (id: string) => Promise<void>
   generateLicenseKey: (data: { clientId: string; type: string; plan: string; maxDevices?: number; maxUsers?: number }) => Promise<void>
   createInvoice: (data: Partial<InvoiceData>) => Promise<void>
+  updateInvoiceStatus: (id: string, status: string) => Promise<void>
+  createQuotation: (data: any) => Promise<void>
+  updateQuotationStatus: (id: string, status: string) => Promise<void>
+  convertQuotationToInvoice: (id: string) => Promise<void>
 }
 
 export const useOwnerStore = create<OwnerStore>((set, get) => ({
@@ -126,6 +156,7 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
   selectedClient: null,
   licenseKeys: [],
   invoices: [],
+  quotations: [],
   dashboardStats: null,
   isLoading: false,
   error: null,
@@ -175,6 +206,18 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
     }
   },
 
+  fetchQuotations: async () => {
+    set({ isLoading: true, error: null })
+    try {
+      const res = await fetch('/api/owner/quotations')
+      if (!res.ok) throw new Error('Failed to fetch quotations')
+      const data = await res.json()
+      set({ quotations: data.quotations || data, isLoading: false })
+    } catch (err: any) {
+      set({ error: err.message, isLoading: false })
+    }
+  },
+
   fetchDashboard: async () => {
     set({ isLoading: true, error: null })
     try {
@@ -213,7 +256,6 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
       })
       if (!res.ok) throw new Error('Failed to update client')
       await get().fetchClients()
-      // Update selected client if it's the one being edited
       const currentSelected = get().selectedClient
       if (currentSelected?.id === id) {
         const clients = get().clients
@@ -263,6 +305,67 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
         body: JSON.stringify(data),
       })
       if (!res.ok) throw new Error('Failed to create invoice')
+      await get().fetchInvoices()
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  updateInvoiceStatus: async (id, status) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/invoices/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      })
+      if (!res.ok) throw new Error('Failed to update invoice status')
+      await get().fetchInvoices()
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  createQuotation: async (data) => {
+    set({ error: null })
+    try {
+      const res = await fetch('/api/owner/quotations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error('Failed to create quotation')
+      await get().fetchQuotations()
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  updateQuotationStatus: async (id, status) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/quotations/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      })
+      if (!res.ok) throw new Error('Failed to update quotation status')
+      await get().fetchQuotations()
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  convertQuotationToInvoice: async (id) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/quotations/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'accepted', createInvoice: true }),
+      })
+      if (!res.ok) throw new Error('Failed to convert quotation to invoice')
+      await get().fetchQuotations()
       await get().fetchInvoices()
     } catch (err: any) {
       set({ error: err.message })

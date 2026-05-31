@@ -1,13 +1,29 @@
 import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
 
-// GET /api/owner/invoices - List all invoices with client info
+// GET /api/owner/invoices - List all invoices with full client info
 export async function GET() {
   try {
     const invoices = await db.invoice.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        client: { select: { id: true, companyName: true, plan: true, status: true } },
+        client: {
+          select: {
+            id: true,
+            companyName: true,
+            contactName: true,
+            email: true,
+            phone: true,
+            address: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            country: true,
+            plan: true,
+            status: true,
+            taxId: true,
+          },
+        },
       },
     })
 
@@ -63,7 +79,23 @@ export async function POST(request: NextRequest) {
         items: body.items ? (typeof body.items === 'string' ? body.items : JSON.stringify(body.items)) : null,
       },
       include: {
-        client: { select: { id: true, companyName: true, plan: true, status: true } },
+        client: {
+          select: {
+            id: true,
+            companyName: true,
+            contactName: true,
+            email: true,
+            phone: true,
+            address: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            country: true,
+            plan: true,
+            status: true,
+            taxId: true,
+          },
+        },
       },
     })
 

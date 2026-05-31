@@ -4,22 +4,24 @@ import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, CheckCircle2, DollarSign, Clock, Shield, Key, FileText,
-  ArrowLeft, Search, Plus, Copy, AlertTriangle, TrendingUp,
-  Building2, Mail, Phone, Globe, MapPin, Calendar, CreditCard,
-  ChevronRight, MoreHorizontal, ExternalLink, Ban, RefreshCw,
-  ArrowUpRight, ArrowDownRight, BarChart3,
+  Search, Plus, Copy, AlertTriangle, TrendingUp,
+  Calendar, BarChart3, Eye, FileSpreadsheet, ArrowRightLeft,
 } from 'lucide-react'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts'
 
-import { useOwnerStore } from '@/stores/owner-store'
+import { useOwnerStore, type InvoiceData, type QuotationData } from '@/stores/owner-store'
 import { ClientCard } from './client-card'
 import { ClientDetail } from './client-detail'
 import { AddClientDialog } from './add-client-dialog'
 import { GenerateLicenseDialog } from './generate-license-dialog'
 import { CreateInvoiceDialog } from './create-invoice-dialog'
+import { CreateQuotationDialog } from './create-quotation-dialog'
+import { InvoiceViewer } from './invoice-viewer'
+import { QuotationViewer } from './quotation-viewer'
+import { ReportsPage } from './reports-page'
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -32,18 +34,13 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table'
-import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuSeparator, DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger,
 } from '@/components/ui/tooltip'
 
-// ── Helpers ──
+// ── Color Maps ──
 
 const PLAN_COLORS: Record<string, string> = {
   starter: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
@@ -74,15 +71,35 @@ const INVOICE_STATUS_COLORS: Record<string, string> = {
   cancelled: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
 }
 
+const QUOTATION_STATUS_COLORS: Record<string, string> = {
+  draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+  sent: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400',
+  viewed: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-400',
+  accepted: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  rejected: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
+  expired: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+}
+
 const CHART_COLORS = ['#c2703a', '#f59e0b', '#8b5cf6', '#6b7280', '#06b6d4', '#ec4899']
 
+// ── Helpers ──
+
 function formatCurrency(amount: number, currency = 'USD') {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount)
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount)
 }
 
 function formatDate(dateStr: string | null) {
   if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 function maskKey(key: string) {
@@ -91,7 +108,9 @@ function maskKey(key: string) {
   return `${parts[0]}-${parts[1]}-****-****-${parts[4]}`
 }
 
-// ── Dashboard Tab ──
+// ═══════════════════════════════════════════════════════════════════════════════
+// DASHBOARD TAB
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function DashboardTab() {
   const { dashboardStats, fetchDashboard, isLoading } = useOwnerStore()
@@ -107,7 +126,9 @@ function DashboardTab() {
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i} className="border-border/30"><CardContent className="p-6"><Skeleton className="h-20 w-full" /></CardContent></Card>
+            <Card key={i} className="border-border/30">
+              <CardContent className="p-6"><Skeleton className="h-20 w-full" /></CardContent>
+            </Card>
           ))}
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
@@ -136,7 +157,7 @@ function DashboardTab() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
           >
-            <Card className="mojave-card border-border/30 hover:shadow-md transition-shadow">
+            <Card className="border-border/30 hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -166,7 +187,7 @@ function DashboardTab() {
           transition={{ delay: 0.2 }}
           className="lg:col-span-2"
         >
-          <Card className="mojave-card border-border/30">
+          <Card className="border-border/30">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold">Monthly Recurring Revenue</CardTitle>
               <CardDescription>Revenue trend over the last 12 months</CardDescription>
@@ -213,7 +234,7 @@ function DashboardTab() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="mojave-card border-border/30 h-full">
+          <Card className="border-border/30 h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold">Client Distribution</CardTitle>
               <CardDescription>By subscription plan</CardDescription>
@@ -271,7 +292,7 @@ function DashboardTab() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="mojave-card border-border/30">
+          <Card className="border-border/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Recent Clients</CardTitle>
             </CardHeader>
@@ -304,7 +325,7 @@ function DashboardTab() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
         >
-          <Card className="mojave-card border-border/30">
+          <Card className="border-border/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">Upcoming Renewals</CardTitle>
               <CardDescription>Next 90 days</CardDescription>
@@ -352,7 +373,7 @@ function DashboardTab() {
             </CardContent>
           </Card>
 
-          <Card className="mojave-card border-border/30">
+          <Card className="border-border/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">License Keys</CardTitle>
             </CardHeader>
@@ -387,7 +408,9 @@ function DashboardTab() {
   )
 }
 
-// ── Clients Tab ──
+// ═══════════════════════════════════════════════════════════════════════════════
+// CLIENTS TAB
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function ClientsTab() {
   const { clients, fetchClients, selectClient, selectedClient } = useOwnerStore()
@@ -496,7 +519,452 @@ function ClientsTab() {
   )
 }
 
-// ── License Keys Tab ──
+// ═══════════════════════════════════════════════════════════════════════════════
+// INVOICES TAB
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function InvoicesTab() {
+  const { invoices, fetchInvoices, clients, updateInvoiceStatus } = useOwnerStore()
+  const [statusFilter, setStatusFilter] = React.useState('all')
+  const [clientFilter, setClientFilter] = React.useState('all')
+  const [showCreateDialog, setShowCreateDialog] = React.useState(false)
+  const [viewingInvoice, setViewingInvoice] = React.useState<InvoiceData | null>(null)
+
+  React.useEffect(() => {
+    fetchInvoices()
+  }, [fetchInvoices])
+
+  const filtered = React.useMemo(() => {
+    return invoices.filter(inv => {
+      const matchesStatus = statusFilter === 'all' || inv.status === statusFilter
+      const matchesClient = clientFilter === 'all' || inv.clientId === clientFilter
+      return matchesStatus && matchesClient
+    })
+  }, [invoices, statusFilter, clientFilter])
+
+  const uniqueClients = React.useMemo(() => {
+    const map = new Map<string, string>()
+    invoices.forEach(inv => {
+      if (inv.client?.companyName) {
+        map.set(inv.clientId, inv.client.companyName)
+      }
+    })
+    return Array.from(map.entries())
+  }, [invoices])
+
+  // Invoice status summary counts
+  const statusCounts = React.useMemo(() => {
+    const counts: Record<string, number> = { draft: 0, sent: 0, paid: 0, overdue: 0, cancelled: 0 }
+    invoices.forEach(inv => { counts[inv.status] = (counts[inv.status] || 0) + 1 })
+    return counts
+  }, [invoices])
+
+  const totalRevenue = React.useMemo(() => {
+    return invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total, 0)
+  }, [invoices])
+
+  const totalOutstanding = React.useMemo(() => {
+    return invoices
+      .filter(i => i.status === 'sent' || i.status === 'overdue')
+      .reduce((sum, i) => sum + (i.total - i.paidAmount), 0)
+  }, [invoices])
+
+  return (
+    <div className="space-y-4">
+      {/* Invoice Viewer Overlay */}
+      <AnimatePresence>
+        {viewingInvoice && (
+          <InvoiceViewer
+            invoice={viewingInvoice}
+            onClose={() => setViewingInvoice(null)}
+            onStatusChange={(status) => {
+              updateInvoiceStatus(viewingInvoice.id, status)
+              setViewingInvoice(null)
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Summary Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Total Invoices</p>
+              <p className="mt-1 text-2xl font-bold">{invoices.length}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Revenue Collected</p>
+              <p className="mt-1 text-2xl font-bold text-primary">{formatCurrency(totalRevenue)}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Outstanding</p>
+              <p className="mt-1 text-2xl font-bold text-amber-600 dark:text-amber-400">{formatCurrency(totalOutstanding)}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Overdue</p>
+              <p className="mt-1 text-2xl font-bold text-red-600 dark:text-red-400">{statusCounts.overdue}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex gap-2 flex-1">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="sent">Sent</SelectItem>
+              <SelectItem value="paid">Paid</SelectItem>
+              <SelectItem value="overdue">Overdue</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={clientFilter} onValueChange={setClientFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Client" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Clients</SelectItem>
+              {uniqueClients.map(([id, name]) => (
+                <SelectItem key={id} value={id}>{name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <Button onClick={() => setShowCreateDialog(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
+          <FileText className="size-4" />
+          Create Invoice
+        </Button>
+      </div>
+
+      {/* Invoice Table */}
+      <Card className="border-border/30 overflow-hidden">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Invoice #</TableHead>
+                <TableHead>Client</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Issue Date</TableHead>
+                <TableHead>Due Date</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="text-right">Paid</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    No invoices found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filtered.map((inv) => (
+                  <TableRow
+                    key={inv.id}
+                    className="hover:bg-accent/50 cursor-pointer"
+                    onClick={() => setViewingInvoice(inv)}
+                  >
+                    <TableCell className="font-mono text-sm font-medium">{inv.invoiceNumber}</TableCell>
+                    <TableCell className="text-sm">{inv.client?.companyName || '—'}</TableCell>
+                    <TableCell className="capitalize text-sm">{inv.type.replace('_', ' ')}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className={`text-[10px] capitalize ${INVOICE_STATUS_COLORS[inv.status] || ''}`}>
+                        {inv.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm">{formatDate(inv.issueDate)}</TableCell>
+                    <TableCell className="text-sm">{formatDate(inv.dueDate)}</TableCell>
+                    <TableCell className="text-right font-medium text-sm">{formatCurrency(inv.total)}</TableCell>
+                    <TableCell className="text-right text-sm text-muted-foreground">{formatCurrency(inv.paidAmount)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="size-8"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setViewingInvoice(inv)
+                        }}
+                      >
+                        <Eye className="size-4 text-muted-foreground" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
+
+      <CreateInvoiceDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// QUOTATIONS TAB
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function QuotationsTab() {
+  const { quotations, fetchQuotations, clients, convertQuotationToInvoice, updateQuotationStatus } = useOwnerStore()
+  const [statusFilter, setStatusFilter] = React.useState('all')
+  const [clientFilter, setClientFilter] = React.useState('all')
+  const [showCreateDialog, setShowCreateDialog] = React.useState(false)
+  const [viewingQuotation, setViewingQuotation] = React.useState<QuotationData | null>(null)
+
+  React.useEffect(() => {
+    fetchQuotations()
+  }, [fetchQuotations])
+
+  const filtered = React.useMemo(() => {
+    return quotations.filter(q => {
+      const matchesStatus = statusFilter === 'all' || q.status === statusFilter
+      const matchesClient = clientFilter === 'all' || q.clientId === clientFilter
+      return matchesStatus && matchesClient
+    })
+  }, [quotations, statusFilter, clientFilter])
+
+  const uniqueClients = React.useMemo(() => {
+    const map = new Map<string, string>()
+    quotations.forEach(q => {
+      if (q.client?.companyName) {
+        map.set(q.clientId, q.client.companyName)
+      }
+    })
+    return Array.from(map.entries())
+  }, [quotations])
+
+  // Status summary
+  const statusCounts = React.useMemo(() => {
+    const counts: Record<string, number> = { draft: 0, sent: 0, viewed: 0, accepted: 0, rejected: 0, expired: 0 }
+    quotations.forEach(q => { counts[q.status] = (counts[q.status] || 0) + 1 })
+    return counts
+  }, [quotations])
+
+  const totalQuotedValue = React.useMemo(() => {
+    return quotations.filter(q => q.status !== 'rejected' && q.status !== 'expired').reduce((sum, q) => sum + q.total, 0)
+  }, [quotations])
+
+  const acceptedValue = React.useMemo(() => {
+    return quotations.filter(q => q.status === 'accepted').reduce((sum, q) => sum + q.total, 0)
+  }, [quotations])
+
+  const conversionRate = React.useMemo(() => {
+    const total = quotations.length
+    if (total === 0) return 0
+    const accepted = quotations.filter(q => q.status === 'accepted').length
+    return Math.round((accepted / total) * 100)
+  }, [quotations])
+
+  return (
+    <div className="space-y-4">
+      {/* Quotation Viewer Overlay */}
+      <AnimatePresence>
+        {viewingQuotation && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm overflow-y-auto p-4 sm:p-8"
+            onClick={(e) => { if (e.target === e.currentTarget) setViewingQuotation(null) }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 40, scale: 0.96 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="max-w-[900px] mx-auto my-4"
+            >
+              <QuotationViewer
+                quotation={viewingQuotation}
+                onClose={() => setViewingQuotation(null)}
+                onConvertToInvoice={(id) => {
+                  convertQuotationToInvoice(id)
+                  setViewingQuotation(null)
+                }}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Summary Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Total Quotations</p>
+              <p className="mt-1 text-2xl font-bold">{quotations.length}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Quoted Value</p>
+              <p className="mt-1 text-2xl font-bold text-primary">{formatCurrency(totalQuotedValue)}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Accepted Value</p>
+              <p className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(acceptedValue)}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground">Conversion Rate</p>
+              <p className="mt-1 text-2xl font-bold">{conversionRate}%</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex gap-2 flex-1">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="sent">Sent</SelectItem>
+              <SelectItem value="viewed">Viewed</SelectItem>
+              <SelectItem value="accepted">Accepted</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+              <SelectItem value="expired">Expired</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={clientFilter} onValueChange={setClientFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Client" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Clients</SelectItem>
+              {uniqueClients.map(([id, name]) => (
+                <SelectItem key={id} value={id}>{name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <Button onClick={() => setShowCreateDialog(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
+          <FileSpreadsheet className="size-4" />
+          Create Quotation
+        </Button>
+      </div>
+
+      {/* Quotations Table */}
+      <Card className="border-border/30 overflow-hidden">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Quote #</TableHead>
+                <TableHead>Client</TableHead>
+                <TableHead>Subject</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Valid Until</TableHead>
+                <TableHead>Converted</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                    No quotations found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filtered.map((q) => (
+                  <TableRow
+                    key={q.id}
+                    className="hover:bg-accent/50 cursor-pointer"
+                    onClick={() => setViewingQuotation(q)}
+                  >
+                    <TableCell className="font-mono text-sm font-medium">{q.quotationNumber}</TableCell>
+                    <TableCell className="text-sm">{q.client?.companyName || '—'}</TableCell>
+                    <TableCell className="text-sm max-w-[200px] truncate">{q.subject || '—'}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className={`text-[10px] capitalize ${QUOTATION_STATUS_COLORS[q.status] || ''}`}>
+                        {q.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm">{formatDate(q.validUntil)}</TableCell>
+                    <TableCell>
+                      {q.convertedToInvoice ? (
+                        <Badge variant="secondary" className="text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 gap-1">
+                          <ArrowRightLeft className="size-3" />
+                          Invoice
+                        </Badge>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right font-medium text-sm">{formatCurrency(q.total)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="size-8"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setViewingQuotation(q)
+                        }}
+                      >
+                        <Eye className="size-4 text-muted-foreground" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
+
+      <CreateQuotationDialog
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+        clients={clients.map(c => ({ id: c.id, companyName: c.companyName, contactName: c.contactName, email: c.email }))}
+      />
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// LICENSE KEYS TAB
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function LicensesTab() {
   const { licenseKeys, fetchLicenseKeys, clients } = useOwnerStore()
@@ -560,7 +1028,7 @@ function LicensesTab() {
       </div>
 
       {/* Table */}
-      <Card className="mojave-card border-border/30 overflow-hidden">
+      <Card className="border-border/30 overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -637,124 +1105,9 @@ function LicensesTab() {
   )
 }
 
-// ── Invoices Tab ──
-
-function InvoicesTab() {
-  const { invoices, fetchInvoices, clients } = useOwnerStore()
-  const [statusFilter, setStatusFilter] = React.useState('all')
-  const [clientFilter, setClientFilter] = React.useState('all')
-  const [showCreateDialog, setShowCreateDialog] = React.useState(false)
-
-  React.useEffect(() => {
-    fetchInvoices()
-  }, [fetchInvoices])
-
-  const filtered = React.useMemo(() => {
-    return invoices.filter(inv => {
-      const matchesStatus = statusFilter === 'all' || inv.status === statusFilter
-      const matchesClient = clientFilter === 'all' || inv.clientId === clientFilter
-      return matchesStatus && matchesClient
-    })
-  }, [invoices, statusFilter, clientFilter])
-
-  const uniqueClients = React.useMemo(() => {
-    const map = new Map<string, string>()
-    invoices.forEach(inv => {
-      if (inv.client?.companyName) {
-        map.set(inv.clientId, inv.client.companyName)
-      }
-    })
-    return Array.from(map.entries())
-  }, [invoices])
-
-  return (
-    <div className="space-y-4">
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex gap-2 flex-1">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="sent">Sent</SelectItem>
-              <SelectItem value="paid">Paid</SelectItem>
-              <SelectItem value="overdue">Overdue</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={clientFilter} onValueChange={setClientFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Client" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Clients</SelectItem>
-              {uniqueClients.map(([id, name]) => (
-                <SelectItem key={id} value={id}>{name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <Button onClick={() => setShowCreateDialog(true)} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
-          <FileText className="size-4" />
-          Create Invoice
-        </Button>
-      </div>
-
-      {/* Invoice Table */}
-      <Card className="mojave-card border-border/30 overflow-hidden">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Invoice #</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Issue Date</TableHead>
-                <TableHead>Due Date</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead className="text-right">Paid</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                    No invoices found
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filtered.map((inv) => (
-                  <TableRow key={inv.id} className="hover:bg-accent/50">
-                    <TableCell className="font-mono text-sm font-medium">{inv.invoiceNumber}</TableCell>
-                    <TableCell className="text-sm">{inv.client?.companyName || '—'}</TableCell>
-                    <TableCell className="capitalize text-sm">{inv.type.replace('_', ' ')}</TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className={`text-[10px] capitalize ${INVOICE_STATUS_COLORS[inv.status] || ''}`}>
-                        {inv.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm">{formatDate(inv.issueDate)}</TableCell>
-                    <TableCell className="text-sm">{formatDate(inv.dueDate)}</TableCell>
-                    <TableCell className="text-right font-medium text-sm">{formatCurrency(inv.total)}</TableCell>
-                    <TableCell className="text-right text-sm text-muted-foreground">{formatCurrency(inv.paidAmount)}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </Card>
-
-      <CreateInvoiceDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
-    </div>
-  )
-}
-
-// ── Main OwnerPage ──
+// ═══════════════════════════════════════════════════════════════════════════════
+// MAIN OWNER PAGE
+// ═══════════════════════════════════════════════════════════════════════════════
 
 export function OwnerPage() {
   const [activeTab, setActiveTab] = React.useState('dashboard')
@@ -772,7 +1125,7 @@ export function OwnerPage() {
         </div>
         <div className="flex-1">
           <h1 className="text-xl font-semibold">Owner Management</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Manage SaaS clients, licenses, and billing</p>
+          <p className="mt-1 text-sm text-muted-foreground">Manage SaaS clients, licenses, billing, and quotations</p>
         </div>
       </motion.div>
 
@@ -781,19 +1134,27 @@ export function OwnerPage() {
         <TabsList className="bg-muted/50 p-1">
           <TabsTrigger value="dashboard" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <BarChart3 className="size-4" />
-            Dashboard
+            <span className="hidden sm:inline">Dashboard</span>
           </TabsTrigger>
           <TabsTrigger value="clients" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <Users className="size-4" />
-            Clients
-          </TabsTrigger>
-          <TabsTrigger value="licenses" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-            <Key className="size-4" />
-            License Keys
+            <span className="hidden sm:inline">Clients</span>
           </TabsTrigger>
           <TabsTrigger value="invoices" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <FileText className="size-4" />
-            Invoices
+            <span className="hidden sm:inline">Invoices</span>
+          </TabsTrigger>
+          <TabsTrigger value="quotations" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <FileSpreadsheet className="size-4" />
+            <span className="hidden sm:inline">Quotations</span>
+          </TabsTrigger>
+          <TabsTrigger value="licenses" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <Key className="size-4" />
+            <span className="hidden sm:inline">License Keys</span>
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <BarChart3 className="size-4" />
+            <span className="hidden sm:inline">Reports</span>
           </TabsTrigger>
         </TabsList>
 
@@ -803,11 +1164,17 @@ export function OwnerPage() {
         <TabsContent value="clients" className="mt-6">
           <ClientsTab />
         </TabsContent>
+        <TabsContent value="invoices" className="mt-6">
+          <InvoicesTab />
+        </TabsContent>
+        <TabsContent value="quotations" className="mt-6">
+          <QuotationsTab />
+        </TabsContent>
         <TabsContent value="licenses" className="mt-6">
           <LicensesTab />
         </TabsContent>
-        <TabsContent value="invoices" className="mt-6">
-          <InvoicesTab />
+        <TabsContent value="reports" className="mt-6">
+          <ReportsPage />
         </TabsContent>
       </Tabs>
     </div>

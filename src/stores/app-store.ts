@@ -60,7 +60,7 @@ const generateId = () =>
 
 export const useAppStore = create<AppStore>((set, get) => ({
   // Navigation
-  activeModule: 'dashboard',
+  activeModule: 'owner',
   setActiveModule: (module) => set({ activeModule: module }),
 
   // Sidebar — defaults to open on desktop, closed on mobile
