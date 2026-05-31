@@ -60,7 +60,7 @@ export function AddPropertyDialog({ children }: AddPropertyDialogProps) {
   const fetchProperties = usePropertyStore((s) => s.fetchProperties)
 
   const form = useForm<AddPropertyFormValues>({
-    resolver: zodResolver(addPropertySchema),
+    resolver: zodResolver(addPropertySchema) as any,
     defaultValues: {
       name: '',
       type: 'residential',

@@ -53,7 +53,7 @@ export async function GET() {
 
     // ── Client growth (last 12 months) ──
     const now = new Date()
-    const clientGrowth = []
+    const clientGrowth: Array<{ month: string; clients: number; revenue: number }> = []
     for (let i = 11; i >= 0; i--) {
       const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1)
       const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0)

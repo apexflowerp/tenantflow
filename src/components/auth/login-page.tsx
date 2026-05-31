@@ -129,7 +129,7 @@ function DeviceActivationStep({
 
   const formatSerialKey = (value: string) => {
     const cleaned = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase()
-    const parts = []
+    const parts: string[] = []
     for (let i = 0; i < cleaned.length && i < 20; i += 4) {
       parts.push(cleaned.slice(i, i + 4))
     }

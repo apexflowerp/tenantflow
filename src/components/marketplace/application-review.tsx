@@ -130,15 +130,16 @@ export function ApplicationReview({
   const statusConfig = STATUS_CONFIG[application.status] ?? STATUS_CONFIG.submitted
   const StatusIcon = statusConfig.icon
   const scoreColor = getScoreColor(application.score)
+  const appId = application.id
 
   async function handleAction(action: 'approve' | 'reject') {
     setIsProcessing(true)
     await new Promise((resolve) => setTimeout(resolve, 600))
     setIsProcessing(false)
     if (action === 'approve') {
-      onApprove?.(application.id)
+      onApprove?.(appId)
     } else {
-      onReject?.(application.id)
+      onReject?.(appId)
     }
     onOpenChange(false)
     setNotes('')

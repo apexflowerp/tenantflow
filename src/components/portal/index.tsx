@@ -244,7 +244,7 @@ export function PortalPage() {
                     'size-9 rounded-xl tahoe-hover tahoe-transition',
                     brandColor === color && 'ring-2 ring-offset-2 ring-offset-background'
                   )}
-                  style={{ backgroundColor: color, ringColor: color }}
+                  style={{ backgroundColor: color, '--tw-ring-color': color } as React.CSSProperties}
                 />
               ))}
               <div className="flex items-center gap-2 ml-2">

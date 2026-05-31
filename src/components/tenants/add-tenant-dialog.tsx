@@ -43,8 +43,8 @@ const tenantFormSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().optional(),
-  type: z.enum(['individual', 'corporate'], {
-    required_error: 'Please select a tenant type',
+  type: z.enum(['individual', 'corporate'] as const, {
+    message: 'Please select a tenant type',
   }),
   company: z.string().optional(),
   idNumber: z.string().optional(),
@@ -70,7 +70,7 @@ export function AddTenantDialog({ open, onOpenChange, onTenantAdded }: AddTenant
   const { toast } = useToast()
 
   const form = useForm<TenantFormValues>({
-    resolver: zodResolver(tenantFormSchema),
+    resolver: zodResolver(tenantFormSchema) as any,
     defaultValues: {
       name: '',
       email: '',

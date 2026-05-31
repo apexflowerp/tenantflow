@@ -79,7 +79,7 @@ const REPORT_CATEGORIES = [
       { id: 'ap-summary', name: 'Accounts Payable Summary', description: 'Outstanding payables and vendor obligations', icon: CreditCard },
       { id: 'revenue-by-property', name: 'Revenue by Property', description: 'Income comparison across all properties', icon: PieChart },
       { id: 'expense-breakdown', name: 'Expense Breakdown', description: 'Categorized expense analysis', icon: BarChart3 },
-    ] as ReportItem[],
+    ] as unknown as ReportItem[],
   },
   {
     id: 'property',
@@ -94,7 +94,7 @@ const REPORT_CATEGORIES = [
       { id: 'lease-expiration', name: 'Lease Expiration Report', description: 'Upcoming lease renewals and expirations', icon: Calendar },
       { id: 'vacancy', name: 'Vacancy Report', description: 'Available units and vacancy trends', icon: FileText },
       { id: 'maintenance-summary', name: 'Maintenance Summary', description: 'Maintenance costs and ticket analytics', icon: BarChart3 },
-    ] as ReportItem[],
+    ] as unknown as ReportItem[],
   },
   {
     id: 'tenant',
@@ -108,7 +108,7 @@ const REPORT_CATEGORIES = [
       { id: 'payment-history', name: 'Payment History', description: 'Transaction history and payment patterns', icon: CreditCard },
       { id: 'outstanding-balances', name: 'Outstanding Balances', description: 'Tenants with overdue or pending payments', icon: DollarSign },
       { id: 'tenant-activity', name: 'Tenant Activity Log', description: 'Recent tenant interactions and events', icon: Clock },
-    ] as ReportItem[],
+    ] as unknown as ReportItem[],
   },
   {
     id: 'owner',
@@ -122,7 +122,7 @@ const REPORT_CATEGORIES = [
       { id: 'portfolio-summary', name: 'Portfolio Summary', description: 'High-level portfolio performance overview', icon: Briefcase },
       { id: 'collection-rate', name: 'Collection Rate Report', description: 'Rent collection efficiency metrics', icon: TrendingUp },
       { id: 'budget-vs-actual', name: 'Budget vs Actual', description: 'Budget performance comparison analysis', icon: BarChart3 },
-    ] as ReportItem[],
+    ] as unknown as ReportItem[],
   },
 ]
 

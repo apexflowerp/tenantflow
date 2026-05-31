@@ -193,7 +193,7 @@ const itemVariants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
 }
@@ -205,7 +205,7 @@ const sectionVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: [0.25, 0.46, 0.45, 0.94] as const,
     },
   },
 }
@@ -537,7 +537,7 @@ export function DashboardPage() {
                     content={({ active, payload, label }) => (
                       <ChartTooltip
                         active={active}
-                        payload={payload}
+                        payload={payload as any}
                         label={label}
                         formatter={(v: number) => `$${v.toLocaleString()}`}
                       />
@@ -599,7 +599,7 @@ export function DashboardPage() {
                     content={({ active, payload, label }) => (
                       <ChartTooltip
                         active={active}
-                        payload={payload}
+                        payload={payload as any}
                         label={label}
                         formatter={(v: number) => `${v}%`}
                       />

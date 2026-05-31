@@ -79,7 +79,24 @@ interface PaymentRecord {
   type: string
 }
 
-interface TenantProfileData extends Tenant {
+interface TenantProfileData {
+  id: string
+  name: string
+  email: string
+  phone: string | null
+  avatar: string | null
+  type: string
+  company: string | null
+  idNumber: string | null
+  emergencyName: string | null
+  emergencyPhone: string | null
+  moveInDate: string | null
+  moveOutDate: string | null
+  status: string
+  notes: string | null
+  workspaceId: string
+  createdAt: string
+  updatedAt: string
   currentLease?: CurrentLease | null
   stats?: TenantStats
   payments?: PaymentRecord[]

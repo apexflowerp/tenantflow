@@ -615,7 +615,7 @@ export async function GET(request: NextRequest) {
         auditLogCount++
       }
 
-      return {
+      return NextResponse.json({
         workspace: workspace.name,
         users: 5,
         properties: 6,
@@ -633,9 +633,7 @@ export async function GET(request: NextRequest) {
         clients: 6,
         licenseKeys: 9,
         invoices: 10,
-      }
-
-    return NextResponse.json({ message: 'Database seeded successfully' })
+      })
   } catch (error) {
     console.error('Seed error:', error)
     return NextResponse.json({ error: 'Failed to seed database', details: String(error) }, { status: 500 })

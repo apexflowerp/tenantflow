@@ -257,12 +257,12 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 16, scale: 0.97 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] as const } },
 }
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] as const } },
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -476,7 +476,7 @@ function RevenueReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" vertical={false} />
                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} formatter={(v) => formatCurrency(v)} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} formatter={(v) => formatCurrency(v)} />} />
                     <Area type="monotone" dataKey="revenue" stroke="var(--tahoe-blue)" strokeWidth={2.5} fill="url(#revGrad)" dot={false} activeDot={{ r: 4, fill: 'var(--tahoe-blue)', stroke: 'var(--background)', strokeWidth: 2 }} />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -496,7 +496,7 @@ function RevenueReport() {
                     <Pie data={revenueByPlan} cx="50%" cy="50%" innerRadius={55} outerRadius={85} dataKey="revenue" nameKey="plan" paddingAngle={3}>
                       {revenueByPlan.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                     </Pie>
-                    <Tooltip content={({ active, payload }) => <ChartTooltip active={active} payload={payload} label={payload?.[0]?.name} formatter={(v) => formatCurrency(v)} />} />
+                    <Tooltip content={({ active, payload }) => <ChartTooltip active={active} payload={payload as any} label={String(payload?.[0]?.name ?? '')} formatter={(v) => formatCurrency(v)} />} />
                     <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -527,7 +527,7 @@ function RevenueReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" vertical={false} />
                     <XAxis dataKey="client" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} formatter={(v) => formatCurrency(v)} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} formatter={(v) => formatCurrency(v)} />} />
                     <Bar dataKey="revenue" radius={[6, 6, 0, 0]} maxBarSize={45}>
                       {revenueByClient.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} opacity={0.85} />)}
                     </Bar>
@@ -661,7 +661,7 @@ function ClientSummaryReport() {
                     <Pie data={statusPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" nameKey="name" paddingAngle={3}>
                       {statusPie.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                     </Pie>
-                    <Tooltip content={({ active, payload }) => <ChartTooltip active={active} payload={payload} label={payload?.[0]?.name} formatter={(v) => `${v} clients`} />} />
+                    <Tooltip content={({ active, payload }) => <ChartTooltip active={active} payload={payload as any} label={String(payload?.[0]?.name ?? '')} formatter={(v) => `${v} clients`} />} />
                     <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -679,7 +679,7 @@ function ClientSummaryReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" vertical={false} />
                     <XAxis dataKey="plan" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} />} />
                     <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={40}>
                       {d.planDistribution.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} opacity={0.85} />)}
                     </Bar>
@@ -699,7 +699,7 @@ function ClientSummaryReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" vertical={false} />
                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} />} />
                     <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
                     <Bar dataKey="newClients" name="New Clients" fill="#34c759" radius={[4, 4, 0, 0]} maxBarSize={20} />
                     <Bar dataKey="churned" name="Churned" fill="#ff3b30" radius={[4, 4, 0, 0]} maxBarSize={20} />
@@ -808,7 +808,7 @@ function InvoiceAgingReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" vertical={false} />
                     <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} formatter={(v) => formatCurrency(v)} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} formatter={(v) => formatCurrency(v)} />} />
                     <Bar dataKey="amount" name="Amount" radius={[6, 6, 0, 0]} maxBarSize={45}>
                       {d.buckets.map((entry, i) => <Cell key={i} fill={entry.color} opacity={0.85} />)}
                     </Bar>
@@ -975,7 +975,7 @@ function LicenseUtilizationReport() {
                     <Pie data={statusPie} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" nameKey="name" paddingAngle={3}>
                       {statusPie.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                     </Pie>
-                    <Tooltip content={({ active, payload }) => <ChartTooltip active={active} payload={payload} label={payload?.[0]?.name} formatter={(v) => `${v} licenses`} />} />
+                    <Tooltip content={({ active, payload }) => <ChartTooltip active={active} payload={payload as any} label={String(payload?.[0]?.name ?? '')} formatter={(v) => `${v} licenses`} />} />
                     <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -993,7 +993,7 @@ function LicenseUtilizationReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" vertical={false} />
                     <XAxis dataKey="plan" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} domain={[0, 100]} tickFormatter={(v: number) => `${v}%`} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} formatter={(v) => `${v}%`} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} formatter={(v) => `${v}%`} />} />
                     <Bar dataKey="utilization" name="Utilization" radius={[6, 6, 0, 0]} maxBarSize={40}>
                       {d.byPlan.map((entry, i) => (
                         <Cell key={i} fill={entry.utilization >= 80 ? '#34c759' : entry.utilization >= 60 ? '#ff9500' : '#ff3b30'} opacity={0.85} />
@@ -1134,7 +1134,7 @@ function ChurnAnalysisReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" vertical={false} />
                     <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
                     <YAxis axisLine={false} tickLine={false} domain={[0, 10]} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} tickFormatter={(v: number) => `${v}%`} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} formatter={(v) => `${v}%`} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} formatter={(v) => `${v}%`} />} />
                     <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: '11px' }} />
                     <Line type="monotone" dataKey="churnRate" name="Churn Rate" stroke="#ff3b30" strokeWidth={2} dot={{ r: 3, fill: '#ff3b30' }} activeDot={{ r: 5 }} />
                     <Line type="monotone" dataKey="retentionRate" name="Retention Rate" stroke="#34c759" strokeWidth={2} dot={{ r: 3, fill: '#34c759' }} activeDot={{ r: 5 }} />
@@ -1154,7 +1154,7 @@ function ChurnAnalysisReport() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--glass-border-subtle)" horizontal={false} />
                     <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} tickFormatter={(v: number) => `${v}%`} />
                     <YAxis type="category" dataKey="reason" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }} />
-                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} formatter={(v) => `${v}%`} />} />
+                    <Tooltip content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload as any} label={label} formatter={(v) => `${v}%`} />} />
                     <Bar dataKey="pct" name="Percentage" radius={[0, 6, 6, 0]} maxBarSize={24} fill="#ff9500" opacity={0.85} />
                   </BarChart>
                 </ResponsiveContainer>

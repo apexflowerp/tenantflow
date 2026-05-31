@@ -75,7 +75,7 @@ export async function getTenantDbFromToken(token: string): Promise<{ tenantDb: P
     throw new Error('Invalid or expired session')
   }
 
-  const clientId = (session.user as any).workspace?.clientId
+  const clientId = (session as any).user?.workspace?.clientId
   if (!clientId) {
     throw new Error('User has no client association')
   }

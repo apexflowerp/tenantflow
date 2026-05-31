@@ -120,8 +120,9 @@ interface LicenseKeyInfo {
   activatedAt: string | null
   expiresAt: string | null
   clientId: string
-  deviceId: string | null
   createdAt: string
+  updatedAt?: string
+  deviceId: string | null
   client?: { id: string; companyName: string; contactName: string; email: string } | null
   device?: { id: string; deviceName: string; serialKey: string } | null
 }

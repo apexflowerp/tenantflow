@@ -100,7 +100,7 @@ model Session {
   id          String   @id @default(cuid())
   userId      String
   deviceId    String?
-  token       String
+  token       String   @unique
   ipAddress   String?
   userAgent   String?
   isActive    Boolean  @default(true)
