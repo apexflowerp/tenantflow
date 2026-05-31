@@ -1,51 +1,76 @@
 'use client'
 
-import { TenantsPage } from '@/components/tenants'
-import { PropertiesPage } from '@/components/properties'
-import { DashboardPage } from '@/components/dashboard'
-import { LeasesPage } from '@/components/leases'
-import { MaintenancePage } from '@/components/maintenance'
-import { BillingPage } from '@/components/billing'
-import { CommunicationsPage } from '@/components/communications'
-import { SettingsPage } from '@/components/settings'
-import { AnalyticsPage } from '@/components/analytics'
-import { AiCopilotPage } from '@/components/ai-copilot'
-import { DocumentsPage } from '@/components/documents'
-import { ReportsPage } from '@/components/reports'
-import { LoginPage } from '@/components/auth/login-page'
-import { OwnerPage, ReportsPage as OwnerReportsPage } from '@/components/owner'
-import { DevicesPage } from '@/components/devices'
-import { AuditPage } from '@/components/audit'
-import { AccountingPage } from '@/components/accounting'
-import { InsurancePage } from '@/components/insurance'
-import { CalendarPage } from '@/components/calendar'
-import { InspectionsPage } from '@/components/inspections'
-import { VendorsPage } from '@/components/vendors'
-import { MarketplacePage } from '@/components/marketplace'
-import { TenantScreeningPage } from '@/components/screening'
-import { CompliancePage } from '@/components/compliance'
-import { WorkflowsPage } from '@/components/workflows'
-import { PortalPage } from '@/components/portal'
-import { UtilitiesPage } from '@/components/utilities'
-import { ParkingPage } from '@/components/parking'
-import { AmenitiesPage } from '@/components/amenities'
-import { AnnouncementsPage } from '@/components/announcements'
-import { SurveysPage } from '@/components/surveys'
-import { SmartHomePage } from '@/components/smart-home'
-import { KeyManagementPage } from '@/components/keys'
-import { RenewalsPage } from '@/components/renewals'
-import { LateFeesPage } from '@/components/late-fees'
-import { PaymentPlansPage } from '@/components/payment-plans'
-import { EnergyPage } from '@/components/energy'
-import { VisitorsPage } from '@/components/visitors'
-import { PackagesPage } from '@/components/packages'
-import { MoveInOutPage } from '@/components/move-inout'
-import { BudgetPage } from '@/components/budget'
-import { ESignaturesPage } from '@/components/e-signatures'
-import { PetsPage } from '@/components/pets'
-import { DisputesPage } from '@/components/disputes'
-import { AssetsPage } from '@/components/assets'
-import { MarketIntelPage } from '@/components/market-intel'
+import dynamic from 'next/dynamic'
+
+// ── Lazy-loaded module components ────────────────────────────────────────────
+// Only the login page is eagerly needed; all other modules load on demand
+// via the moduleLoader map below to minimize initial compilation memory.
+const LoginPage = dynamic(() => import('@/components/auth/login-page').then(m => ({ default: m.LoginPage })), { ssr: false })
+
+// Module loader map — uses string-based dynamic imports that webpack resolves
+// lazily. Each key maps to a [module_path, export_name] pair.
+// The actual import() only happens when the user navigates to that module.
+const moduleRegistry: Record<string, [string, string]> = {
+  dashboard: ['@/components/dashboard', 'DashboardPage'],
+  properties: ['@/components/properties', 'PropertiesPage'],
+  tenants: ['@/components/tenants', 'TenantsPage'],
+  leases: ['@/components/leases', 'LeasesPage'],
+  maintenance: ['@/components/maintenance', 'MaintenancePage'],
+  vendors: ['@/components/vendors', 'VendorsPage'],
+  billing: ['@/components/billing', 'BillingPage'],
+  marketplace: ['@/components/marketplace', 'MarketplacePage'],
+  accounting: ['@/components/accounting', 'AccountingPage'],
+  analytics: ['@/components/analytics', 'AnalyticsPage'],
+  copilot: ['@/components/ai-copilot', 'AiCopilotPage'],
+  communications: ['@/components/communications', 'CommunicationsPage'],
+  settings: ['@/components/settings', 'SettingsPage'],
+  documents: ['@/components/documents', 'DocumentsPage'],
+  reports: ['@/components/reports', 'ReportsPage'],
+  owner: ['@/components/owner', 'OwnerPage'],
+  owner_reports: ['@/components/owner', 'ReportsPage'],
+  devices: ['@/components/devices', 'DevicesPage'],
+  inspections: ['@/components/inspections', 'InspectionsPage'],
+  insurance: ['@/components/insurance', 'InsurancePage'],
+  calendar: ['@/components/calendar', 'CalendarPage'],
+  audit: ['@/components/audit', 'AuditPage'],
+  screening: ['@/components/screening', 'TenantScreeningPage'],
+  compliance: ['@/components/compliance', 'CompliancePage'],
+  workflows: ['@/components/workflows', 'WorkflowsPage'],
+  portal: ['@/components/portal', 'PortalPage'],
+  utilities: ['@/components/utilities', 'UtilitiesPage'],
+  parking: ['@/components/parking', 'ParkingPage'],
+  amenities: ['@/components/amenities', 'AmenitiesPage'],
+  announcements: ['@/components/announcements', 'AnnouncementsPage'],
+  surveys: ['@/components/surveys', 'SurveysPage'],
+  smart_home: ['@/components/smart-home', 'SmartHomePage'],
+  keys: ['@/components/keys', 'KeyManagementPage'],
+  renewals: ['@/components/renewals', 'RenewalsPage'],
+  late_fees: ['@/components/late-fees', 'LateFeesPage'],
+  payment_plans: ['@/components/payment-plans', 'PaymentPlansPage'],
+  energy: ['@/components/energy', 'EnergyPage'],
+  visitors: ['@/components/visitors', 'VisitorsPage'],
+  packages: ['@/components/packages', 'PackagesPage'],
+  move_inout: ['@/components/move-inout', 'MoveInOutPage'],
+  budget: ['@/components/budget', 'BudgetPage'],
+  e_signatures: ['@/components/e-signatures', 'ESignaturesPage'],
+  pets: ['@/components/pets', 'PetsPage'],
+  disputes: ['@/components/disputes', 'DisputesPage'],
+  assets: ['@/components/assets', 'AssetsPage'],
+  market_intel: ['@/components/market-intel', 'MarketIntelPage'],
+}
+
+async function loadModule(moduleId: string): Promise<React.ComponentType | null> {
+  const entry = moduleRegistry[moduleId]
+  if (!entry) return null
+  const [importPath, exportName] = entry
+  try {
+    // @ts-expect-error — dynamic string import
+    const mod = await import(importPath)
+    return mod[exportName] ?? null
+  } catch {
+    return null
+  }
+}
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -871,56 +896,30 @@ function ModulePlaceholder({ moduleId }: { moduleId: string }) {
 // ── Module Renderer ─────────────────────────────────────────────────────────
 
 function ModuleContent({ moduleId }: { moduleId: string }) {
-  const moduleMap: Record<string, React.ComponentType> = {
-    dashboard: DashboardPage,
-    properties: PropertiesPage,
-    tenants: TenantsPage,
-    leases: LeasesPage,
-    maintenance: MaintenancePage,
-    vendors: VendorsPage,
-    billing: BillingPage,
-    marketplace: MarketplacePage,
-    accounting: AccountingPage,
-    analytics: AnalyticsPage,
-    copilot: AiCopilotPage,
-    communications: CommunicationsPage,
-    settings: SettingsPage,
-    documents: DocumentsPage,
-    reports: ReportsPage,
-    owner: OwnerPage,
-    owner_reports: OwnerReportsPage,
-    devices: DevicesPage,
-    inspections: InspectionsPage,
-    insurance: InsurancePage,
-    calendar: CalendarPage,
-    audit: AuditPage,
-    screening: TenantScreeningPage,
-    compliance: CompliancePage,
-    workflows: WorkflowsPage,
-    portal: PortalPage,
-    utilities: UtilitiesPage,
-    parking: ParkingPage,
-    amenities: AmenitiesPage,
-    announcements: AnnouncementsPage,
-    surveys: SurveysPage,
-    smart_home: SmartHomePage,
-    keys: KeyManagementPage,
-    renewals: RenewalsPage,
-    late_fees: LateFeesPage,
-    payment_plans: PaymentPlansPage,
-    energy: EnergyPage,
-    visitors: VisitorsPage,
-    packages: PackagesPage,
-    move_inout: MoveInOutPage,
-    budget: BudgetPage,
-    e_signatures: ESignaturesPage,
-    pets: PetsPage,
-    disputes: DisputesPage,
-    assets: AssetsPage,
-    market_intel: MarketIntelPage,
-  }
+  const [ModuleComponent, setModuleComponent] = React.useState<React.ComponentType | null>(null)
+  const [loading, setLoading] = React.useState(true)
 
-  const ModuleComponent = moduleMap[moduleId]
+  React.useEffect(() => {
+    let cancelled = false
+    loadModule(moduleId).then((comp) => {
+      if (!cancelled) {
+        setModuleComponent(() => comp)
+        setLoading(false)
+      }
+    })
+    return () => { cancelled = true }
+  }, [moduleId])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Building2 className="size-5 animate-pulse" />
+          <span className="text-sm">Loading module...</span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <AnimatePresence mode="wait">

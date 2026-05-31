@@ -17,8 +17,7 @@ function createPrismaClient() {
         url,
       },
     },
-    // Neon serverless Postgres works best with a reasonable connection limit
-    // and shorter timeouts to avoid stale connections
+    // SQLite: file-based, no connection pooling needed
   })
 }
 
