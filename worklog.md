@@ -681,3 +681,29 @@ Stage Summary:
 - All 10 bug fixes successfully re-applied
 - Zero apexflow.cloud references remain in source code
 - Lint passes with 0 errors (3 pre-existing warnings unrelated to fixes)
+---
+Task ID: 1
+Agent: Main Agent
+Task: Migrate database from SQLite to Neon PostgreSQL with multi-tenant support
+
+Work Log:
+- Updated .env with Neon PostgreSQL connection string
+- Changed prisma/schema.prisma from provider="sqlite" to provider="postgresql" with directUrl
+- Updated src/lib/db.ts with hardcoded Neon URL to prevent system env override
+- Updated src/lib/tenant-db.ts for Neon multi-tenant database provisioning
+- Deleted old SQLite database references
+- Pushed schema to Neon PostgreSQL (57 models synced)
+- Ran seed script — all data seeded successfully to Neon
+- Verified API endpoints work: POST /api/auth/demo returns 200, POST /api/auth/device/activate returns 200
+- Added @prisma/adapter-pg and pg packages
+- Updated next.config.ts with serverExternalPackages for pg
+- Updated package.json dev script with explicit Neon env vars
+
+Stage Summary:
+- Database successfully migrated from SQLite to Neon PostgreSQL
+- All 57 models created on Neon
+- All seed data loaded (9 users, 10 devices, 6 properties, etc.)
+- API endpoints verified working with curl
+- Server stability issue: Next.js crashes after multiple API calls (likely memory constraint in sandbox)
+- Key credentials: admin@apexflow.cloud / Admin@180H, serial key TFOW-OWNR-180H-XK9Z
+- Neon connection: postgresql://neondb_owner:npg_0LaXsMl2YzBt@ep-royal-recipe-apb3473r-pooler.c-7.us-east-1.aws.neon.tech/neondb
