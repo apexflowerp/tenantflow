@@ -240,6 +240,16 @@ function DeviceActivationStep({
           <p className="text-[11px] text-white/20 px-1">
             Serial keys start with TFOW- (device) or TFOL- (license)
           </p>
+          <button
+            type="button"
+            onClick={() => {
+              setSerialKey('TFOW-OWNR-180H-XK9Z')
+              setError('')
+            }}
+            className="w-full text-left text-[11px] text-white/30 hover:text-white/50 px-1 py-1.5 rounded-lg hover:bg-white/[0.03] transition-colors"
+          >
+            💡 Use owner key: <span className="font-mono text-white/40">TFOW-OWNR-180H-XK9Z</span>
+          </button>
 
           {error && (
             <motion.div
