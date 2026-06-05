@@ -154,6 +154,7 @@ function DeviceActivationStep({
     try {
       const success = await activateDevice(serialKey)
       if (success) {
+        setSerialKey('') // Clear key from state immediately after activation
         setActivationSuccess(true)
         // Brief success animation before transitioning
         setTimeout(() => onActivated(), 800)
@@ -227,29 +228,30 @@ function DeviceActivationStep({
             <MonitorSmartphone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-white/25" />
             <Input
               id="serial-key"
-              type="text"
+              type="password"
               value={serialKey}
               onChange={handleSerialKeyChange}
               onKeyDown={handleKeyDown}
-              placeholder="TFOW-2024-XKCD-7A3B"
-              className="h-12 pl-11 pr-4 text-center font-mono text-base tracking-wider text-white placeholder:text-white/12 rounded-xl bg-white/[0.06] border-white/[0.08] focus:border-[#5e3c92]/50 focus:ring-[#5e3c92]/20"
+              placeholder="TFOW-XXXX-XXXX-XXXX"
+              className="h-12 pl-11 pr-11 text-center font-mono text-base tracking-wider text-white placeholder:text-white/12 rounded-xl bg-white/[0.06] border-white/[0.08] focus:border-[#5e3c92]/50 focus:ring-[#5e3c92]/20"
               autoComplete="off"
               autoFocus
             />
+            <button
+              type="button"
+              onClick={() => {
+                const input = document.getElementById('serial-key') as HTMLInputElement
+                if (input) input.type = input.type === 'password' ? 'text' : 'password'
+              }}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/40 transition-colors"
+            >
+              <Eye className="size-4" />
+            </button>
           </div>
           <p className="text-[11px] text-white/20 px-1">
             Serial keys start with TFOW- (device) or TFOL- (license)
           </p>
-          <button
-            type="button"
-            onClick={() => {
-              setSerialKey('TFOW-OWNR-180H-XK9Z')
-              setError('')
-            }}
-            className="w-full text-left text-[11px] text-white/30 hover:text-white/50 px-1 py-1.5 rounded-lg hover:bg-white/[0.03] transition-colors"
-          >
-            💡 Use owner key: <span className="font-mono text-white/40">TFOW-OWNR-180H-XK9Z</span>
-          </button>
+
 
           {error && (
             <motion.div

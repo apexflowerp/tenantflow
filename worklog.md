@@ -77,3 +77,61 @@ Stage Summary:
 - Vercel Deployment Protection is the ONLY remaining blocker
 - User needs to disable Deployment Protection on Vercel dashboard
 - Or re-create the project under apexflowerp account with protection disabled
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Fix security leak - serial key visible in UI input field after activation
+
+Work Log:
+- Identified critical security vulnerability: serial key was visible in plain text in the activation input field
+- Found multiple security issues across the codebase:
+  1. "Use owner key" button on login page exposed the full owner serial key TFOW-OWNR-180H-XK9Z in the UI
+  2. Serial key input was type="text" (visible while typing)
+  3. Serial key not cleared from React state after successful activation
+  4. Auth store persisted full serial key to localStorage
+  5. All API endpoints returned full serial keys in responses
+  6. Device list, session list, license key list all exposed full keys
+
+- Created shared `maskSerialKey()` utility in src/lib/utils.ts
+  Format: "TFOW-OWNR-180H-XK9Z" → "TFOW-****-****-XK9Z"
+
+- Fixed login-page.tsx:
+  - Changed input type from "text" to "password" with eye toggle
+  - Removed the "Use owner key" button that exposed TFOW-OWNR-180H-XK9Z
+  - Changed placeholder from specific key to "TFOW-XXXX-XXXX-XXXX"
+  - Clear serialKey state immediately after successful activation
+
+- Fixed auth-store.ts:
+  - Import maskSerialKey from shared utility
+  - Mask serial key before storing in currentDevice state
+  - Masked key is persisted to localStorage instead of full key
+
+- Fixed all API routes to return masked serial keys:
+  - /api/auth/device/activate (all 4 response paths)
+  - /api/auth/device/status
+  - /api/auth/demo
+  - /api/auth/owner-setup
+  - /api/devices (GET and POST)
+  - /api/devices/[id] (PATCH)
+  - /api/devices/sessions (GET and POST)
+  - /api/devices/license-keys (GET only - POST returns full key for one-time reveal pattern)
+  - /api/owner/licenses (GET only - POST returns full key for one-time reveal)
+
+- Fixed frontend components:
+  - devices-page.tsx: Removed local maskSerialKey function (API now handles masking)
+  - device-detail.tsx: Will automatically display masked keys from API
+
+- Added allowedDevOrigins to next.config.ts for cross-origin dev requests
+
+- Verified fixes via curl:
+  - Activation API: returns "TFOW-****-****-XK9Z" ✅
+  - Demo API: returns "TFOW-****-****-0000" ✅
+
+Stage Summary:
+- Complete security hardening of serial key handling across the entire application
+- Serial keys are now masked at the API level (server-side) and never stored in full in localStorage
+- The "Use owner key" shortcut button has been removed from the login page
+- Serial key input is now type="password" with toggle visibility
+- License key generation still shows full key once (standard security pattern) then masks in listings
+- All changes need to be pushed to GitHub

@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { NextResponse } from 'next/server'
 
 // GET /api/devices/sessions — list all sessions
@@ -12,13 +13,19 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     })
 
+    // Mask serial keys in response
+    const maskedSessions = sessions.map((s) => ({
+      ...s,
+      device: s.device ? { ...s.device, serialKey: maskSerialKey(s.device.serialKey) } : null,
+    }))
+
     const stats = {
       total: sessions.length,
       active: sessions.filter((s) => s.isActive).length,
       expired: sessions.filter((s) => !s.isActive).length,
     }
 
-    return NextResponse.json({ sessions, stats })
+    return NextResponse.json({ sessions: maskedSessions, stats })
   } catch (error) {
     console.error('GET /api/devices/sessions error:', error)
     return NextResponse.json({ error: 'Failed to fetch sessions' }, { status: 500 })
@@ -51,6 +58,12 @@ export async function POST(request: Request) {
       },
     })
 
+    // Mask serial key in response
+    const maskedSession = {
+      ...session,
+      device: session.device ? { ...session.device, serialKey: maskSerialKey(session.device.serialKey) } : null,
+    }
+
     // Update device lastSeenAt
     if (deviceId) {
       await db.device.update({
@@ -59,7 +72,7 @@ export async function POST(request: Request) {
       })
     }
 
-    return NextResponse.json({ session }, { status: 201 })
+    return NextResponse.json({ session: maskedSession }, { status: 201 })
   } catch (error) {
     console.error('POST /api/devices/sessions error:', error)
     return NextResponse.json({ error: 'Failed to create session' }, { status: 500 })

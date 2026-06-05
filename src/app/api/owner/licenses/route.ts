@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { NextRequest, NextResponse } from 'next/server'
 import { randomUUID } from 'crypto'
 
@@ -12,7 +13,13 @@ export async function GET() {
       },
     })
 
-    return NextResponse.json({ licenseKeys })
+    // Mask keys in listing
+    const maskedKeys = licenseKeys.map((k) => ({
+      ...k,
+      key: maskSerialKey(k.key),
+    }))
+
+    return NextResponse.json({ licenseKeys: maskedKeys })
   } catch (error) {
     console.error('Error fetching license keys:', error)
     return NextResponse.json({ error: 'Failed to fetch license keys' }, { status: 500 })

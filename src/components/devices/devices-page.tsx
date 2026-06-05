@@ -176,14 +176,6 @@ function maskKey(key: string): string {
   return key.substring(0, 4) + '••••••••' + key.substring(key.length - 4)
 }
 
-function maskSerialKey(key: string): string {
-  const parts = key.split('-')
-  if (parts.length > 1) {
-    return parts[0] + '-' + '••••' + '-' + parts[parts.length - 1]
-  }
-  return key.substring(0, 4) + '••••' + key.substring(key.length - 4)
-}
-
 function getDeviceIcon(type: string) {
   switch (type) {
     case 'desktop': return Monitor
@@ -728,7 +720,7 @@ export function DevicesPage() {
                               <TableCell>
                                 <div className="flex items-center gap-2">
                                   <code className="text-xs font-mono bg-muted px-1.5 py-0.5 rounded">
-                                    {maskSerialKey(device.serialKey)}
+                                    {device.serialKey}
                                   </code>
                                   <button
                                     onClick={(e) => { e.stopPropagation(); copyToClipboard(device.serialKey, 'Serial key') }}

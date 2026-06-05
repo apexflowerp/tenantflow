@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { provisionTenantDatabase } from '@/lib/tenant-db'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
           id: existingDevice.id,
-          serialKey: existingDevice.serialKey,
+          serialKey: maskSerialKey(existingDevice.serialKey),
           deviceName: existingDevice.deviceName,
           status: existingDevice.status,
           activatedAt: existingDevice.activatedAt,
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         id: updated.id,
-        serialKey: updated.serialKey,
+        serialKey: maskSerialKey(updated.serialKey),
         deviceName: updated.deviceName,
         status: updated.status,
         activatedAt: updated.activatedAt,
@@ -174,7 +175,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         id: ownerDevice.id,
-        serialKey: ownerDevice.serialKey,
+        serialKey: maskSerialKey(ownerDevice.serialKey),
         deviceName: ownerDevice.deviceName,
         status: ownerDevice.status,
         activatedAt: ownerDevice.activatedAt,
@@ -255,7 +256,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         id: newDevice.id,
-        serialKey: newDevice.serialKey,
+        serialKey: maskSerialKey(newDevice.serialKey),
         deviceName: newDevice.deviceName,
         status: newDevice.status,
         activatedAt: newDevice.activatedAt,

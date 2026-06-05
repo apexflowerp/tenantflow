@@ -1,6 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
+import { maskSerialKey } from '@/lib/utils'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -15,7 +16,7 @@ interface CurrentUser {
 
 interface CurrentDevice {
   id: string
-  serialKey: string
+  serialKey: string  // Masked version (e.g., TFOW-****-****-XK9Z)
   deviceName: string
   status: string
 }
@@ -197,12 +198,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       }
 
       const data = await res.json()
+      // Mask the serial key before storing — never persist full key to localStorage
+      const maskedKey = maskSerialKey(data.serialKey)
+
       const newState = {
         isDeviceActivated: data.status === 'active' || data.status === 'activated',
         requiresActivation: !(data.status === 'active' || data.status === 'activated'),
         currentDevice: {
           id: data.id,
-          serialKey: data.serialKey,
+          serialKey: maskedKey,
           deviceName: data.deviceName ?? 'Unknown Device',
           status: data.status,
         },

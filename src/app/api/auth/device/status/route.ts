@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
       status: device.status,
       device: {
         id: device.id,
-        serialKey: device.serialKey,
+        serialKey: maskSerialKey(device.serialKey),
         deviceName: device.deviceName,
         deviceType: device.deviceType,
         activatedAt: device.activatedAt,

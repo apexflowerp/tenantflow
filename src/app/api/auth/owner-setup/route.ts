@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { NextRequest, NextResponse } from 'next/server'
 
 function generateToken(): string {
@@ -168,7 +169,7 @@ export async function POST(request: NextRequest) {
       },
       device: {
         id: device.id,
-        serialKey: device.serialKey,
+        serialKey: maskSerialKey(device.serialKey),
         deviceName: device.deviceName,
         status: device.status,
       },

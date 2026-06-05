@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { NextResponse } from 'next/server'
 
 // PATCH /api/devices/[id] — update device (block, unblock, deactivate, activate)
@@ -50,7 +51,17 @@ export async function PATCH(
       })
     }
 
-    return NextResponse.json({ device })
+    // Mask serial key and license keys in response
+    const maskedDevice = {
+      ...device,
+      serialKey: maskSerialKey(device.serialKey),
+      licenseKeys: device.licenseKeys.map((lk) => ({
+        ...lk,
+        key: maskSerialKey(lk.key),
+      })),
+    }
+
+    return NextResponse.json({ device: maskedDevice })
   } catch (error) {
     console.error('PATCH /api/devices/[id] error:', error)
     return NextResponse.json({ error: 'Failed to update device' }, { status: 500 })

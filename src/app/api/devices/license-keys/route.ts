@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { NextResponse } from 'next/server'
 
 // GET /api/devices/license-keys — list all license keys
@@ -12,6 +13,13 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     })
 
+    // Mask serial keys and license keys in response
+    const maskedKeys = licenseKeys.map((k) => ({
+      ...k,
+      key: maskSerialKey(k.key),
+      device: k.device ? { ...k.device, serialKey: maskSerialKey(k.device.serialKey) } : null,
+    }))
+
     const stats = {
       total: licenseKeys.length,
       available: licenseKeys.filter((k) => k.status === 'available').length,
@@ -20,7 +28,7 @@ export async function GET() {
       revoked: licenseKeys.filter((k) => k.status === 'revoked').length,
     }
 
-    return NextResponse.json({ licenseKeys, stats })
+    return NextResponse.json({ licenseKeys: maskedKeys, stats })
   } catch (error) {
     console.error('GET /api/devices/license-keys error:', error)
     return NextResponse.json({ error: 'Failed to fetch license keys' }, { status: 500 })
@@ -75,7 +83,14 @@ export async function POST(request: Request) {
       },
     })
 
-    return NextResponse.json({ licenseKey }, { status: 201 })
+    // Return full key on creation (one-time reveal pattern)
+    // but mask device serial key for security
+    const responseKey = {
+      ...licenseKey,
+      device: licenseKey.device ? { ...licenseKey.device, serialKey: maskSerialKey(licenseKey.device.serialKey) } : null,
+    }
+
+    return NextResponse.json({ licenseKey: responseKey }, { status: 201 })
   } catch (error) {
     console.error('POST /api/devices/license-keys error:', error)
     return NextResponse.json({ error: 'Failed to generate license key' }, { status: 500 })

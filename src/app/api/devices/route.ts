@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import { maskSerialKey } from '@/lib/utils'
 import { NextResponse } from 'next/server'
 
 // GET /api/devices — list all devices with user info
@@ -13,6 +14,16 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     })
 
+    // Mask serial keys in response
+    const maskedDevices = devices.map((d) => ({
+      ...d,
+      serialKey: maskSerialKey(d.serialKey),
+      licenseKeys: d.licenseKeys.map((lk) => ({
+        ...lk,
+        key: maskSerialKey(lk.key),
+      })),
+    }))
+
     const stats = {
       total: devices.length,
       active: devices.filter((d) => d.status === 'active').length,
@@ -22,7 +33,7 @@ export async function GET() {
       activeSessions: devices.reduce((sum, d) => sum + d.sessions.length, 0),
     }
 
-    return NextResponse.json({ devices, stats })
+    return NextResponse.json({ devices: maskedDevices, stats })
   } catch (error) {
     console.error('GET /api/devices error:', error)
     return NextResponse.json({ error: 'Failed to fetch devices' }, { status: 500 })
@@ -60,7 +71,12 @@ export async function POST(request: Request) {
       },
     })
 
-    return NextResponse.json({ device }, { status: 201 })
+    return NextResponse.json({
+      device: {
+        ...device,
+        serialKey: maskSerialKey(device.serialKey),
+      },
+    }, { status: 201 })
   } catch (error) {
     console.error('POST /api/devices error:', error)
     return NextResponse.json({ error: 'Failed to register device' }, { status: 500 })
