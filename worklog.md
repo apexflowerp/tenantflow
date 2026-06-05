@@ -54,3 +54,26 @@ Stage Summary:
 - Login with admin@apexflow.cloud / Admin@180H works correctly
 - Dashboard renders with all data (48 properties, 156 tenants, KPIs, charts, AI insights)
 - All code pushed to GitHub at https://github.com/apexflowerp/tenantflow
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix Vercel deployment - serial key activation fails on production
+
+Work Log:
+- Diagnosed the root cause: Vercel Deployment Protection (Vercel Authentication / SSO) is enabled on the project
+- All API requests return 401 "Authentication Required" before reaching the backend
+- The project is deployed under "apexflow" team, not "apexflowerp"
+- Added postinstall hook for prisma generate in package.json
+- Added vercel-build script in package.json
+- Removed standalone output from next.config.ts (not needed for Vercel)
+- Created vercel.json with buildCommand override
+- Pushed 3 commits to fix Vercel build (bfaeabb is the latest, build succeeds)
+- The build now succeeds on Vercel, but Deployment Protection still blocks all requests
+
+Stage Summary:
+- Code fixes for Vercel build are complete and pushed
+- The serial key activation works locally (confirmed 200 response)
+- Vercel Deployment Protection is the ONLY remaining blocker
+- User needs to disable Deployment Protection on Vercel dashboard
+- Or re-create the project under apexflowerp account with protection disabled
