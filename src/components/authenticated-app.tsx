@@ -1058,7 +1058,7 @@ function ViewOnlyBanner() {
       animate={{ height: 'auto', opacity: 1 }}
       exit={{ height: 0, opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="relative flex items-center justify-center gap-3 px-4 py-2 bg-amber-500/10 border-b border-amber-500/15"
+      className="relative flex items-center justify-center gap-3 px-4 py-2 bg-amber-500/10 border-b border-amber-500/15 shrink-0"
     >
       <div className="flex items-center gap-2 text-[12px]">
         <Eye className="size-3.5 text-amber-600 dark:text-amber-400" />
@@ -1097,7 +1097,7 @@ export function AuthenticatedApp() {
 
         {/* User info bar — macOS subtitle bar style */}
         {isAuthenticated && currentUser && (
-          <div className="flex items-center justify-between border-b border-border/30 px-5 py-1.5 bg-muted/20">
+          <div className="flex items-center justify-between border-b border-border/30 px-5 py-1.5 bg-muted/20 shrink-0">
             <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
               <div className="flex size-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
                 <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400">
@@ -1139,7 +1139,7 @@ export function AuthenticatedApp() {
         )}
 
         {/* Main content area — macOS content view */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-y-auto">
           <div className="p-5 md:p-6 lg:p-8">
             <ModuleContent key={activeModule} moduleId={activeModule} />
           </div>

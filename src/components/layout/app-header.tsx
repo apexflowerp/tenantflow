@@ -95,7 +95,7 @@ export function AppHeader() {
   const moduleLabel = MODULE_LABELS[activeModule] ?? 'Dashboard'
 
   return (
-    <header className="flex h-12 items-center gap-2 glass-toolbar border-b border-border/40 px-4 sticky top-0 z-20">
+    <header className="flex h-12 items-center gap-2 glass-toolbar border-b border-border/40 px-4 shrink-0 z-20">
       {/* Sidebar trigger */}
       <SidebarTrigger className="-ml-1 size-8 rounded-lg" />
       <Separator orientation="vertical" className="mr-1 h-4 opacity-50" />
