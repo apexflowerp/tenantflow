@@ -135,3 +135,25 @@ Stage Summary:
 - Serial key input is now type="password" with toggle visibility
 - License key generation still shows full key once (standard security pattern) then masks in listings
 - All changes need to be pushed to GitHub
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Fix sidebar scrolling with page content and layout bugs
+
+Work Log:
+- Analyzed screenshot using VLM - sidebar was scrolling with page content instead of staying fixed
+- Identified root cause: SidebarProvider used min-h-svh which allowed body to grow and scroll
+- Fixed SidebarProvider: changed min-h-svh to h-svh overflow-hidden (locks root to viewport height)
+- Fixed SidebarInset: added overflow-hidden to prevent content from overflowing flex space
+- Fixed AppHeader: replaced sticky top-0 with shrink-0 (correct for constrained flex column)
+- Fixed AuthenticatedApp: added shrink-0 to ViewOnlyBanner and user info bar, content area uses overflow-y-auto
+- Layout now works correctly: only content area scrolls, sidebar stays fixed
+- Pushed fix to GitHub (commit b745534)
+
+Stage Summary:
+- Sidebar is now viewport-locked and never scrolls with page content
+- Header stays pinned at top of content area
+- Only the main content area (flex-1 overflow-y-auto) scrolls
+- Mobile layout unaffected (sidebar renders as Sheet on mobile)
+- All changes pushed to https://github.com/apexflowerp/tenantflow
