@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev": "DATABASE_URL=postgresql://neondb_owner:npg_0LaXsMl2YzBt@ep-royal-recipe-apb3473r-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require DIRECT_URL=postgresql://neondb_owner:npg_0LaXsMl2YzBt@ep-royal-recipe-apb3473r-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require NODE_OPTIONS='--max-old-space-size=4096' next dev -p 3000 -H 0.0.0.0 --webpack 2>&1 | tee dev.log",
+    "dev": "next dev -p 3000 -H 0.0.0.0 --turbopack",
     "build": "next build && mkdir -p .next/standalone/.next && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",

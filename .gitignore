@@ -59,3 +59,20 @@ agent-ctx/
 prisma/*.db
 prisma/*.db-journal
 mini-services/
+
+# Generated Prisma clients
+src/generated/
+
+# SQLite databases
+db/*.db
+
+# Screenshots
+*.png
+
+# Keep-alive script
+keep-alive.sh
+
+# Prisma backups
+prisma/*.bak
+prisma/schema-central.prisma
+prisma/schema-tenant.prisma

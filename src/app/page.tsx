@@ -64,9 +64,56 @@ async function loadModule(moduleId: string): Promise<React.ComponentType | null>
   if (!entry) return null
   const [importPath, exportName] = entry
   try {
-    // @ts-expect-error — dynamic string import
-    const mod = await import(importPath)
-    return mod[exportName] ?? null
+    let mod: Record<string, unknown>
+    switch (importPath) {
+      case '@/components/dashboard': mod = await import('@/components/dashboard'); break
+      case '@/components/properties': mod = await import('@/components/properties'); break
+      case '@/components/tenants': mod = await import('@/components/tenants'); break
+      case '@/components/leases': mod = await import('@/components/leases'); break
+      case '@/components/maintenance': mod = await import('@/components/maintenance'); break
+      case '@/components/vendors': mod = await import('@/components/vendors'); break
+      case '@/components/billing': mod = await import('@/components/billing'); break
+      case '@/components/marketplace': mod = await import('@/components/marketplace'); break
+      case '@/components/accounting': mod = await import('@/components/accounting'); break
+      case '@/components/analytics': mod = await import('@/components/analytics'); break
+      case '@/components/ai-copilot': mod = await import('@/components/ai-copilot'); break
+      case '@/components/communications': mod = await import('@/components/communications'); break
+      case '@/components/settings': mod = await import('@/components/settings'); break
+      case '@/components/documents': mod = await import('@/components/documents'); break
+      case '@/components/reports': mod = await import('@/components/reports'); break
+      case '@/components/owner': mod = await import('@/components/owner'); break
+      case '@/components/devices': mod = await import('@/components/devices'); break
+      case '@/components/inspections': mod = await import('@/components/inspections'); break
+      case '@/components/insurance': mod = await import('@/components/insurance'); break
+      case '@/components/calendar': mod = await import('@/components/calendar'); break
+      case '@/components/audit': mod = await import('@/components/audit'); break
+      case '@/components/screening': mod = await import('@/components/screening'); break
+      case '@/components/compliance': mod = await import('@/components/compliance'); break
+      case '@/components/workflows': mod = await import('@/components/workflows'); break
+      case '@/components/portal': mod = await import('@/components/portal'); break
+      case '@/components/utilities': mod = await import('@/components/utilities'); break
+      case '@/components/parking': mod = await import('@/components/parking'); break
+      case '@/components/amenities': mod = await import('@/components/amenities'); break
+      case '@/components/announcements': mod = await import('@/components/announcements'); break
+      case '@/components/surveys': mod = await import('@/components/surveys'); break
+      case '@/components/smart-home': mod = await import('@/components/smart-home'); break
+      case '@/components/keys': mod = await import('@/components/keys'); break
+      case '@/components/renewals': mod = await import('@/components/renewals'); break
+      case '@/components/late-fees': mod = await import('@/components/late-fees'); break
+      case '@/components/payment-plans': mod = await import('@/components/payment-plans'); break
+      case '@/components/energy': mod = await import('@/components/energy'); break
+      case '@/components/visitors': mod = await import('@/components/visitors'); break
+      case '@/components/packages': mod = await import('@/components/packages'); break
+      case '@/components/move-inout': mod = await import('@/components/move-inout'); break
+      case '@/components/budget': mod = await import('@/components/budget'); break
+      case '@/components/e-signatures': mod = await import('@/components/e-signatures'); break
+      case '@/components/pets': mod = await import('@/components/pets'); break
+      case '@/components/disputes': mod = await import('@/components/disputes'); break
+      case '@/components/assets': mod = await import('@/components/assets'); break
+      case '@/components/market-intel': mod = await import('@/components/market-intel'); break
+      default: return null
+    }
+    return (mod[exportName] as React.ComponentType) ?? null
   } catch {
     return null
   }
