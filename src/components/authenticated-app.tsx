@@ -1081,7 +1081,7 @@ function ViewOnlyBanner() {
 
 export function AuthenticatedApp() {
   const { activeModule } = useAppStore()
-  const { isAuthenticated, currentUser, isViewOnly, loginMethod, logout } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
 
   return (
     <SidebarProvider>
@@ -1094,49 +1094,6 @@ export function AuthenticatedApp() {
 
         {/* View-only banner */}
         <ViewOnlyBanner />
-
-        {/* User info bar — macOS subtitle bar style */}
-        {isAuthenticated && currentUser && (
-          <div className="flex items-center justify-between border-b border-border/30 px-5 py-1.5 bg-muted/20 shrink-0">
-            <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
-              <div className="flex size-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
-                <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400">
-                  {currentUser.name.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2)}
-                </span>
-              </div>
-              <span className="font-medium text-foreground/80">{currentUser.name}</span>
-              <span className="text-muted-foreground/40">·</span>
-              <span className="text-muted-foreground/60">{currentUser.email}</span>
-              {currentUser.clientId && (
-                <>
-                  <span className="text-muted-foreground/40">·</span>
-                  <Badge className="text-[9px] px-1.5 py-0 h-4 font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/15" variant="outline">
-                    {currentUser.clientId.slice(0, 8)}…
-                  </Badge>
-                </>
-              )}
-              {isViewOnly && (
-                <Badge className="ml-1 text-[9px] px-1.5 py-0 h-4 font-semibold bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/20 hover:bg-amber-500/20" variant="outline">
-                  <Eye className="size-2.5 mr-0.5" />
-                  VIEW ONLY
-                </Badge>
-              )}
-              {loginMethod === 'demo' && (
-                <Badge className="text-[9px] px-1.5 py-0 h-4 font-semibold bg-violet-500/15 text-violet-600 dark:text-violet-400 border-violet-500/20 hover:bg-violet-500/20" variant="outline">
-                  <Zap className="size-2.5 mr-0.5" />
-                  DEMO
-                </Badge>
-              )}
-            </div>
-            <button
-              onClick={() => logout()}
-              className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-            >
-              <LogOut className="size-3" />
-              Sign Out
-            </button>
-          </div>
-        )}
 
         {/* Main content area — macOS content view */}
         <div className="flex-1 overflow-y-auto">

@@ -14,9 +14,6 @@ import {
   FolderOpen,
   Settings,
   ChevronsUpDown,
-  LogOut,
-  User,
-  Settings2,
   FileBarChart,
   Shield,
   ShieldCheck,
@@ -48,6 +45,8 @@ import {
   Warehouse,
   TrendingUp,
   Leaf,
+  ChevronsLeft,
+  ChevronsRight,
 } from 'lucide-react'
 
 import { useAppStore, useAuthStore } from '@/stores'
@@ -56,7 +55,6 @@ import { cn } from '@/lib/utils'
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -66,15 +64,20 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 // ── Navigation structure ────────────────────────────────────────────────────
 
@@ -186,12 +189,50 @@ const WORKSPACES = [
   { id: 'ws-2', name: 'Skyline Properties', slug: 'skyline' },
 ]
 
+// ── Sidebar Toggle Button ────────────────────────────────────────────────────
+
+function SidebarToggleButton() {
+  const { state, toggleSidebar } = useSidebar()
+  const isCollapsed = state === 'collapsed'
+
+  return (
+    <div className="px-2 pb-3 pt-1">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleSidebar}
+            className={cn(
+              'w-full justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-sidebar-accent transition-all duration-200',
+              isCollapsed ? 'h-8 w-8 px-0' : 'h-8 gap-2 px-2'
+            )}
+          >
+            {isCollapsed ? (
+              <ChevronsRight className="size-4" />
+            ) : (
+              <>
+                <ChevronsLeft className="size-4" />
+                <span className="text-[11px] font-medium">Collapse</span>
+              </>
+            )}
+          </Button>
+        </TooltipTrigger>
+        {isCollapsed && (
+          <TooltipContent side="right" align="center">
+            Expand sidebar
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </div>
+  )
+}
+
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function AppSidebar() {
   const { activeModule, setActiveModule, currentWorkspace, setCurrentWorkspace } =
     useAppStore()
-  const { currentUser } = useAuthStore()
 
   return (
     <Sidebar collapsible="icon" className="border-r-0 glass-sidebar">
@@ -281,64 +322,8 @@ export function AppSidebar() {
 
       <SidebarSeparator className="mx-3 opacity-50" />
 
-      {/* ── User / Footer ────────────────────────────────────────────── */}
-      <SidebarFooter className="px-2 pb-3">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent rounded-xl"
-                >
-                  <Avatar className="size-8 rounded-lg">
-                    <AvatarImage src="" alt="User" />
-                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 text-amber-700 dark:from-amber-900/40 dark:to-orange-900/40 dark:text-amber-400 text-xs font-semibold">
-                      {currentUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'TF'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                    <span className="truncate font-medium text-sidebar-foreground">
-                      {currentUser?.name || 'TenantFlow User'}
-                    </span>
-                    <span className="truncate text-[11px] text-muted-foreground">
-                      {currentUser?.email || 'user@tenantflow.io'}
-                    </span>
-                  </div>
-                  <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-56 rounded-xl glass-modal"
-                align="start"
-                sideOffset={4}
-              >
-                <DropdownMenuItem className="cursor-pointer rounded-lg">
-                  <User className="size-4" />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="cursor-pointer rounded-lg"
-                  onClick={() => setActiveModule('settings')}
-                >
-                  <Settings2 className="size-4" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="cursor-pointer text-destructive focus:text-destructive rounded-lg"
-                  variant="destructive"
-                  onClick={() => window.dispatchEvent(new Event('tenantflow:logout'))}
-                >
-                  <LogOut className="size-4" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+      {/* ── Expand / Collapse Toggle ──────────────────────────────────── */}
+      <SidebarToggleButton />
 
       <SidebarRail />
     </Sidebar>
