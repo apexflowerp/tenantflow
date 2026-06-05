@@ -163,8 +163,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'PLATFORM',
     items: [
-      { id: 'owner', label: 'Owner Mgmt', icon: Shield },
-      { id: 'owner_reports', label: 'Owner Reports', icon: BarChart3, color: 'text-tahoe-purple' },
+      { id: 'owner', label: 'Owner Panel', icon: Shield },
+      { id: 'owner_reports', label: 'Reports', icon: BarChart3, color: 'text-tahoe-purple' },
       { id: 'portal', label: 'Portal', icon: Globe, color: 'text-tahoe-pink' },
     ],
   },
@@ -235,7 +235,7 @@ export function AppSidebar() {
       <SidebarSeparator className="mx-3 opacity-50" />
 
       {/* ── Navigation ───────────────────────────────────────────────── */}
-      <SidebarContent className="px-2 overflow-y-auto">
+      <SidebarContent className="px-2 overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border/50 [&::-webkit-scrollbar-track]:bg-transparent">
         {NAV_GROUPS.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel className="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground/50 uppercase">

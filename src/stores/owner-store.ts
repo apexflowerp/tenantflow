@@ -107,6 +107,43 @@ export interface QuotationData {
   client?: ClientData
 }
 
+export interface DeviceData {
+  id: string
+  serialKey: string
+  deviceName: string | null
+  deviceType: string
+  os: string | null
+  browser: string | null
+  ipAddress: string | null
+  macAddress: string | null
+  status: string
+  activatedAt: string | null
+  lastSeenAt: string | null
+  workspaceId: string
+  userId: string | null
+  createdAt: string
+  updatedAt: string
+  workspace?: { id: string; name: string; clientId: string; client?: { id: string; companyName: string; plan: string } }
+  user?: { id: string; name: string; email: string }
+  licenseKeys?: { id: string; key: string; status: string; plan: string }[]
+}
+
+export interface AuditLogData {
+  id: string
+  action: string
+  entity: string
+  entityId: string | null
+  userId: string | null
+  workspaceId: string
+  clientId: string | null
+  ipAddress: string | null
+  userAgent: string | null
+  details: string | null
+  severity: string
+  createdAt: string
+  user?: { id: string; name: string; email: string } | null
+}
+
 export interface DashboardStats {
   totalClients: number
   activeClients: number
@@ -130,6 +167,8 @@ interface OwnerStore {
   invoices: InvoiceData[]
   quotations: QuotationData[]
   dashboardStats: DashboardStats | null
+  clientDevices: DeviceData[]
+  clientAuditLogs: AuditLogData[]
   isLoading: boolean
   error: string | null
 
@@ -144,6 +183,10 @@ interface OwnerStore {
   updateClient: (id: string, data: Partial<ClientData>) => Promise<void>
   deleteClient: (id: string) => Promise<void>
   generateLicenseKey: (data: { clientId: string; type: string; plan: string; maxDevices?: number; maxUsers?: number }) => Promise<void>
+  revokeLicenseKey: (id: string) => Promise<void>
+  fetchClientDevices: (clientId: string) => Promise<void>
+  fetchClientAuditLogs: (clientId: string) => Promise<void>
+  renewSubscription: (id: string, data: { contractStart: string; contractEnd: string }) => Promise<void>
   createInvoice: (data: Partial<InvoiceData>) => Promise<void>
   updateInvoiceStatus: (id: string, status: string) => Promise<void>
   createQuotation: (data: any) => Promise<void>
@@ -158,6 +201,8 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
   invoices: [],
   quotations: [],
   dashboardStats: null,
+  clientDevices: [],
+  clientAuditLogs: [],
   isLoading: false,
   error: null,
 
@@ -367,6 +412,66 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
       if (!res.ok) throw new Error('Failed to convert quotation to invoice')
       await get().fetchQuotations()
       await get().fetchInvoices()
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  revokeLicenseKey: async (id) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/licenses/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'revoked' }),
+      })
+      if (!res.ok) throw new Error('Failed to revoke license key')
+      await get().fetchLicenseKeys()
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  fetchClientDevices: async (clientId) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/devices?clientId=${clientId}`)
+      if (!res.ok) throw new Error('Failed to fetch devices')
+      const data = await res.json()
+      set({ clientDevices: data.devices || [] })
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  fetchClientAuditLogs: async (clientId) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/clients/${clientId}`)
+      if (!res.ok) throw new Error('Failed to fetch audit logs')
+      const data = await res.json()
+      set({ clientAuditLogs: data.client?.auditLogs || [] })
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  renewSubscription: async (id, data) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/clients/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) throw new Error('Failed to renew subscription')
+      await get().fetchClients()
+      const currentSelected = get().selectedClient
+      if (currentSelected?.id === id) {
+        const clients = get().clients
+        const updated = clients.find(c => c.id === id) || null
+        set({ selectedClient: updated })
+      }
     } catch (err: any) {
       set({ error: err.message })
     }
