@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod/v4'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
 import { getApiUrl } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 
 import {
   Dialog,
@@ -79,6 +79,7 @@ interface RecordPaymentDialogProps {
 export function RecordPaymentDialog({ open, onOpenChange, tenants, onSuccess }: RecordPaymentDialogProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [selectedTenantId, setSelectedTenantId] = React.useState<string>('')
+  const { toast } = useToast()
 
   const form = useForm<RecordPaymentForm>({
     resolver: zodResolver(recordPaymentSchema),
@@ -124,7 +125,7 @@ export function RecordPaymentDialog({ open, onOpenChange, tenants, onSuccess }: 
         body: JSON.stringify({
           tenantId: values.tenantId,
           leaseId: values.leaseId,
-          amount: values.amount,
+          amount: parseFloat(values.amount),
           type: values.type,
           status: 'paid',
           method: values.method,
@@ -140,11 +141,18 @@ export function RecordPaymentDialog({ open, onOpenChange, tenants, onSuccess }: 
         throw new Error(errorData.error || 'Failed to record payment')
       }
 
-      toast.success('Payment recorded successfully')
+      toast({
+        title: 'Payment Recorded',
+        description: 'The payment has been successfully recorded.',
+      })
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to record payment')
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to record payment',
+        variant: 'destructive',
+      })
     } finally {
       setIsSubmitting(false)
     }

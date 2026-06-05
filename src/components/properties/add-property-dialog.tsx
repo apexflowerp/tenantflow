@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { usePropertyStore } from '@/stores'
+import { useToast } from '@/hooks/use-toast'
 import { getApiUrl } from '@/lib/api'
 
 const addPropertySchema = z.object({
@@ -58,6 +59,7 @@ export function AddPropertyDialog({ children }: AddPropertyDialogProps) {
   const [open, setOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const fetchProperties = usePropertyStore((s) => s.fetchProperties)
+  const { toast } = useToast()
 
   const form = useForm<AddPropertyFormValues>({
     resolver: zodResolver(addPropertySchema) as any,
@@ -89,12 +91,21 @@ export function AddPropertyDialog({ children }: AddPropertyDialogProps) {
         throw new Error(data.error || 'Failed to create property')
       }
 
+      toast({
+        title: 'Property Created',
+        description: `${values.name} has been successfully added.`,
+      })
+
       // Refresh the list
       await fetchProperties()
       form.reset()
       setOpen(false)
     } catch (error) {
-      console.error('Failed to create property:', error)
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to create property',
+        variant: 'destructive',
+      })
     } finally {
       setIsSubmitting(false)
     }

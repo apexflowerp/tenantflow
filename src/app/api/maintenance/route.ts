@@ -109,3 +109,25 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to update ticket' }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { db: tenantDb } = await getDbForRequest(request)
+
+    const body = await request.json()
+    const { id } = body
+
+    if (!id) {
+      return NextResponse.json({ error: 'Ticket ID is required' }, { status: 400 })
+    }
+
+    await tenantDb.maintenanceTicket.delete({
+      where: { id },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Ticket deletion error:', error)
+    return NextResponse.json({ error: 'Failed to delete ticket' }, { status: 500 })
+  }
+}

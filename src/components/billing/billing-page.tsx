@@ -23,7 +23,7 @@ import {
 } from 'recharts'
 import { format, parseISO, subMonths, startOfMonth, endOfMonth } from 'date-fns'
 
-import { usePaymentStore } from '@/stores/payment-store'
+import { usePaymentStore } from '@/stores'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'

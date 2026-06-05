@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select'
 import { useTenantStore } from '@/stores'
 import type { Tenant } from '@/stores/tenant-store'
+import { getApiUrl } from '@/lib/api'
 
 import { TenantTable, type TenantRow } from './tenant-table'
 import { TenantProfile } from './tenant-profile'
@@ -127,7 +128,7 @@ export function TenantsPage() {
   const handleSeed = async () => {
     setIsSeeding(true)
     try {
-      const response = await fetch('/api/seed')
+      const response = await fetch(getApiUrl('/api/seed'))
       if (response.ok) {
         await fetchTenants()
       }

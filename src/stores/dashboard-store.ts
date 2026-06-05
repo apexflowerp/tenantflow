@@ -40,6 +40,20 @@ export interface OccupancyDataPoint {
   rate: number
 }
 
+export interface PropertyOccupancyPoint {
+  id: string
+  name: string
+  totalUnits: number
+  occupiedUnits: number
+  occupancyRate: number
+}
+
+export interface DashboardTicketPriority {
+  low: number
+  medium: number
+  high: number
+}
+
 export interface PaymentBreakdown {
   paid: number
   pending: number
@@ -67,7 +81,9 @@ interface DashboardStore {
   occupancyData: OccupancyDataPoint[]
   paymentBreakdown: PaymentBreakdown | null
   ticketBreakdown: TicketBreakdown | null
+  ticketPriority: DashboardTicketPriority | null
   leaseBreakdown: LeaseBreakdown | null
+  propertyOccupancy: PropertyOccupancyPoint[]
 
   // State
   isLoading: boolean
@@ -86,6 +102,8 @@ const initialState = {
   recentActivities: [],
   revenueData: [],
   occupancyData: [],
+  propertyOccupancy: [],
+  ticketPriority: null,
   paymentBreakdown: null,
   ticketBreakdown: null,
   leaseBreakdown: null,
@@ -121,7 +139,9 @@ export const useDashboardStore = create<DashboardStore>((set, get) => ({
         occupancyData: data.occupancyData ?? [],
         paymentBreakdown: data.paymentBreakdown ?? null,
         ticketBreakdown: data.ticketBreakdown ?? null,
+        ticketPriority: data.ticketPriority ?? null,
         leaseBreakdown: data.leaseBreakdown ?? null,
+        propertyOccupancy: data.propertyOccupancy ?? [],
         isLoading: false,
         lastFetched: Date.now(),
       })

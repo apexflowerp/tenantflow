@@ -89,7 +89,7 @@ const MODULE_LABELS: Record<string, string> = {
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function AppHeader() {
-  const { activeModule, setCommandPaletteOpen } = useAppStore()
+  const { activeModule, setActiveModule, setCommandPaletteOpen } = useAppStore()
   const { theme, setTheme, resolvedTheme } = useTheme()
 
   const moduleLabel = MODULE_LABELS[activeModule] ?? 'Dashboard'
@@ -151,19 +151,19 @@ export function AppHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 rounded-xl">
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('properties')}>
               <Building2 className="size-4" />
               New Property
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('tenants')}>
               <Users className="size-4" />
               New Tenant
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('leases')}>
               <FileText className="size-4" />
               New Lease
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('maintenance')}>
               <Wrench className="size-4" />
               New Ticket
             </DropdownMenuItem>
@@ -182,19 +182,19 @@ export function AppHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 rounded-xl">
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('properties')}>
               <Building2 className="size-4" />
               New Property
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('tenants')}>
               <Users className="size-4" />
               New Tenant
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('leases')}>
               <FileText className="size-4" />
               New Lease
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer rounded-lg">
+            <DropdownMenuItem className="cursor-pointer rounded-lg" onClick={() => setActiveModule('maintenance')}>
               <Wrench className="size-4" />
               New Ticket
             </DropdownMenuItem>

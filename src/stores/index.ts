@@ -18,8 +18,10 @@ export type {
   RecentActivity,
   RevenueDataPoint,
   OccupancyDataPoint,
+  PropertyOccupancyPoint,
   PaymentBreakdown,
   TicketBreakdown,
+  DashboardTicketPriority,
   LeaseBreakdown,
 } from './dashboard-store'
 

@@ -21,6 +21,8 @@ import {
   TrendingUp,
   Zap,
   Bell,
+  RefreshCw,
+  AlertCircle,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -40,50 +42,12 @@ import {
   Cell,
 } from 'recharts'
 import { cn } from '@/lib/utils'
+import { useDashboardStore } from '@/stores/dashboard-store'
+import { useAppStore } from '@/stores'
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// MOCK DATA
+// STATIC PLACEHOLDER DATA (AI-generated content & calendar events)
 // ═══════════════════════════════════════════════════════════════════════════════
-
-const revenueData = [
-  { month: 'Jul', revenue: 98200 },
-  { month: 'Aug', revenue: 105400 },
-  { month: 'Sep', revenue: 112800 },
-  { month: 'Oct', revenue: 108600 },
-  { month: 'Nov', revenue: 118200 },
-  { month: 'Dec', revenue: 124500 },
-  { month: 'Jan', revenue: 119800 },
-  { month: 'Feb', revenue: 126400 },
-  { month: 'Mar', revenue: 131200 },
-  { month: 'Apr', revenue: 128900 },
-  { month: 'May', revenue: 136700 },
-  { month: 'Jun', revenue: 142800 },
-]
-
-const occupancyData = [
-  { property: 'Skyline Tower', occupancy: 96 },
-  { property: 'Harbor View', occupancy: 92 },
-  { property: 'Greenfield', occupancy: 88 },
-  { property: 'Metro Hub', occupancy: 97 },
-  { property: 'Riverside', occupancy: 85 },
-  { property: 'Oak Terrace', occupancy: 91 },
-]
-
-const recentActivities = [
-  { id: 1, type: 'payment' as const, title: 'Rent payment received', description: 'Unit 12A - Harbor View Residences', amount: '$2,400', time: '2 min ago', user: 'JM' },
-  { id: 2, type: 'lease' as const, title: 'New lease signed', description: 'Sarah Mitchell - Greenfield Gardens 7C', amount: '12 months', time: '18 min ago', user: 'SM' },
-  { id: 3, type: 'maintenance' as const, title: 'Maintenance request filed', description: 'HVAC system - Metro Commercial Hub', amount: 'Urgent', time: '1 hr ago', user: 'RK' },
-  { id: 4, type: 'tenant' as const, title: 'New tenant registered', description: 'Alex Thompson - Skyline Tower 22B', amount: '', time: '3 hrs ago', user: 'AT' },
-  { id: 5, type: 'payment' as const, title: 'Rent payment received', description: 'Unit 5D - Oak Terrace Apartments', amount: '$1,850', time: '4 hrs ago', user: 'LD' },
-  { id: 6, type: 'lease' as const, title: 'Lease renewal initiated', description: 'Michael Brown - Riverside Condos 3A', amount: '$2,100/mo', time: '5 hrs ago', user: 'MB' },
-]
-
-const leaseExpirations = [
-  { tenant: 'Emily Chen', property: 'Skyline Tower 14A', daysRemaining: 18, avatar: 'EC' },
-  { tenant: 'David Park', property: 'Harbor View 8B', daysRemaining: 27, avatar: 'DP' },
-  { tenant: 'Maria Garcia', property: 'Riverside 2C', daysRemaining: 45, avatar: 'MG' },
-  { tenant: 'James Wilson', property: 'Greenfield 11D', daysRemaining: 72, avatar: 'JW' },
-]
 
 const aiInsights = [
   {
@@ -106,68 +70,12 @@ const aiInsights = [
   },
 ]
 
-const paymentCollection = [
-  { property: 'Skyline Tower', rate: 97.2, collected: 35200, total: 36200 },
-  { property: 'Harbor View Residences', rate: 95.8, collected: 28700, total: 29950 },
-  { property: 'Greenfield Gardens', rate: 93.1, collected: 18900, total: 20300 },
-  { property: 'Metro Commercial Hub', rate: 96.5, collected: 42800, total: 44350 },
-  { property: 'Riverside Condos', rate: 88.4, collected: 11200, total: 12660 },
-  { property: 'Oak Terrace Apartments', rate: 94.0, collected: 6200, total: 6600 },
-]
-
 const upcomingTasks = [
   { title: 'Property Inspection - Skyline Tower', type: 'inspection' as const, date: 'Today, 2:00 PM', priority: 'high' as const },
   { title: 'Lease Signing - Sarah Mitchell', type: 'lease_signing' as const, date: 'Tomorrow, 10:00 AM', priority: 'medium' as const },
   { title: 'Rent Collection - 48 units due', type: 'payment_due' as const, date: 'Mar 1, 2026', priority: 'high' as const },
   { title: 'HVAC Maintenance - Metro Hub', type: 'maintenance' as const, date: 'Mar 3, 2026', priority: 'medium' as const },
   { title: 'Quarterly Review Meeting', type: 'meeting' as const, date: 'Mar 5, 2026', priority: 'low' as const },
-]
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// KPI CONFIG
-// ═══════════════════════════════════════════════════════════════════════════════
-
-const kpiCards = [
-  {
-    title: 'Total Properties',
-    value: '48',
-    subtitle: '+3 this month',
-    trend: '+6.7%',
-    trendDirection: 'up' as const,
-    icon: Building2,
-    accentColor: 'tahoe-blue',
-    sparkData: [32, 35, 38, 36, 40, 42, 44, 43, 45, 46, 47, 48],
-  },
-  {
-    title: 'Active Tenants',
-    value: '156',
-    subtitle: '94% occupancy',
-    trend: '+4.2%',
-    trendDirection: 'up' as const,
-    icon: Users,
-    accentColor: 'tahoe-green',
-    sparkData: [120, 128, 132, 130, 138, 140, 142, 145, 148, 150, 153, 156],
-  },
-  {
-    title: 'Monthly Revenue',
-    value: '$142,800',
-    subtitle: '+12% YoY',
-    trend: '+12.3%',
-    trendDirection: 'up' as const,
-    icon: DollarSign,
-    accentColor: 'tahoe-purple',
-    sparkData: [98, 105, 112, 108, 118, 124, 119, 126, 131, 128, 136, 142],
-  },
-  {
-    title: 'Open Tickets',
-    value: '12',
-    subtitle: '3 urgent',
-    trend: '-8.2%',
-    trendDirection: 'down' as const,
-    icon: AlertTriangle,
-    accentColor: 'tahoe-orange',
-    sparkData: [22, 20, 18, 19, 16, 15, 17, 14, 16, 13, 14, 12],
-  },
 ]
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -214,6 +122,15 @@ const sectionVariants = {
 // HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount)
+}
+
 function getGreeting(): string {
   const hour = new Date().getHours()
   if (hour < 12) return 'Good morning'
@@ -228,6 +145,31 @@ function formatDate(): string {
     day: 'numeric',
     year: 'numeric',
   })
+}
+
+function getRelativeTime(dateString: string): string {
+  const now = new Date()
+  const date = new Date(dateString)
+  const diffMs = now.getTime() - date.getTime()
+  const diffSec = Math.floor(diffMs / 1000)
+  const diffMin = Math.floor(diffSec / 60)
+  const diffHr = Math.floor(diffMin / 60)
+  const diffDay = Math.floor(diffHr / 24)
+
+  if (diffSec < 60) return 'just now'
+  if (diffMin < 60) return `${diffMin}m ago`
+  if (diffHr < 24) return `${diffHr}h ago`
+  if (diffDay < 7) return `${diffDay}d ago`
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+function getUserInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
 }
 
 function getActivityIcon(type: string) {
@@ -248,12 +190,6 @@ function getActivityColor(type: string) {
     case 'tenant': return 'text-tahoe-purple bg-tahoe-purple/10'
     default: return 'text-muted-foreground bg-muted'
   }
-}
-
-function getUrgencyColor(days: number) {
-  if (days < 30) return 'text-tahoe-red bg-tahoe-red/10 border-tahoe-red/20'
-  if (days < 60) return 'text-tahoe-orange bg-tahoe-orange/10 border-tahoe-orange/20'
-  return 'text-tahoe-green bg-tahoe-green/10 border-tahoe-green/20'
 }
 
 function getUrgencyBadge(days: number) {
@@ -308,6 +244,7 @@ function getAccentClasses(color: string) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function MiniSparkline({ data, color }: { data: number[]; color: string }) {
+  if (data.length < 2) return null
   const max = Math.max(...data)
   const min = Math.min(...data)
   const range = max - min || 1
@@ -368,10 +305,237 @@ function ChartTooltip({ active, payload, label, formatter }: {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// LOADING SKELETON
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      {/* Header skeleton */}
+      <div className="glass-panel glass-tint-blue p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-8 w-64 rounded-lg bg-muted/50" />
+            <div className="h-4 w-48 rounded bg-muted/50" />
+          </div>
+          <div className="h-6 w-40 rounded-full bg-muted/50" />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-8 w-28 rounded-xl bg-muted/50" />
+          ))}
+        </div>
+      </div>
+
+      {/* KPI cards skeleton */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="glass-card rounded-xl p-5 space-y-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-muted/50" />
+                <div className="space-y-1.5">
+                  <div className="h-3 w-20 rounded bg-muted/50" />
+                  <div className="h-6 w-16 rounded bg-muted/50" />
+                </div>
+              </div>
+              <div className="h-7 w-20 rounded bg-muted/50" />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="h-3 w-24 rounded bg-muted/50" />
+              <div className="h-3 w-12 rounded bg-muted/50" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {[1, 2].map((i) => (
+          <div key={i} className="glass-card rounded-xl p-6 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="h-5 w-32 rounded bg-muted/50" />
+              <div className="h-5 w-20 rounded-full bg-muted/50" />
+            </div>
+            <div className="h-[280px] rounded-lg bg-muted/30" />
+          </div>
+        ))}
+      </div>
+
+      {/* Middle row skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="glass-card rounded-xl p-6 space-y-3">
+            <div className="h-5 w-32 rounded bg-muted/50" />
+            <div className="space-y-2">
+              {[1, 2, 3, 4].map((j) => (
+                <div key={j} className="h-12 rounded-xl bg-muted/30" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom row skeleton */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {[1, 2].map((i) => (
+          <div key={i} className="glass-card rounded-xl p-6 space-y-3">
+            <div className="h-5 w-32 rounded bg-muted/50" />
+            <div className="space-y-2">
+              {[1, 2, 3, 4, 5].map((j) => (
+                <div key={j} className="h-14 rounded-xl bg-muted/30" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // DASHBOARD PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function DashboardPage() {
+  const {
+    stats,
+    recentActivities,
+    revenueData,
+    propertyOccupancy,
+    paymentBreakdown,
+    ticketBreakdown,
+    ticketPriority,
+    leaseBreakdown,
+    isLoading,
+    error,
+    fetchDashboardData,
+  } = useDashboardStore()
+
+  const setActiveModule = useAppStore((s) => s.setActiveModule)
+
+  // Fetch dashboard data on mount
+  React.useEffect(() => {
+    fetchDashboardData()
+  }, [fetchDashboardData])
+
+  // Loading state
+  if (isLoading && !stats) {
+    return <DashboardSkeleton />
+  }
+
+  // Error state
+  if (error && !stats) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+        <div className="flex size-16 items-center justify-center rounded-2xl bg-tahoe-red/10">
+          <AlertCircle className="size-8 text-tahoe-red" />
+        </div>
+        <div className="text-center space-y-1">
+          <h3 className="text-lg font-semibold text-foreground">Failed to load dashboard</h3>
+          <p className="tahoe-caption max-w-md">{error}</p>
+        </div>
+        <Button
+          variant="outline"
+          className="gap-2 rounded-xl"
+          onClick={() => fetchDashboardData()}
+        >
+          <RefreshCw className="size-4" />
+          Try Again
+        </Button>
+      </div>
+    )
+  }
+
+  // ── Derived data from store ──────────────────────────────────────────────────
+
+  const openTicketCount = (ticketBreakdown?.open ?? 0) + (ticketBreakdown?.in_progress ?? 0)
+  const highPriorityCount = ticketPriority?.high ?? 0
+
+  // KPI cards from real stats
+  const kpiCards = [
+    {
+      title: 'Total Properties',
+      value: String(stats?.totalProperties ?? 0),
+      subtitle: `${stats?.totalUnits ?? 0} total units`,
+      trend: '',
+      trendDirection: 'up' as const,
+      icon: Building2,
+      accentColor: 'tahoe-blue',
+      sparkData: revenueData.length > 1
+        ? revenueData.map((d) => d.revenue > 0 ? 1 : 0)
+        : [1],
+    },
+    {
+      title: 'Active Tenants',
+      value: String(stats?.totalTenants ?? 0),
+      subtitle: `${stats?.occupancyRate ?? 0}% occupancy`,
+      trend: '',
+      trendDirection: 'up' as const,
+      icon: Users,
+      accentColor: 'tahoe-green',
+      sparkData: revenueData.length > 1
+        ? revenueData.map((d) => d.revenue > 0 ? 1 : 0)
+        : [1],
+    },
+    {
+      title: 'Monthly Revenue',
+      value: formatCurrency(stats?.totalRevenue ?? 0),
+      subtitle: stats?.pendingPayments ? `${formatCurrency(stats.pendingPayments)} pending` : 'No pending',
+      trend: '',
+      trendDirection: 'up' as const,
+      icon: DollarSign,
+      accentColor: 'tahoe-purple',
+      sparkData: revenueData.length > 1
+        ? revenueData.map((d) => d.revenue)
+        : [0],
+    },
+    {
+      title: 'Open Tickets',
+      value: String(openTicketCount),
+      subtitle: highPriorityCount > 0 ? `${highPriorityCount} high priority` : 'No high priority',
+      trend: '',
+      trendDirection: 'down' as const,
+      icon: AlertTriangle,
+      accentColor: 'tahoe-orange',
+      sparkData: revenueData.length > 1
+        ? revenueData.map(() => openTicketCount)
+        : [0],
+    },
+  ]
+
+  // Map propertyOccupancy for bar chart
+  const occupancyChartData = propertyOccupancy.map((p) => ({
+    property: p.name,
+    occupancy: p.occupancyRate,
+  }))
+
+  // Compute avg occupancy for badge
+  const avgOccupancy = propertyOccupancy.length > 0
+    ? Math.round(propertyOccupancy.reduce((sum, p) => sum + p.occupancyRate, 0) / propertyOccupancy.length)
+    : 0
+
+  // Payment collection overall rate
+  const totalPayments = (paymentBreakdown?.paid ?? 0) + (paymentBreakdown?.pending ?? 0) + (paymentBreakdown?.overdue ?? 0)
+  const overallCollectionRate = totalPayments > 0
+    ? Math.round(((paymentBreakdown?.paid ?? 0) / totalPayments) * 1000) / 10
+    : 0
+
+  // Lease breakdown for the expirations card
+  const leaseSummaryItems = [
+    { label: 'Active Leases', count: leaseBreakdown?.active ?? 0, color: 'tahoe-green' as const },
+    { label: 'Expiring Soon', count: leaseBreakdown?.expiring ?? 0, color: 'tahoe-orange' as const },
+    { label: 'Expired', count: leaseBreakdown?.expired ?? 0, color: 'tahoe-red' as const },
+  ]
+
+  // Quick actions config with navigation
+  const quickActions = [
+    { label: 'Add Property', icon: Building2, accent: 'tahoe-blue', module: 'properties' },
+    { label: 'New Lease', icon: FileText, accent: 'tahoe-purple', module: 'leases' },
+    { label: 'Collect Rent', icon: CreditCard, accent: 'tahoe-green', module: 'billing' },
+    { label: 'AI Copilot', icon: Sparkles, accent: 'tahoe-purple', module: 'copilot' },
+  ] as const
+
   return (
     <motion.div
       initial="hidden"
@@ -401,16 +565,12 @@ export function DashboardPage() {
 
           {/* Quick Actions */}
           <div className="flex flex-wrap gap-2">
-            {[
-              { label: 'Add Property', icon: Building2, accent: 'tahoe-blue' },
-              { label: 'New Lease', icon: FileText, accent: 'tahoe-purple' },
-              { label: 'Collect Rent', icon: CreditCard, accent: 'tahoe-green' },
-              { label: 'AI Copilot', icon: Sparkles, accent: 'tahoe-purple' },
-            ].map((action) => (
+            {quickActions.map((action) => (
               <Button
                 key={action.label}
                 variant="outline"
                 size="sm"
+                onClick={() => setActiveModule(action.module)}
                 className={cn(
                   'gap-2 rounded-xl border-border/30 bg-background/50 backdrop-blur-sm',
                   'hover:bg-accent/50 hover:border-border/50',
@@ -432,9 +592,6 @@ export function DashboardPage() {
         {kpiCards.map((kpi, index) => {
           const accents = getAccentClasses(kpi.accentColor)
           const Icon = kpi.icon
-          const isDown = kpi.trendDirection === 'down'
-          // For tickets, down is good
-          const isPositive = kpi.title === 'Open Tickets' ? isDown : !isDown
 
           return (
             <motion.div
@@ -471,17 +628,19 @@ export function DashboardPage() {
                   </div>
                   <div className="mt-3 flex items-center justify-between">
                     <span className="tahoe-caption">{kpi.subtitle}</span>
-                    <span className={cn(
-                      'inline-flex items-center gap-0.5 text-[11px] font-semibold',
-                      isPositive ? 'text-tahoe-green' : 'text-tahoe-red'
-                    )}>
-                      {isDown ? (
-                        <ArrowDownRight className="size-3" />
-                      ) : (
-                        <ArrowUpRight className="size-3" />
-                      )}
-                      {kpi.trend}
-                    </span>
+                    {kpi.trend && (
+                      <span className={cn(
+                        'inline-flex items-center gap-0.5 text-[11px] font-semibold',
+                        kpi.trendDirection === 'up' ? 'text-tahoe-green' : 'text-tahoe-red'
+                      )}>
+                        {kpi.trendDirection === 'down' ? (
+                          <ArrowDownRight className="size-3" />
+                        ) : (
+                          <ArrowUpRight className="size-3" />
+                        )}
+                        {kpi.trend}
+                      </span>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -501,64 +660,70 @@ export function DashboardPage() {
               <CardTitle className="text-base font-semibold">Revenue Trend</CardTitle>
               <Badge className="tahoe-badge tahoe-badge-green">
                 <TrendingUp className="size-3" />
-                +12% YoY
+                {formatCurrency(stats?.totalRevenue ?? 0)}
               </Badge>
             </div>
           </CardHeader>
           <CardContent>
             <div className="h-[280px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--tahoe-blue)" stopOpacity={0.3} />
-                      <stop offset="50%" stopColor="var(--tahoe-blue)" stopOpacity={0.1} />
-                      <stop offset="100%" stopColor="var(--tahoe-blue)" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="var(--glass-border-subtle)"
-                    vertical={false}
-                  />
-                  <XAxis
-                    dataKey="month"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
-                    tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => (
-                      <ChartTooltip
-                        active={active}
-                        payload={payload as any}
-                        label={label}
-                        formatter={(v: number) => `$${v.toLocaleString()}`}
-                      />
-                    )}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="revenue"
-                    stroke="var(--tahoe-blue)"
-                    strokeWidth={2.5}
-                    fill="url(#revenueGradient)"
-                    dot={false}
-                    activeDot={{
-                      r: 5,
-                      fill: 'var(--tahoe-blue)',
-                      stroke: 'var(--background)',
-                      strokeWidth: 2,
-                    }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              {revenueData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={revenueData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="var(--tahoe-blue)" stopOpacity={0.3} />
+                        <stop offset="50%" stopColor="var(--tahoe-blue)" stopOpacity={0.1} />
+                        <stop offset="100%" stopColor="var(--tahoe-blue)" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--glass-border-subtle)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="month"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                      tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => (
+                        <ChartTooltip
+                          active={active}
+                          payload={payload as any}
+                          label={label}
+                          formatter={(v: number) => `$${v.toLocaleString()}`}
+                        />
+                      )}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="var(--tahoe-blue)"
+                      strokeWidth={2.5}
+                      fill="url(#revenueGradient)"
+                      dot={false}
+                      activeDot={{
+                        r: 5,
+                        fill: 'var(--tahoe-blue)',
+                        stroke: 'var(--background)',
+                        strokeWidth: 2,
+                      }}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+                  No revenue data available
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -569,62 +734,68 @@ export function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold">Occupancy by Property</CardTitle>
               <Badge className="tahoe-badge tahoe-badge-blue">
-                Avg 91.5%
+                Avg {avgOccupancy}%
               </Badge>
             </div>
           </CardHeader>
           <CardContent>
             <div className="h-[280px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={occupancyData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }} barCategoryGap="20%">
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="var(--glass-border-subtle)"
-                    vertical={false}
-                  />
-                  <XAxis
-                    dataKey="property"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    domain={[70, 100]}
-                    tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
-                    tickFormatter={(v: number) => `${v}%`}
-                  />
-                  <Tooltip
-                    content={({ active, payload, label }) => (
-                      <ChartTooltip
-                        active={active}
-                        payload={payload as any}
-                        label={label}
-                        formatter={(v: number) => `${v}%`}
-                      />
-                    )}
-                  />
-                  <Bar
-                    dataKey="occupancy"
-                    radius={[6, 6, 0, 0]}
-                    maxBarSize={40}
-                  >
-                    {occupancyData.map((entry, index) => (
-                      <Cell
-                        key={index}
-                        fill={
-                          entry.occupancy >= 95 ? 'var(--tahoe-green)' :
-                          entry.occupancy >= 90 ? 'var(--tahoe-blue)' :
-                          entry.occupancy >= 85 ? 'var(--tahoe-orange)' :
-                          'var(--tahoe-red)'
-                        }
-                        opacity={0.85}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              {occupancyChartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={occupancyChartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }} barCategoryGap="20%">
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--glass-border-subtle)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="property"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      domain={[0, 100]}
+                      tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+                      tickFormatter={(v: number) => `${v}%`}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => (
+                        <ChartTooltip
+                          active={active}
+                          payload={payload as any}
+                          label={label}
+                          formatter={(v: number) => `${v}%`}
+                        />
+                      )}
+                    />
+                    <Bar
+                      dataKey="occupancy"
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={40}
+                    >
+                      {occupancyChartData.map((entry, index) => (
+                        <Cell
+                          key={index}
+                          fill={
+                            entry.occupancy >= 95 ? 'var(--tahoe-green)' :
+                            entry.occupancy >= 90 ? 'var(--tahoe-blue)' :
+                            entry.occupancy >= 85 ? 'var(--tahoe-orange)' :
+                            'var(--tahoe-red)'
+                          }
+                          opacity={0.85}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+                  No occupancy data available
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -646,9 +817,13 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent className="max-h-[340px] overflow-y-auto">
             <div className="space-y-1">
-              {recentActivities.map((activity, idx) => {
+              {recentActivities.length > 0 ? recentActivities.map((activity, idx) => {
                 const ActivityIcon = getActivityIcon(activity.type)
                 const colorClasses = getActivityColor(activity.type)
+                const initials = activity.user?.name
+                  ? getUserInitials(activity.user.name)
+                  : activity.type.slice(0, 2).toUpperCase()
+
                 return (
                   <motion.div
                     key={activity.id}
@@ -668,74 +843,115 @@ export function DashboardPage() {
                         <p className="text-[13px] font-medium text-foreground truncate">
                           {activity.title}
                         </p>
-                        <span className="tahoe-caption shrink-0 whitespace-nowrap">{activity.time}</span>
+                        <span className="tahoe-caption shrink-0 whitespace-nowrap">
+                          {getRelativeTime(activity.createdAt)}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between gap-2 mt-0.5">
-                        <p className="tahoe-caption truncate">{activity.description}</p>
-                        {activity.amount && (
-                          <span className={cn(
-                            'text-[11px] font-semibold shrink-0',
-                            activity.type === 'payment' ? 'text-tahoe-green' :
-                            activity.type === 'maintenance' && activity.amount === 'Urgent' ? 'text-tahoe-red' :
-                            'text-muted-foreground'
-                          )}>
-                            {activity.amount}
+                        <p className="tahoe-caption truncate">{activity.description ?? ''}</p>
+                        {activity.user?.name && (
+                          <span className="tahoe-caption shrink-0 font-medium">
+                            {initials}
                           </span>
                         )}
                       </div>
                     </div>
                   </motion.div>
                 )
-              })}
+              }) : (
+                <div className="flex items-center justify-center py-8 text-muted-foreground text-sm">
+                  No recent activity
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
 
-        {/* B. Lease Expirations */}
+        {/* B. Lease Breakdown */}
         <Card className="glass-card">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-semibold">Lease Expirations</CardTitle>
+              <CardTitle className="text-base font-semibold">Lease Overview</CardTitle>
               <Badge className="tahoe-badge tahoe-badge-orange">
                 <Clock className="size-3" />
-                4 Upcoming
+                {leaseBreakdown?.expiring ?? 0} Expiring
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            {leaseExpirations.map((lease, idx) => (
-              <motion.div
-                key={lease.tenant}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.08 }}
-                className={cn(
-                  'flex items-center gap-3 rounded-xl border p-3 transition-colors',
-                  'hover:bg-accent/30 cursor-pointer',
-                  lease.daysRemaining < 30 ? 'border-tahoe-red/15 bg-tahoe-red/[0.03] dark:bg-tahoe-red/[0.05]' :
-                  lease.daysRemaining < 60 ? 'border-tahoe-orange/15 bg-tahoe-orange/[0.03] dark:bg-tahoe-orange/[0.05]' :
-                  'border-border/30 bg-background/30'
-                )}
-              >
-                <Avatar className="size-9 shrink-0">
-                  <AvatarFallback className={cn(
-                    'text-[10px] font-semibold',
-                    lease.daysRemaining < 30 ? 'bg-tahoe-red/10 text-tahoe-red' :
-                    lease.daysRemaining < 60 ? 'bg-tahoe-orange/10 text-tahoe-orange' :
-                    'bg-tahoe-green/10 text-tahoe-green'
-                  )}>
-                    {lease.avatar}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium text-foreground truncate">{lease.tenant}</p>
-                  <p className="tahoe-caption truncate">{lease.property}</p>
-                </div>
-                <Badge className={cn('tahoe-badge text-[10px] shrink-0', getUrgencyBadge(lease.daysRemaining))}>
-                  {lease.daysRemaining}d
-                </Badge>
-              </motion.div>
-            ))}
+            {leaseSummaryItems.map((item, idx) => {
+              const colorMap = {
+                'tahoe-green': {
+                  iconBg: 'bg-tahoe-green/10',
+                  iconColor: 'text-tahoe-green',
+                  barColor: '[&>div]:bg-tahoe-green',
+                  borderBg: 'border-tahoe-green/15 bg-tahoe-green/[0.03] dark:bg-tahoe-green/[0.05]',
+                },
+                'tahoe-orange': {
+                  iconBg: 'bg-tahoe-orange/10',
+                  iconColor: 'text-tahoe-orange',
+                  barColor: '[&>div]:bg-tahoe-orange',
+                  borderBg: 'border-tahoe-orange/15 bg-tahoe-orange/[0.03] dark:bg-tahoe-orange/[0.05]',
+                },
+                'tahoe-red': {
+                  iconBg: 'bg-tahoe-red/10',
+                  iconColor: 'text-tahoe-red',
+                  barColor: '[&>div]:bg-tahoe-red',
+                  borderBg: 'border-tahoe-red/15 bg-tahoe-red/[0.03] dark:bg-tahoe-red/[0.05]',
+                },
+              }[item.color]
+
+              const totalLeases = leaseBreakdown?.active ?? 0 + (leaseBreakdown?.expiring ?? 0) + (leaseBreakdown?.expired ?? 0)
+              const rate = totalLeases > 0 ? Math.round((item.count / totalLeases) * 100) : 0
+
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.08 }}
+                  className={cn(
+                    'rounded-xl border p-3 transition-colors space-y-2',
+                    'hover:bg-accent/30 cursor-pointer',
+                    colorMap.borderBg
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-9 shrink-0">
+                      <AvatarFallback className={cn(
+                        'text-[10px] font-semibold',
+                        colorMap.iconBg,
+                        colorMap.iconColor,
+                      )}>
+                        {item.label === 'Active Leases' ? 'AL' : item.label === 'Expiring Soon' ? 'ES' : 'EX'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[13px] font-medium text-foreground">{item.label}</p>
+                        <Badge className={cn('tahoe-badge text-[10px] shrink-0', getUrgencyBadge(item.color === 'tahoe-green' ? 90 : item.color === 'tahoe-orange' ? 25 : 5))}>
+                          {item.count}
+                        </Badge>
+                      </div>
+                      <Progress
+                        value={rate}
+                        className={cn('h-1.5 rounded-full mt-1.5', colorMap.barColor)}
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
+
+            {/* Quick link to leases */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full text-[12px] text-muted-foreground hover:text-foreground mt-2"
+              onClick={() => setActiveModule('leases')}
+            >
+              View All Leases <ChevronRight className="size-3 ml-0.5" />
+            </Button>
           </CardContent>
         </Card>
 
@@ -801,44 +1017,146 @@ export function DashboardPage() {
               <CardTitle className="text-base font-semibold">Payment Collection</CardTitle>
               <div className="flex items-center gap-2">
                 <span className="tahoe-overline">Overall</span>
-                <span className="text-lg font-bold text-tahoe-green">94.2%</span>
+                <span className={cn(
+                  'text-lg font-bold',
+                  overallCollectionRate >= 95 ? 'text-tahoe-green' :
+                  overallCollectionRate >= 90 ? 'text-tahoe-blue' :
+                  'text-tahoe-orange'
+                )}>
+                  {overallCollectionRate}%
+                </span>
               </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {paymentCollection.map((item, idx) => (
-              <motion.div
-                key={item.property}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.06 }}
-                className="space-y-1.5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] font-medium text-foreground truncate">{item.property}</span>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="tahoe-caption">${item.collected.toLocaleString()}k</span>
-                    <span className={cn(
-                      'text-[11px] font-semibold',
-                      item.rate >= 95 ? 'text-tahoe-green' :
-                      item.rate >= 90 ? 'text-tahoe-blue' :
-                      'text-tahoe-orange'
-                    )}>
-                      {item.rate}%
-                    </span>
+            {paymentBreakdown ? (
+              <>
+                {/* Paid */}
+                <motion.div
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex size-6 items-center justify-center rounded-md bg-tahoe-green/10">
+                        <CreditCard className="size-3 text-tahoe-green" />
+                      </div>
+                      <span className="text-[13px] font-medium text-foreground">Paid</span>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="tahoe-caption">{paymentBreakdown.paid} payments</span>
+                      <span className="text-[11px] font-semibold text-tahoe-green">
+                        {totalPayments > 0 ? Math.round((paymentBreakdown.paid / totalPayments) * 100) : 0}%
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <Progress
-                  value={item.rate}
-                  className={cn(
-                    'h-2 rounded-full',
-                    item.rate >= 95 ? '[&>div]:bg-tahoe-green' :
-                    item.rate >= 90 ? '[&>div]:bg-tahoe-blue' :
-                    '[&>div]:bg-tahoe-orange'
-                  )}
-                />
-              </motion.div>
-            ))}
+                  <Progress
+                    value={totalPayments > 0 ? (paymentBreakdown.paid / totalPayments) * 100 : 0}
+                    className="h-2 rounded-full [&>div]:bg-tahoe-green"
+                  />
+                </motion.div>
+
+                {/* Pending */}
+                <motion.div
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.06 }}
+                  className="space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex size-6 items-center justify-center rounded-md bg-tahoe-blue/10">
+                        <Clock className="size-3 text-tahoe-blue" />
+                      </div>
+                      <span className="text-[13px] font-medium text-foreground">Pending</span>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="tahoe-caption">{formatCurrency(stats?.pendingPayments ?? 0)}</span>
+                      <span className="text-[11px] font-semibold text-tahoe-blue">
+                        {totalPayments > 0 ? Math.round((paymentBreakdown.pending / totalPayments) * 100) : 0}%
+                      </span>
+                    </div>
+                  </div>
+                  <Progress
+                    value={totalPayments > 0 ? (paymentBreakdown.pending / totalPayments) * 100 : 0}
+                    className="h-2 rounded-full [&>div]:bg-tahoe-blue"
+                  />
+                </motion.div>
+
+                {/* Overdue */}
+                <motion.div
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.12 }}
+                  className="space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex size-6 items-center justify-center rounded-md bg-tahoe-red/10">
+                        <AlertTriangle className="size-3 text-tahoe-red" />
+                      </div>
+                      <span className="text-[13px] font-medium text-foreground">Overdue</span>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="tahoe-caption">{formatCurrency(stats?.overduePayments ?? 0)}</span>
+                      <span className="text-[11px] font-semibold text-tahoe-red">
+                        {totalPayments > 0 ? Math.round((paymentBreakdown.overdue / totalPayments) * 100) : 0}%
+                      </span>
+                    </div>
+                  </div>
+                  <Progress
+                    value={totalPayments > 0 ? (paymentBreakdown.overdue / totalPayments) * 100 : 0}
+                    className="h-2 rounded-full [&>div]:bg-tahoe-red"
+                  />
+                </motion.div>
+
+                {/* Property-level occupancy as secondary info */}
+                {propertyOccupancy.length > 0 && (
+                  <div className="pt-3 border-t border-border/30 space-y-3">
+                    <p className="tahoe-overline">Collection by Property</p>
+                    {propertyOccupancy.map((prop, idx) => (
+                      <motion.div
+                        key={prop.id}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.18 + idx * 0.06 }}
+                        className="space-y-1.5"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-[13px] font-medium text-foreground truncate">{prop.name}</span>
+                          <div className="flex items-center gap-3 shrink-0">
+                            <span className="tahoe-caption">{prop.occupiedUnits}/{prop.totalUnits} units</span>
+                            <span className={cn(
+                              'text-[11px] font-semibold',
+                              prop.occupancyRate >= 95 ? 'text-tahoe-green' :
+                              prop.occupancyRate >= 90 ? 'text-tahoe-blue' :
+                              'text-tahoe-orange'
+                            )}>
+                              {prop.occupancyRate}%
+                            </span>
+                          </div>
+                        </div>
+                        <Progress
+                          value={prop.occupancyRate}
+                          className={cn(
+                            'h-2 rounded-full',
+                            prop.occupancyRate >= 95 ? '[&>div]:bg-tahoe-green' :
+                            prop.occupancyRate >= 90 ? '[&>div]:bg-tahoe-blue' :
+                            '[&>div]:bg-tahoe-orange'
+                          )}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex items-center justify-center py-8 text-muted-foreground text-sm">
+                No payment data available
+              </div>
+            )}
           </CardContent>
         </Card>
 

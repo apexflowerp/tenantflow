@@ -52,6 +52,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 import { useMaintenanceStore } from '@/stores'
 import { getApiUrl } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 import type { MaintenanceTicket } from '@/stores'
 
 import { KanbanBoard } from './kanban-board'
@@ -172,6 +173,7 @@ function SortIcon({ field, currentField, dir }: { field: SortField; currentField
 export function MaintenancePage() {
   const { tickets, selectedTicket, isLoading, fetchTickets, selectTicket, clearSelection } =
     useMaintenanceStore()
+  const { toast } = useToast()
 
   // View state
   const [viewMode, setViewMode] = React.useState<'kanban' | 'list'>('kanban')
@@ -243,16 +245,52 @@ export function MaintenancePage() {
       if (status === 'resolved') {
         updateData.completedAt = new Date().toISOString()
       }
-      await fetch(getApiUrl('/api/maintenance'), {
+      const response = await fetch(getApiUrl('/api/maintenance'), {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateData),
       })
+      if (!response.ok) {
+        throw new Error('Failed to update ticket status')
+      }
       await fetchTickets()
       // Re-select the ticket to refresh its data
       selectTicket(selectedTicket.id)
+      toast({
+        title: 'Status Updated',
+        description: `Ticket status changed to ${status.replace('_', ' ')}.`,
+      })
     } catch (error) {
-      console.error('Failed to update ticket status:', error)
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to update ticket status',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  // Handle delete ticket
+  async function handleDeleteTicket(ticketId: string) {
+    try {
+      const response = await fetch(getApiUrl('/api/maintenance'), {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: ticketId }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to delete ticket')
+      }
+      await fetchTickets()
+      toast({
+        title: 'Ticket Deleted',
+        description: 'The maintenance ticket has been deleted.',
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to delete ticket',
+        variant: 'destructive',
+      })
     }
   }
 
@@ -605,7 +643,13 @@ export function MaintenancePage() {
                                     Edit
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem className="text-red-600 dark:text-red-400">
+                                  <DropdownMenuItem
+                                    className="text-red-600 dark:text-red-400"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleDeleteTicket(ticket.id)
+                                    }}
+                                  >
                                     <Trash2 className="size-4 mr-2" />
                                     Delete
                                   </DropdownMenuItem>

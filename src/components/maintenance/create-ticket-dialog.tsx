@@ -34,6 +34,7 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useMaintenanceStore, usePropertyStore } from '@/stores'
+import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { getApiUrl } from '@/lib/api'
 import { format } from 'date-fns'
@@ -74,6 +75,7 @@ export function CreateTicketDialog({ open, onOpenChange }: CreateTicketDialogPro
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const { fetchTickets } = useMaintenanceStore()
   const { properties, fetchProperties } = usePropertyStore()
+  const { toast } = useToast()
 
   // Fetch properties on mount if not already loaded
   React.useEffect(() => {
@@ -115,6 +117,11 @@ export function CreateTicketDialog({ open, onOpenChange }: CreateTicketDialogPro
         throw new Error('Failed to create ticket')
       }
 
+      toast({
+        title: 'Ticket Created',
+        description: `"${values.title}" has been submitted successfully.`,
+      })
+
       // Refresh tickets list
       await fetchTickets()
 
@@ -122,7 +129,11 @@ export function CreateTicketDialog({ open, onOpenChange }: CreateTicketDialogPro
       form.reset()
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to create ticket:', error)
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to create ticket',
+        variant: 'destructive',
+      })
     } finally {
       setIsSubmitting(false)
     }

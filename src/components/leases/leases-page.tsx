@@ -30,6 +30,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { useLeaseStore } from '@/stores'
+import { getApiUrl } from '@/lib/api'
 
 import { LeaseCard, LeaseCardSkeleton, type LeaseRow } from './lease-card'
 import { LeaseDetail } from './lease-detail'
@@ -221,7 +222,7 @@ export function LeasesPage() {
   const handleSeed = async () => {
     setIsSeeding(true)
     try {
-      const response = await fetch('/api/seed')
+      const response = await fetch(getApiUrl('/api/seed'))
       if (response.ok) {
         await fetchLeases()
       }
