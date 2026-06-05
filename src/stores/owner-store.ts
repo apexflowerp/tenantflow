@@ -169,6 +169,7 @@ interface OwnerStore {
   dashboardStats: DashboardStats | null
   clientDevices: DeviceData[]
   clientAuditLogs: AuditLogData[]
+  devices: DeviceData[]
   isLoading: boolean
   error: string | null
 
@@ -192,6 +193,10 @@ interface OwnerStore {
   createQuotation: (data: any) => Promise<void>
   updateQuotationStatus: (id: string, status: string) => Promise<void>
   convertQuotationToInvoice: (id: string) => Promise<void>
+  fetchDevices: () => Promise<void>
+  updateDeviceStatus: (id: string, status: 'active' | 'disabled' | 'blocked' | 'pending') => Promise<void>
+  blockDevice: (id: string) => Promise<void>
+  unblockDevice: (id: string) => Promise<void>
 }
 
 export const useOwnerStore = create<OwnerStore>((set, get) => ({
@@ -203,6 +208,7 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
   dashboardStats: null,
   clientDevices: [],
   clientAuditLogs: [],
+  devices: [],
   isLoading: false,
   error: null,
 
@@ -475,5 +481,48 @@ export const useOwnerStore = create<OwnerStore>((set, get) => ({
     } catch (err: any) {
       set({ error: err.message })
     }
+  },
+
+  fetchDevices: async () => {
+    set({ isLoading: true, error: null })
+    try {
+      const res = await fetch('/api/owner/devices')
+      if (!res.ok) throw new Error('Failed to fetch devices')
+      const data = await res.json()
+      set({ devices: data.devices || [], isLoading: false })
+    } catch (err: any) {
+      set({ error: err.message, isLoading: false })
+    }
+  },
+
+  updateDeviceStatus: async (id, status) => {
+    set({ error: null })
+    try {
+      const res = await fetch(`/api/owner/devices/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      })
+      if (!res.ok) throw new Error('Failed to update device status')
+      // Refresh the devices list after update
+      await get().fetchDevices()
+      // Also refresh clientDevices if it was filtered
+      const currentClientId = get().selectedClient?.id
+      if (currentClientId) {
+        const allDevices = get().devices
+        const filtered = allDevices.filter(d => d.workspace?.clientId === currentClientId)
+        set({ clientDevices: filtered })
+      }
+    } catch (err: any) {
+      set({ error: err.message })
+    }
+  },
+
+  blockDevice: async (id) => {
+    await get().updateDeviceStatus(id, 'disabled')
+  },
+
+  unblockDevice: async (id) => {
+    await get().updateDeviceStatus(id, 'active')
   },
 }))

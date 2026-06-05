@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Plus } from 'lucide-react'
 import { useOwnerStore } from '@/stores/owner-store'
+import { useToast } from '@/hooks/use-toast'
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
@@ -21,6 +22,7 @@ interface AddClientDialogProps {
 
 export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
   const { addClient } = useOwnerStore()
+  const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [form, setForm] = React.useState({
     companyName: '',
@@ -52,6 +54,10 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
     setIsSubmitting(true)
     try {
       await addClient(form)
+      toast({
+        title: 'Client added',
+        description: `${form.companyName} has been added successfully.`,
+      })
       onOpenChange(false)
       // Reset form
       setForm({
@@ -62,6 +68,8 @@ export function AddClientDialog({ open, onOpenChange }: AddClientDialogProps) {
         monthlyFee: 49, setupFee: 0, discountPercent: 0,
         maxProperties: 10, maxUsers: 5, maxDevices: 3,
       })
+    } catch {
+      toast({ title: 'Error', description: 'Failed to add client. Please try again.', variant: 'destructive' })
     } finally {
       setIsSubmitting(false)
     }

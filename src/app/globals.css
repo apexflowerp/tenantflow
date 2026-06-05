@@ -309,6 +309,29 @@
   -webkit-backdrop-filter: blur(50px) saturate(200%);
   border-right: 0.5px solid var(--sidebar-border);
   isolation: isolate;
+  /* Ensure fixed positioning is never overridden by CSS specificity */
+  position: fixed !important;
+}
+
+/* ── Sidebar Layout Constraints ───────────────────────────────────────────────
+   Belt-and-suspenders rules to guarantee the sidebar stays fixed and the
+   content area scrolls independently. These protect against Tailwind CSS 4
+   specificity edge-cases where utility classes might lose to custom CSS.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+[data-slot="sidebar-wrapper"] {
+  height: 100svh;
+  overflow: hidden;
+}
+
+[data-slot="sidebar-inset"] {
+  height: 100svh;
+  overflow: hidden;
+}
+
+[data-slot="sidebar-container"] {
+  position: fixed !important;
+  height: 100svh;
 }
 
 .glass-sidebar::before {

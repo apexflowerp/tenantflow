@@ -6,13 +6,14 @@ import {
   Users, CheckCircle2, DollarSign, Clock, Shield, Key, FileText,
   Search, Plus, Copy, AlertTriangle, TrendingUp,
   Calendar, BarChart3, Eye, FileSpreadsheet, ArrowRightLeft,
+  Monitor, Ban, Unlock, Lock, Wifi,
 } from 'lucide-react'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts'
 
-import { useOwnerStore, type InvoiceData, type QuotationData } from '@/stores/owner-store'
+import { useOwnerStore, type InvoiceData, type QuotationData, type DeviceData } from '@/stores/owner-store'
 import { ClientCard } from './client-card'
 import { ClientDetail } from './client-detail'
 import { AddClientDialog } from './add-client-dialog'
@@ -39,6 +40,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import {
   Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { useToast } from '@/hooks/use-toast'
 
 // ── Color Maps ──
 
@@ -78,6 +84,13 @@ const QUOTATION_STATUS_COLORS: Record<string, string> = {
   accepted: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
   rejected: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
   expired: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+}
+
+const DEVICE_STATUS_COLORS: Record<string, string> = {
+  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+  disabled: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
+  pending: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+  blocked: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
 }
 
 const CHART_COLORS = ['#c2703a', '#f59e0b', '#8b5cf6', '#6b7280', '#06b6d4', '#ec4899']
@@ -963,6 +976,356 @@ function QuotationsTab() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// DEVICES TAB
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function DevicesTab() {
+  const { devices, fetchDevices, blockDevice, unblockDevice, isLoading } = useOwnerStore()
+  const { toast } = useToast()
+  const [statusFilter, setStatusFilter] = React.useState('all')
+  const [clientFilter, setClientFilter] = React.useState('all')
+  const [search, setSearch] = React.useState('')
+  const [blockTarget, setBlockTarget] = React.useState<DeviceData | null>(null)
+  const [actionLoading, setActionLoading] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    fetchDevices()
+  }, [fetchDevices])
+
+  const filtered = React.useMemo(() => {
+    return devices.filter(d => {
+      const matchesStatus = statusFilter === 'all' || d.status === statusFilter
+      const matchesClient = clientFilter === 'all' || d.workspace?.clientId === clientFilter
+      const matchesSearch = !search ||
+        (d.deviceName || '').toLowerCase().includes(search.toLowerCase()) ||
+        d.serialKey.toLowerCase().includes(search.toLowerCase()) ||
+        (d.ipAddress || '').toLowerCase().includes(search.toLowerCase()) ||
+        (d.workspace?.name || '').toLowerCase().includes(search.toLowerCase())
+      return matchesStatus && matchesClient && matchesSearch
+    })
+  }, [devices, statusFilter, clientFilter, search])
+
+  const uniqueClients = React.useMemo(() => {
+    const map = new Map<string, string>()
+    devices.forEach(d => {
+      if (d.workspace?.client?.companyName) {
+        map.set(d.workspace.clientId, d.workspace.client.companyName)
+      }
+    })
+    return Array.from(map.entries())
+  }, [devices])
+
+  // Summary counts
+  const statusCounts = React.useMemo(() => {
+    const counts: Record<string, number> = { active: 0, disabled: 0, blocked: 0, pending: 0 }
+    devices.forEach(d => { counts[d.status] = (counts[d.status] || 0) + 1 })
+    return counts
+  }, [devices])
+
+  const handleBlock = async (device: DeviceData) => {
+    setActionLoading(device.id)
+    try {
+      await blockDevice(device.id)
+      toast({
+        title: 'Device blocked',
+        description: `${device.deviceName || device.serialKey} has been blocked.`,
+      })
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to block device. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setActionLoading(null)
+      setBlockTarget(null)
+    }
+  }
+
+  const handleUnblock = async (device: DeviceData) => {
+    setActionLoading(device.id)
+    try {
+      await unblockDevice(device.id)
+      toast({
+        title: 'Device unblocked',
+        description: `${device.deviceName || device.serialKey} has been unblocked and reactivated.`,
+      })
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Failed to unblock device. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  function formatTimeAgo(dateStr: string | null) {
+    if (!dateStr) return '—'
+    const now = new Date()
+    const date = new Date(dateStr)
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    if (diffMins < 1) return 'Just now'
+    if (diffMins < 60) return `${diffMins}m ago`
+    const diffHours = Math.floor(diffMins / 60)
+    if (diffHours < 24) return `${diffHours}h ago`
+    const diffDays = Math.floor(diffHours / 24)
+    if (diffDays < 30) return `${diffDays}d ago`
+    return formatDate(dateStr)
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Block Confirmation Dialog */}
+      <AlertDialog open={!!blockTarget} onOpenChange={(open) => !open && setBlockTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Block Device</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to block <strong>{blockTarget?.deviceName || blockTarget?.serialKey}</strong>?
+              This device will lose access immediately and all active sessions will be invalidated.
+              You can unblock it later to restore access.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => blockTarget && handleBlock(blockTarget)}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Block Device
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Summary Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Devices</p>
+                  <p className="mt-1 text-2xl font-bold">{devices.length}</p>
+                </div>
+                <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+                  <Monitor className="size-5 text-primary" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Active</p>
+                  <p className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400">{statusCounts.active}</p>
+                </div>
+                <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10">
+                  <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Disabled / Blocked</p>
+                  <p className="mt-1 text-2xl font-bold text-red-600 dark:text-red-400">{statusCounts.disabled + statusCounts.blocked}</p>
+                </div>
+                <div className="flex size-10 items-center justify-center rounded-lg bg-red-500/10">
+                  <Ban className="size-5 text-red-600 dark:text-red-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <Card className="border-border/30">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Pending</p>
+                  <p className="mt-1 text-2xl font-bold text-amber-600 dark:text-amber-400">{statusCounts.pending}</p>
+                </div>
+                <div className="flex size-10 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Clock className="size-5 text-amber-600 dark:text-amber-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search devices..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <div className="flex gap-2">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="disabled">Disabled</SelectItem>
+              <SelectItem value="blocked">Blocked</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={clientFilter} onValueChange={setClientFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Client" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Clients</SelectItem>
+              {uniqueClients.map(([id, name]) => (
+                <SelectItem key={id} value={id}>{name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Devices Table */}
+      <Card className="border-border/30 overflow-hidden">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Device Name</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Serial Key</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Client / Workspace</TableHead>
+                <TableHead>OS / Browser</TableHead>
+                <TableHead>IP Address</TableHead>
+                <TableHead>Last Seen</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center py-8">
+                    <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                      <div className="size-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                      Loading devices...
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2">
+                      <Monitor className="size-8 text-muted-foreground/30" />
+                      <span>No devices found</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filtered.map((d) => (
+                  <TableRow key={d.id} className="hover:bg-accent/50">
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
+                          <Monitor className="size-4 text-muted-foreground" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">{d.deviceName || 'Unknown Device'}</p>
+                          {d.user && (
+                            <p className="text-xs text-muted-foreground">{d.user.name}</p>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="capitalize text-sm">{d.deviceType}</TableCell>
+                    <TableCell>
+                      <code className="text-xs font-mono bg-muted px-2 py-1 rounded">
+                        {maskKey(d.serialKey)}
+                      </code>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className={`text-[10px] capitalize ${DEVICE_STATUS_COLORS[d.status] || ''}`}>
+                        {d.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <p className="text-sm">{d.workspace?.client?.companyName || '—'}</p>
+                        <p className="text-xs text-muted-foreground">{d.workspace?.name || '—'}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <p className="text-sm">{d.os || '—'}</p>
+                        <p className="text-xs text-muted-foreground">{d.browser || '—'}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1.5 text-sm">
+                        {d.ipAddress && <Wifi className="size-3 text-muted-foreground" />}
+                        {d.ipAddress || '—'}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm">{formatTimeAgo(d.lastSeenAt)}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {d.status === 'blocked' || d.status === 'disabled' ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="size-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+                            disabled={actionLoading === d.id}
+                            onClick={() => handleUnblock(d)}
+                          >
+                            {actionLoading === d.id ? (
+                              <div className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                            ) : (
+                              <Unlock className="size-4" />
+                            )}
+                          </Button>
+                        ) : d.status === 'active' ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="size-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                            disabled={actionLoading === d.id}
+                            onClick={() => setBlockTarget(d)}
+                          >
+                            <Lock className="size-4" />
+                          </Button>
+                        ) : null}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // LICENSE KEYS TAB
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1152,6 +1515,10 @@ export function OwnerPage() {
             <Key className="size-4" />
             <span className="hidden sm:inline">License Keys</span>
           </TabsTrigger>
+          <TabsTrigger value="devices" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <Monitor className="size-4" />
+            <span className="hidden sm:inline">Devices</span>
+          </TabsTrigger>
           <TabsTrigger value="reports" className="gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <BarChart3 className="size-4" />
             <span className="hidden sm:inline">Reports</span>
@@ -1172,6 +1539,9 @@ export function OwnerPage() {
         </TabsContent>
         <TabsContent value="licenses" className="mt-6">
           <LicensesTab />
+        </TabsContent>
+        <TabsContent value="devices" className="mt-6">
+          <DevicesTab />
         </TabsContent>
         <TabsContent value="reports" className="mt-6">
           <ReportsPage />

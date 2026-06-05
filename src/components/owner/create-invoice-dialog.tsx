@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { FileText, Plus, Trash2 } from 'lucide-react'
 import { useOwnerStore } from '@/stores/owner-store'
+import { useToast } from '@/hooks/use-toast'
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
@@ -28,6 +29,7 @@ interface CreateInvoiceDialogProps {
 
 export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogProps) {
   const { createInvoice, clients, fetchClients } = useOwnerStore()
+  const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [lineItems, setLineItems] = React.useState<LineItem[]>([
     { description: '', quantity: 1, unitPrice: 0, amount: 0 },
@@ -84,9 +86,15 @@ export function CreateInvoiceDialog({ open, onOpenChange }: CreateInvoiceDialogP
         terms: form.terms,
         items: JSON.stringify(validItems),
       })
+      toast({
+        title: 'Invoice created',
+        description: 'The invoice has been created successfully.',
+      })
       onOpenChange(false)
       setForm({ clientId: '', type: 'subscription', taxRate: 0, discount: 0, notes: '', terms: 'Net 30' })
       setLineItems([{ description: '', quantity: 1, unitPrice: 0, amount: 0 }])
+    } catch {
+      toast({ title: 'Error', description: 'Failed to create invoice. Please try again.', variant: 'destructive' })
     } finally {
       setIsSubmitting(false)
     }

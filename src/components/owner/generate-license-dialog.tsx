@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Key } from 'lucide-react'
 import { useOwnerStore } from '@/stores/owner-store'
+import { useToast } from '@/hooks/use-toast'
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
@@ -20,7 +21,8 @@ interface GenerateLicenseDialogProps {
 }
 
 export function GenerateLicenseDialog({ open, onOpenChange }: GenerateLicenseDialogProps) {
-  const { generateLicenseKey, clients, fetchClients } = useOwnerStore()
+  const { fetchLicenseKeys, clients, fetchClients } = useOwnerStore()
+  const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [generatedKey, setGeneratedKey] = React.useState<string | null>(null)
   const [form, setForm] = React.useState({
@@ -50,8 +52,16 @@ export function GenerateLicenseDialog({ open, onOpenChange }: GenerateLicenseDia
       if (response.ok) {
         const data = await response.json()
         setGeneratedKey(data.licenseKey.key)
-        await generateLicenseKey(form)
+        await fetchLicenseKeys()
+        toast({
+          title: 'License key generated',
+          description: 'A new license key has been generated successfully.',
+        })
+      } else {
+        toast({ title: 'Error', description: 'Failed to generate license key. Please try again.', variant: 'destructive' })
       }
+    } catch {
+      toast({ title: 'Error', description: 'Failed to generate license key. Please try again.', variant: 'destructive' })
     } finally {
       setIsSubmitting(false)
     }

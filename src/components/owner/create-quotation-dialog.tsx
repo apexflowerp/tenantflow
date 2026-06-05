@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 import { FileText, Plus, Trash2 } from 'lucide-react'
+import { useOwnerStore } from '@/stores/owner-store'
+import { useToast } from '@/hooks/use-toast'
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle,
@@ -59,6 +61,8 @@ const DEFAULT_TERMS = 'Payment is due within 30 days of acceptance. This quotati
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function CreateQuotationDialog({ open, onOpenChange, clients }: CreateQuotationDialogProps) {
+  const { createQuotation } = useOwnerStore()
+  const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [quotationNumber] = React.useState(generateQuotationNumber)
   const [lineItems, setLineItems] = React.useState<LineItem[]>([
@@ -144,7 +148,7 @@ export function CreateQuotationDialog({ open, onOpenChange, clients }: CreateQuo
     setIsSubmitting(true)
     try {
       const validItems = lineItems.filter(item => item.description && item.amount > 0)
-      const payload = {
+      await createQuotation({
         clientId: form.clientId,
         quotationNumber,
         subject: form.subject,
@@ -160,20 +164,16 @@ export function CreateQuotationDialog({ open, onOpenChange, clients }: CreateQuo
         terms: form.terms,
         notes: form.notes,
         status: 'draft',
-      }
-
-      const res = await fetch('/api/owner/quotations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
       })
 
-      if (!res.ok) throw new Error('Failed to create quotation')
-
+      toast({
+        title: 'Quotation created',
+        description: 'The quotation has been created successfully.',
+      })
       onOpenChange(false)
       resetForm()
-    } catch (err) {
-      console.error('Failed to create quotation:', err)
+    } catch {
+      toast({ title: 'Error', description: 'Failed to create quotation. Please try again.', variant: 'destructive' })
     } finally {
       setIsSubmitting(false)
     }

@@ -7,7 +7,7 @@ import {
   DollarSign, Users, HomeIcon, Monitor, CreditCard, CheckCircle2,
   Clock, Shield, Key, FileText, Activity, Settings, Edit,
   ExternalLink, Copy, AlertCircle, Tag, Palette, Server,
-  Ban, RefreshCw, Smartphone, Laptop, Tablet, Trash2,
+  Ban, RefreshCw, Smartphone, Laptop, Tablet, Trash2, Unlock, Lock,
 } from 'lucide-react'
 import { useOwnerStore, type ClientData } from '@/stores/owner-store'
 import { useToast } from '@/hooks/use-toast'
@@ -69,6 +69,7 @@ const DEVICE_STATUS_COLORS: Record<string, string> = {
   pending: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
   active: 'bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary',
   disabled: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
+  blocked: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
 }
 
 const DEVICE_TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -167,6 +168,7 @@ export function ClientDetail() {
     licenseKeys, invoices, updateClient, revokeLicenseKey,
     fetchClientDevices, fetchClientAuditLogs,
     clientDevices, clientAuditLogs,
+    blockDevice, unblockDevice,
   } = useOwnerStore()
   const { toast } = useToast()
   const [detailTab, setDetailTab] = React.useState('overview')
@@ -179,6 +181,8 @@ export function ClientDetail() {
   const [revokeTarget, setRevokeTarget] = React.useState<string | null>(null)
   const [isRevoking, setIsRevoking] = React.useState(false)
   const [isSuspending, setIsSuspending] = React.useState(false)
+  const [blockDeviceTarget, setBlockDeviceTarget] = React.useState<string | null>(null)
+  const [blockingDeviceId, setBlockingDeviceId] = React.useState<string | null>(null)
   const [usageData, setUsageData] = React.useState<{ properties: number; users: number; devices: number }>({ properties: 0, users: 0, devices: 0 })
 
   // Renew form
@@ -319,6 +323,40 @@ export function ClientDetail() {
     }
   }
 
+  const handleBlockDevice = async () => {
+    if (!blockDeviceTarget) return
+    setBlockingDeviceId(blockDeviceTarget)
+    try {
+      await blockDevice(blockDeviceTarget)
+      toast({
+        title: 'Device blocked',
+        description: 'The device has been blocked and its sessions invalidated.',
+      })
+      if (client) await fetchClientDevices(client.id)
+    } catch {
+      toast({ title: 'Error', description: 'Failed to block device', variant: 'destructive' })
+    } finally {
+      setBlockingDeviceId(null)
+      setBlockDeviceTarget(null)
+    }
+  }
+
+  const handleUnblockDevice = async (deviceId: string) => {
+    setBlockingDeviceId(deviceId)
+    try {
+      await unblockDevice(deviceId)
+      toast({
+        title: 'Device unblocked',
+        description: 'The device has been reactivated successfully.',
+      })
+      if (client) await fetchClientDevices(client.id)
+    } catch {
+      toast({ title: 'Error', description: 'Failed to unblock device', variant: 'destructive' })
+    } finally {
+      setBlockingDeviceId(null)
+    }
+  }
+
   // Prepare renew form defaults from current client
   const openRenewDialog = () => {
     setRenewForm({
@@ -428,6 +466,32 @@ export function ClientDetail() {
                 <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 'Revoke License'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Block Device Confirmation */}
+      <AlertDialog open={!!blockDeviceTarget} onOpenChange={(open) => !open && setBlockDeviceTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Block Device</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to block this device? The device will be disconnected and all active sessions will be invalidated. The user will need to re-register the device.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleBlockDevice}
+              disabled={!!blockingDeviceId}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {blockingDeviceId ? (
+                <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                'Block Device'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -827,12 +891,13 @@ export function ClientDetail() {
                     <TableHead>Workspace</TableHead>
                     <TableHead>Last Seen</TableHead>
                     <TableHead>License</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {clientDevices.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                         No devices found for this client
                       </TableCell>
                     </TableRow>
@@ -868,6 +933,39 @@ export function ClientDetail() {
                             ) : (
                               <span className="text-xs text-muted-foreground">—</span>
                             )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {device.status === 'active' ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                onClick={() => setBlockDeviceTarget(device.id)}
+                                disabled={!!blockingDeviceId}
+                                title="Block device"
+                              >
+                                {blockingDeviceId === device.id ? (
+                                  <span className="size-4 border-2 border-destructive/30 border-t-destructive rounded-full animate-spin" />
+                                ) : (
+                                  <Lock className="size-4" />
+                                )}
+                              </Button>
+                            ) : (device.status === 'disabled' || device.status === 'blocked') ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="size-8 text-primary hover:text-primary hover:bg-primary/10"
+                                onClick={() => handleUnblockDevice(device.id)}
+                                disabled={!!blockingDeviceId}
+                                title="Unblock device"
+                              >
+                                {blockingDeviceId === device.id ? (
+                                  <span className="size-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+                                ) : (
+                                  <Unlock className="size-4" />
+                                )}
+                              </Button>
+                            ) : null}
                           </TableCell>
                         </TableRow>
                       )
