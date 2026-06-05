@@ -1,6 +1,9 @@
 import { db } from '@/lib/db'
 import { NextRequest, NextResponse } from 'next/server'
-import { generateToken } from '@/lib/utils'
+
+function generateToken(): string {
+  return 'tf-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+}
 
 /**
  * Parse user-agent to detect browser, OS, and device type.
