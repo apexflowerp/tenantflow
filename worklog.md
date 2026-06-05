@@ -742,3 +742,35 @@ Stage Summary:
 - Critical fix: db.ts now sets process.env.DATABASE_URL before Prisma init
 - Key credentials: TFOW-OWNR-180H-XK9Z (serial), admin@apexflow.cloud / Admin@180H
 - New Neon connection: postgresql://neondb_owner:npg_2k4canmfWyvD@ep-jolly-violet-apzu92qe-pooler.c-7.us-east-1.aws.neon.tech/neondb
+
+---
+Task ID: 10
+Agent: Main Agent
+Task: Push to GitHub after fixing new Neon PostgreSQL database setup
+
+Work Log:
+- User reported "Invalid serial key" error after switching to new Neon PostgreSQL
+- New connection: postgresql://neondb_owner:npg_2k4canmfWyvD@ep-jolly-violet-apzu92qe-pooler.c-7.us-east-1.aws.neon.tech/neondb
+- Updated .env with new DATABASE_URL and DIRECT_URL (pooler + direct endpoints)
+- Updated src/lib/db.ts with new Neon URLs and connection timeout params
+- Pushed Prisma schema to new database — all 57 models synced
+- Created comprehensive prisma/seed.ts standalone seed script
+- Ran seed script: all data seeded successfully
+  - Owner device TFOW-OWNR-180H-XK9Z pre-seeded and active
+  - Admin user: admin@apexflow.cloud
+  - 5 clients (TenantFlow HQ Corp, Meridian, Skyline, Pacific Coast, Urban Living)
+  - 7 license keys (including owner key)
+  - 6 properties, 25+ units, 15 tenants, 12 leases
+  - 40+ payments, 6 maintenance tickets, 4 vendors, 5 invoices
+  - 8 audit logs, 5 activities
+- Verified serial key activation via curl: POST /api/auth/device/activate → 200 OK
+- Verified demo login via curl: POST /api/auth/demo → 200 OK with user data
+- Verified login page via agent-browser: shows serial key input, owner key hint, activate button
+- Committed and pushed to GitHub (commit 44a4eb9)
+- Note: Sandbox memory constraint (8GB) causes server to crash when Chrome browser + Next.js dev server both running (server uses ~2.3GB, Chrome uses ~1.5GB+)
+
+Stage Summary:
+- New Neon PostgreSQL database fully set up and seeded
+- Owner serial key TFOW-OWNR-180H-XK9Z works correctly
+- All code pushed to GitHub: https://github.com/apexflowerp/tenantflow
+- Server stability issue in sandbox due to memory constraints (not a code bug)
